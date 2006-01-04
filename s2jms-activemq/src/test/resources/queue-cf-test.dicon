@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components namespace="jms-activemq-cf">
+	<include path="j2ee.dicon"/>
+	<include path="jndi.dicon"/>
+	<include path="ra.dicon"/>
+
+	<component name="mcfDeployer"
+		class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployerImpl"
+	>
+		<property name="managedConnectionFactoryClass">
+			"org.seasar.jms.connector.mcf.QueueManagedConnectionFactoryImpl"
+		</property>
+	</component>
+
+	<component name="connectionFactory" class="javax.jms.QueueConnectionFactory">
+		mcfDeployer.createConnectionFactory()
+	</component>
+	
+	<component class="org.seasar.jms.core.destination.impl.QueueFactory">
+		<property name="name">"queue"</property>
+	</component>
+	
+	<component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
+	<component class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
+</components>
