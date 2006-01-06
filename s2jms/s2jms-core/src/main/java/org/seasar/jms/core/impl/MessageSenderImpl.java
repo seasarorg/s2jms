@@ -116,15 +116,14 @@ public class MessageSenderImpl extends AbstractMessageProcessor<Object, MessageF
     @Override
     protected Object processSession(final Session session, final MessageFactory messageFactory)
             throws JMSException {
-        final Destination destination = getDestination(session);
-        final MessageProducer producer = createMessageProducer(session, destination);
-        final Message message = (messageFactory).createMessage(session);
+        final MessageProducer producer = createMessageProducer(session);
+        final Message message = messageFactory.createMessage(session);
         producer.send(message, deliveryMode, priority, timeToLive);
         return null;
     }
 
-    protected MessageProducer createMessageProducer(final Session session,
-            final Destination destination) throws JMSException {
+    protected MessageProducer createMessageProducer(final Session session) throws JMSException {
+        final Destination destination = getDestination(session);
         final MessageProducer producer = session.createProducer(destination);
         producer.setDisableMessageID(disableMessageID);
         producer.setDisableMessageTimestamp(disableMessageTimestamp);

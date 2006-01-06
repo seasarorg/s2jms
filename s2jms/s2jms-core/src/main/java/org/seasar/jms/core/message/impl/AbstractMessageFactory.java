@@ -92,22 +92,21 @@ public abstract class AbstractMessageFactory<T extends Message> implements Messa
         for (final Map.Entry<String, Object> entry : properties.entrySet()) {
             final String name = entry.getKey();
             final Object value = entry.getValue();
-            final Class<?> valueType = value.getClass();
-            if (valueType == Boolean.class) {
+            if (value instanceof Boolean) {
                 message.setBooleanProperty(name, (Boolean) value);
-            } else if (valueType == Byte.class) {
+            } else if (value instanceof Byte) {
                 message.setByteProperty(name, (Byte) value);
-            } else if (valueType == Short.class) {
+            } else if (value instanceof Short) {
                 message.setShortProperty(name, (Short) value);
-            } else if (valueType == Integer.class) {
+            } else if (value instanceof Integer) {
                 message.setIntProperty(name, (Integer) value);
-            } else if (valueType == Long.class) {
+            } else if (value instanceof Long) {
                 message.setLongProperty(name, (Long) value);
-            } else if (valueType == Float.class) {
+            } else if (value instanceof Float) {
                 message.setFloatProperty(name, (Float) value);
-            } else if (valueType == Double.class) {
+            } else if (value instanceof Double) {
                 message.setDoubleProperty(name, (Double) value);
-            } else if (valueType == String.class) {
+            } else if (value instanceof String) {
                 message.setStringProperty(name, (String) value);
             } else {
                 message.setObjectProperty(name, value);

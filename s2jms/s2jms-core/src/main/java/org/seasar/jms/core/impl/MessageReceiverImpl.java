@@ -23,6 +23,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import javax.jms.Topic;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
@@ -40,21 +41,32 @@ import org.seasar.jms.core.message.impl.TextMessageHandler;
 @Component
 public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Object> implements
         MessageReceiver {
-    protected long timeout = -1;
+    protected boolean durable;
+    protected String subscriptionName;
     protected String messageSelector = null;
     protected boolean noLocal = false;
+    protected long timeout = -1;
 
     public MessageReceiverImpl() {
         super(true);
     }
 
-    public long getTimeout() {
-        return timeout;
+    public boolean isDurable() {
+        return durable;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public void setTimeout(final long timeout) {
-        this.timeout = timeout;
+    public void setDurable(final boolean durable) {
+        this.durable = durable;
+    }
+
+    public String getSubscriptionName() {
+        return subscriptionName;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setSubscriptionName(final String subscriptionName) {
+        this.subscriptionName = subscriptionName;
     }
 
     public String getMessageSelector() {
@@ -73,6 +85,15 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
     @Binding(bindingType = BindingType.MAY)
     public void setNoLocal(final boolean noLocal) {
         this.noLocal = noLocal;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setTimeout(final long timeout) {
+        this.timeout = timeout;
     }
 
     public byte[] receiveBytes() {
@@ -99,9 +120,7 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
     @Override
     protected Message processSession(final Session session, final Object opaque)
             throws JMSException {
-        final Destination destination = getDestination(session);
-        final MessageConsumer consumer = session.createConsumer(destination, messageSelector,
-                noLocal);
+        final MessageConsumer consumer = createMessageConsumer(session);
         if (timeout > 0) {
             return consumer.receive(timeout);
         } else if (timeout == 0) {
@@ -109,5 +128,20 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
         } else {
             return consumer.receive();
         }
+    }
+
+    protected MessageConsumer createMessageConsumer(final Session session) throws JMSException {
+        final Destination destination = getDestination(session);
+        if (durable) {
+            if (!(destination instanceof Topic)) {
+                throw new IllegalStateException("destination");
+            }
+            if (subscriptionName == null) {
+                throw new IllegalStateException("subscriptionName");
+            }
+            return session.createDurableSubscriber((Topic) destination, subscriptionName,
+                    messageSelector, noLocal);
+        }
+        return session.createConsumer(destination, messageSelector, noLocal);
     }
 }
