@@ -28,6 +28,7 @@ public abstract class AbstractTestCase extends S2TestCase {
     protected TransactionManager tm;
     protected MessageSender sender;
     protected MessageReceiver receiver;
+    protected boolean recvSucceeded;
 
     public AbstractTestCase(String name) {
         super(name);
@@ -44,9 +45,9 @@ public abstract class AbstractTestCase extends S2TestCase {
             public void run() {
                 try {
                     recv();
+                    recvSucceeded = true;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    fail(e.toString());
                 }
             }
         });
@@ -54,6 +55,7 @@ public abstract class AbstractTestCase extends S2TestCase {
         Thread.sleep(2000);
         send();
         thread.join();
+        assertTrue("1", recvSucceeded);
     }
 
     protected void send() throws Exception {
@@ -68,7 +70,7 @@ public abstract class AbstractTestCase extends S2TestCase {
     protected void recv() throws Exception {
         tm.begin();
         try {
-            assertEquals("1", "Hoge", receiver.receiveText());
+            assertEquals("2", "Hoge", receiver.receiveText());
         } finally {
             tm.commit();
         }

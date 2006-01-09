@@ -2,6 +2,11 @@
 <!DOCTYPE components PUBLIC "-//SEASAR2.1//DTD S2Container//EN"
 	"http://www.seasar.org/dtd/components21.dtd">
 <components namespace="jms">
+	<!--
+		S2JMS-Connector は JNDI から (XA)ConnectionFactory をルックアップする．
+		そのためのネーミングコンテキスト (java:comp/env/jndi/jms) を提供する．
+	-->
+
 	<component name="ConnectionFactory" autoBinding="none"
 		class="org.activemq.ActiveMQConnectionFactory"
 	>
