@@ -9,9 +9,9 @@
 	<classpathentry output="s2jms-connector/target/test-classes" kind="src" path="s2jms-connector/src/test/java"/>
 	<classpathentry output="s2jms-connector/target/test-classes" kind="src" path="s2jms-connector/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/s2jca"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/s2jca"/>
 	<classpathentry kind="lib" path="lib/velocity-dep-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/velocity-tools-generic-1.1.jar"/>
 	<classpathentry kind="output" path="s2jms-core/target/classes"/>

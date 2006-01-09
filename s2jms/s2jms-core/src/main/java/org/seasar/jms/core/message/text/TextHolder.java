@@ -33,7 +33,7 @@ public class TextHolder implements TextProvider {
     }
 
     public String getText() {
-        return null;
+        return text;
     }
 
     public void setText(final String text) {
