@@ -33,8 +33,8 @@ import javax.resource.spi.ResourceAdapter;
 import javax.resource.spi.ResourceAdapterAssociation;
 import javax.security.auth.Subject;
 
-import org.seasar.jca.cm.ConnectionManagerImpl;
 import org.seasar.jca.exception.SResourceException;
+import org.seasar.jca.outbound.ConnectionManagerImpl;
 import org.seasar.jms.connector.JMSManagedConnection;
 import org.seasar.jms.connector.ra.JMSResourceAdapter;
 import org.seasar.jms.connector.support.ConnectionRequestInfoImpl;

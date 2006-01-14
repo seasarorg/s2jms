@@ -39,17 +39,9 @@ public class SendMessageInterceptor extends MessageSenderImpl implements MethodI
     public SendMessageInterceptor() {
     }
 
-    public S2Container getContainer() {
-        return container;
-    }
-
     @Binding(bindingType = BindingType.MUST)
     public void setContainer(final S2Container container) {
         this.container = container;
-    }
-
-    public String getMessageFactoryName() {
-        return messageFactoryName;
     }
 
     @Binding(bindingType = BindingType.MAY)
