@@ -4,7 +4,7 @@
 <components namespace="jms">
 	<!--
 		S2JMS-Connector は JNDI から (XA)ConnectionFactory をルックアップする．
-		そのためのネーミングコンテキスト (java:comp/env/jndi/jms) を提供する．
+		そのためのネーミングコンテキスト (java:comp/env/jms) を提供する．
 	-->
 
 	<component name="ConnectionFactory" autoBinding="none"
