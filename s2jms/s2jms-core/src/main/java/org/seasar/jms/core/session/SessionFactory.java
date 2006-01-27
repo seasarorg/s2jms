@@ -13,30 +13,8 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.message.text;
+package org.seasar.jms.core.session;
 
-import org.seasar.framework.container.annotation.tiger.Component;
-import org.seasar.framework.container.annotation.tiger.InstanceType;
-
-/**
- * @author koichik
- */
-@Component(instance = InstanceType.PROTOTYPE)
-public class TextHolder implements TextProvider {
-    protected String text;
-
-    public TextHolder() {
-    }
-
-    public TextHolder(final String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(final String text) {
-        this.text = text;
-    }
+public interface SessionFactory {
+    void createSession(boolean startConnection, SessionHandler handler);
 }

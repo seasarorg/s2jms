@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.message.text;
+package org.seasar.jms.core.text.impl;
 
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeSingleton;
@@ -26,13 +26,14 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.jms.core.text.TextProvider;
 
 /**
  * @author bowez
  */
 @Component
 public class VelocityTextFormatter implements TextProvider {
-    private static final Logger logger = Logger.getLogger(VelocityTextFormatterTest.class);
+    private static final Logger logger = Logger.getLogger(VelocityTextFormatter.class);
 
     protected S2Container container;
     protected String templateText;

@@ -18,6 +18,7 @@ package org.seasar.jms.core.impl;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -27,17 +28,23 @@ import javax.jms.Session;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.jms.core.MessageSender;
+import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.message.MessageFactory;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
 import org.seasar.jms.core.message.impl.MapMessageFactory;
 import org.seasar.jms.core.message.impl.ObjectMessageFactory;
 import org.seasar.jms.core.message.impl.TextMessageFactory;
+import org.seasar.jms.core.session.SessionFactory;
+import org.seasar.jms.core.session.SessionHandler;
 
 /**
  * @author koichik
  */
-public class MessageSenderImpl extends AbstractMessageProcessor<Object, MessageFactory> implements
-        MessageSender {
+public class MessageSenderImpl implements MessageSender {
+    protected ConnectionFactory connectionFactory;
+    protected SessionFactory sessionFactory;
+    protected DestinationFactory destinationFactory;
+    protected MessageFactory messageFactory;
     protected int deliveryMode = Message.DEFAULT_DELIVERY_MODE;
     protected int priority = Message.DEFAULT_PRIORITY;
     protected long timeToLive = Message.DEFAULT_TIME_TO_LIVE;
@@ -45,11 +52,30 @@ public class MessageSenderImpl extends AbstractMessageProcessor<Object, MessageF
     protected boolean disableMessageTimestamp = false;
 
     public MessageSenderImpl() {
-        super(false);
     }
 
     public int getDeliveryMode() {
         return deliveryMode;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setConnectionFactory(final ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setSessionFactory(final SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setDestinationFactory(final DestinationFactory destinationFactory) {
+        this.destinationFactory = destinationFactory;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setMessageFactory(final MessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
     }
 
     @Binding(bindingType = BindingType.MAY)
@@ -57,17 +83,9 @@ public class MessageSenderImpl extends AbstractMessageProcessor<Object, MessageF
         this.deliveryMode = deliveryMode;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
     @Binding(bindingType = BindingType.MAY)
     public void setPriority(final int priority) {
         this.priority = priority;
-    }
-
-    public long getTimeToLive() {
-        return timeToLive;
     }
 
     @Binding(bindingType = BindingType.MAY)
@@ -75,22 +93,18 @@ public class MessageSenderImpl extends AbstractMessageProcessor<Object, MessageF
         this.timeToLive = timeToLive;
     }
 
-    public boolean isDisableMessageID() {
-        return disableMessageID;
-    }
-
     @Binding(bindingType = BindingType.MAY)
     public void setDisableMessageID(final boolean disableMessageID) {
         this.disableMessageID = disableMessageID;
     }
 
-    public boolean isDisableMessageTimestamp() {
-        return disableMessageTimestamp;
-    }
-
     @Binding(bindingType = BindingType.MAY)
     public void setDisableMessageTimestamp(final boolean disableMessageTimestamp) {
         this.disableMessageTimestamp = disableMessageTimestamp;
+    }
+
+    public void send() {
+        send(messageFactory);
     }
 
     public void send(final byte[] bytes) {
@@ -110,20 +124,17 @@ public class MessageSenderImpl extends AbstractMessageProcessor<Object, MessageF
     }
 
     public void send(final MessageFactory messageFactory) {
-        process(messageFactory);
-    }
-
-    @Override
-    protected Object processSession(final Session session, final MessageFactory messageFactory)
-            throws JMSException {
-        final MessageProducer producer = createMessageProducer(session);
-        final Message message = messageFactory.createMessage(session);
-        producer.send(message, deliveryMode, priority, timeToLive);
-        return null;
+        sessionFactory.createSession(false, new SessionHandler() {
+            public void handleSession(Session session) throws JMSException {
+                final MessageProducer producer = createMessageProducer(session);
+                final Message message = messageFactory.createMessage(session);
+                producer.send(message, deliveryMode, priority, timeToLive);
+            }
+        });
     }
 
     protected MessageProducer createMessageProducer(final Session session) throws JMSException {
-        final Destination destination = getDestination(session);
+        final Destination destination = destinationFactory.getDestination(session);
         final MessageProducer producer = session.createProducer(destination);
         producer.setDisableMessageID(disableMessageID);
         producer.setDisableMessageTimestamp(disableMessageTimestamp);

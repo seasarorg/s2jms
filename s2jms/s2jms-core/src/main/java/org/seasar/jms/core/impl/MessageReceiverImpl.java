@@ -18,6 +18,7 @@ package org.seasar.jms.core.impl;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -29,18 +30,23 @@ import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.jms.core.MessageReceiver;
+import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.message.MessageHandler;
 import org.seasar.jms.core.message.impl.BytesMessageHandler;
 import org.seasar.jms.core.message.impl.MapMessageHandler;
 import org.seasar.jms.core.message.impl.ObjectMessageHandler;
 import org.seasar.jms.core.message.impl.TextMessageHandler;
+import org.seasar.jms.core.session.SessionFactory;
+import org.seasar.jms.core.session.SessionHandler;
 
 /**
  * @author koichik
  */
 @Component
-public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Object> implements
-        MessageReceiver {
+public class MessageReceiverImpl implements MessageReceiver {
+    protected ConnectionFactory connectionFactory;
+    protected SessionFactory sessionFactory;
+    protected DestinationFactory destinationFactory;
     protected boolean durable;
     protected String subscriptionName;
     protected String messageSelector = null;
@@ -48,11 +54,21 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
     protected long timeout = -1;
 
     public MessageReceiverImpl() {
-        super(true);
     }
 
-    public boolean isDurable() {
-        return durable;
+    @Binding(bindingType = BindingType.MUST)
+    public void setConnectionFactory(final ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setSessionFactory(final SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setDestinationFactory(final DestinationFactory destinationFactory) {
+        this.destinationFactory = destinationFactory;
     }
 
     @Binding(bindingType = BindingType.MAY)
@@ -60,17 +76,9 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
         this.durable = durable;
     }
 
-    public String getSubscriptionName() {
-        return subscriptionName;
-    }
-
     @Binding(bindingType = BindingType.MAY)
     public void setSubscriptionName(final String subscriptionName) {
         this.subscriptionName = subscriptionName;
-    }
-
-    public String getMessageSelector() {
-        return messageSelector;
     }
 
     @Binding(bindingType = BindingType.MAY)
@@ -78,17 +86,9 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
         this.messageSelector = messageSelector;
     }
 
-    public boolean isNoLocal() {
-        return noLocal;
-    }
-
     @Binding(bindingType = BindingType.MAY)
     public void setNoLocal(final boolean noLocal) {
         this.noLocal = noLocal;
-    }
-
-    public long getTimeout() {
-        return timeout;
     }
 
     @Binding(bindingType = BindingType.MAY)
@@ -114,34 +114,47 @@ public class MessageReceiverImpl extends AbstractMessageProcessor<Message, Objec
 
     public <MSGTYPE extends Message, T> T receive(final MessageHandler<MSGTYPE, T> messageHandler) {
         Class<MSGTYPE> clazz = messageHandler.getMessageType();
-        return messageHandler.handleMessage(clazz.cast(process(null)));
+        return messageHandler.handleMessage(clazz.cast(receive()));
     }
 
-    @Override
-    protected Message processSession(final Session session, final Object opaque)
-            throws JMSException {
-        final MessageConsumer consumer = createMessageConsumer(session);
-        if (timeout > 0) {
-            return consumer.receive(timeout);
-        } else if (timeout == 0) {
-            return consumer.receiveNoWait();
-        } else {
-            return consumer.receive();
-        }
+    public Message receive() {
+        final SessionHandlerImpl sessionHandler = new SessionHandlerImpl();
+        sessionFactory.createSession(true, sessionHandler);
+        return sessionHandler.getMessage();
     }
 
     protected MessageConsumer createMessageConsumer(final Session session) throws JMSException {
-        final Destination destination = getDestination(session);
-        if (durable) {
-            if (!(destination instanceof Topic)) {
-                throw new IllegalStateException("destination");
-            }
-            if (subscriptionName == null) {
-                throw new IllegalStateException("subscriptionName");
-            }
-            return session.createDurableSubscriber((Topic) destination, subscriptionName,
-                    messageSelector, noLocal);
+        final Destination destination = destinationFactory.getDestination(session);
+        if (!durable) {
+            return session.createConsumer(destination, messageSelector, noLocal);
         }
-        return session.createConsumer(destination, messageSelector, noLocal);
+
+        if (!(destination instanceof Topic)) {
+            throw new IllegalStateException("destination is not topic.");
+        }
+        if (subscriptionName == null) {
+            throw new IllegalStateException("subscriptionName is not specified.");
+        }
+        return session.createDurableSubscriber((Topic) destination, subscriptionName,
+                messageSelector, noLocal);
+    }
+
+    public class SessionHandlerImpl implements SessionHandler {
+        protected Message message;
+
+        public Message getMessage() {
+            return message;
+        }
+
+        public void handleSession(Session session) throws JMSException {
+            final MessageConsumer consumer = createMessageConsumer(session);
+            if (timeout > 0) {
+                message = consumer.receive(timeout);
+            } else if (timeout == 0) {
+                message = consumer.receiveNoWait();
+            } else {
+                message = consumer.receive();
+            }
+        }
     }
 }

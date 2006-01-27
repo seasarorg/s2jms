@@ -13,49 +13,34 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.message.impl;
-
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+package org.seasar.jms.core.text.impl;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.jms.core.text.TextProvider;
-import org.seasar.jms.core.text.impl.TextHolder;
 
 /**
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
-public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
-    protected TextProvider textProvider;
+public class TextHolder implements TextProvider {
+    protected String text;
 
-    public TextMessageFactory() {
+    public TextHolder() {
     }
 
-    public TextMessageFactory(final String text) {
-        this(new TextHolder(text));
+    public TextHolder(final String text) {
+        this.text = text;
     }
 
-    public TextMessageFactory(final TextProvider textProvider) {
-        this.textProvider = textProvider;
+    public String getText() {
+        return text;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public void setTextProvider(final TextProvider textProvider) {
-        this.textProvider = textProvider;
-    }
-
-    @Override
-    protected TextMessage createMessageInstance(final Session session) throws JMSException {
-        return session.createTextMessage();
-    }
-
-    @Override
-    protected void setupBody(final TextMessage message) throws JMSException {
-        message.setText(textProvider.getText());
+    public void setText(final String text) {
+        this.text = text;
     }
 }

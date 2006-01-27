@@ -15,27 +15,26 @@
  */
 package org.seasar.jms.core.interceptor;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.util.MethodUtil;
 import org.seasar.jms.core.MessageSender;
+import org.seasar.jms.core.message.MessageFactory;
 
-/**
- * @author koichik
- */
-@Component
-public class SendMessageInterceptor implements MethodInterceptor {
+public class SendReturnValueInterceptor implements MethodInterceptor {
     protected S2Container container;
     protected String messageSenderName;
     protected ComponentDef componentDef;
 
-    public SendMessageInterceptor() {
+    public SendReturnValueInterceptor() {
     }
 
     @Binding(bindingType = BindingType.MUST)
@@ -50,13 +49,24 @@ public class SendMessageInterceptor implements MethodInterceptor {
 
     @InitMethod
     public void initialize() {
-        componentDef = container.getComponentDef(messageSenderName == null ? MessageSender.class
+        componentDef = container.getComponentDef(messageSenderName == null ? MessageFactory.class
                 : messageSenderName);
     }
 
+    @SuppressWarnings("unchecked")
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         final Object result = proceed(invocation);
-        getMessageSender().send();
+        if (result instanceof String) {
+            getMessageSender().send(String.class.cast(result));
+        } else if (result instanceof byte[]) {
+            getMessageSender().send(byte[].class.cast(result));
+        } else if (result instanceof Map) {
+            getMessageSender().send((Map<String, Object>) result);
+        } else if (result instanceof Serializable) {
+            getMessageSender().send(Serializable.class.cast(result));
+        } else {
+            throw new IllegalStateException();
+        }
         return result;
     }
 

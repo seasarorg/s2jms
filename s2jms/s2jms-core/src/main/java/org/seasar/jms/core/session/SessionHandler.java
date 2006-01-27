@@ -13,28 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core;
+package org.seasar.jms.core.session;
 
-import java.io.Serializable;
-import java.util.Map;
+import javax.jms.JMSException;
+import javax.jms.Session;
 
-import javax.jms.Message;
-
-import org.seasar.jms.core.message.MessageFactory;
-
-/**
- * @author koichik
- */
-public interface MessageSender {
-    void send();
-
-    void send(byte[] bytes);
-
-    void send(String text);
-
-    void send(Serializable object);
-
-    void send(Map<String, Object> map);
-
-    <MSGTYPE extends Message> void send(MessageFactory<MSGTYPE> messageFactory);
+public interface SessionHandler {
+    void handleSession(Session session) throws JMSException;
 }

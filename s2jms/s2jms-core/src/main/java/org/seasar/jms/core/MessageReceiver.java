@@ -35,4 +35,6 @@ public interface MessageReceiver {
     Map<String, Object> receiveMap();
 
     <MSGTYPE extends Message, T> T receive(MessageHandler<MSGTYPE, T> messageHandler);
+
+    Message receive();
 }

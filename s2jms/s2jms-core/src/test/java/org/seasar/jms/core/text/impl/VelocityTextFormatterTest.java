@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.message.text;
+package org.seasar.jms.core.text.impl;
 
 import junit.framework.TestCase;
 
@@ -36,7 +36,7 @@ public class VelocityTextFormatterTest extends TestCase {
         container.register("Hoge", "hoge");
         container.register("FOO", "foo");
         container.register("BAR", "bar");
-        container.register(new Dto("Yuri", 26), "dto");
+        container.register(new Model("Yuri", 26), "model");
         container.init();
 
         VelocityTextFormatter formatter = new VelocityTextFormatter();
@@ -51,15 +51,15 @@ public class VelocityTextFormatterTest extends TestCase {
         formatter.setTemplateText("$hoge $foo $bar $baz");
         assertEquals("3", "Hoge FOO BAR $baz", formatter.getText());
 
-        formatter.setTemplateText("$dto.name $dto.age $dto.birthday");
-        assertEquals("4", "Yuri 26 $dto.birthday", formatter.getText());
+        formatter.setTemplateText("$model.name $model.age $model.birthday");
+        assertEquals("4", "Yuri 26 $model.birthday", formatter.getText());
     }
 
-    public static class Dto {
+    public static class Model {
         String name;
         int age;
 
-        public Dto(String name, int age) {
+        public Model(String name, int age) {
             this.name = name;
             this.age = age;
         }
