@@ -22,25 +22,27 @@ import javax.jms.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.seasar.extension.j2ee.JndiContextFactory;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
-import org.seasar.jndi.JndiContextFactory;
 
 /**
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class JndiDestinationFactory extends AbstractDestinationFactory {
-    protected Hashtable env = JndiContextFactory.ENVIRONMENT;
+    protected Hashtable<String, Object> env;
     protected String name;
 
     public JndiDestinationFactory() {
+        env = new Hashtable<String, Object>();
+        env.put(InitialContext.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class.getName());
     }
 
-    public JndiDestinationFactory(final Hashtable env, final String name) {
+    public JndiDestinationFactory(final Hashtable<String, Object> env, final String name) {
         this.env = env;
         this.name = name;
     }
@@ -50,7 +52,7 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public void setEnv(final Hashtable env) {
+    public void setEnv(final Hashtable<String, Object> env) {
         this.env = env;
     }
 

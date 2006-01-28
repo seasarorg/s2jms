@@ -33,12 +33,12 @@ import javax.resource.spi.ResourceAdapter;
 import javax.resource.spi.ResourceAdapterAssociation;
 import javax.security.auth.Subject;
 
+import org.seasar.extension.j2ee.JndiContextFactory;
 import org.seasar.jca.exception.SResourceException;
 import org.seasar.jca.outbound.ConnectionManagerImpl;
 import org.seasar.jms.connector.JMSManagedConnection;
 import org.seasar.jms.connector.ra.JMSResourceAdapter;
 import org.seasar.jms.connector.support.ConnectionRequestInfoImpl;
-import org.seasar.jndi.JndiContextFactory;
 
 /**
  * @author koichik
@@ -47,11 +47,16 @@ public abstract class AbstractManagedConnectionFactory implements ManagedConnect
         ResourceAdapterAssociation {
     protected PrintWriter out;
     protected JMSResourceAdapter ra;
-    protected Hashtable<?, ?> environment = JndiContextFactory.ENVIRONMENT;
+    protected Hashtable<String, Object> environment;
     protected String connectionFactoryName;
     protected String user;
     protected String password;
     protected ConnectionFactory cf;
+
+    public AbstractManagedConnectionFactory() {
+        environment = new Hashtable<String, Object>();
+        environment.put(InitialContext.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class.getName());
+    }
 
     public Object createConnectionFactory() throws ResourceException {
         return createConnectionFactory(new ConnectionManagerImpl());
@@ -116,7 +121,7 @@ public abstract class AbstractManagedConnectionFactory implements ManagedConnect
         return environment;
     }
 
-    public void setEnvironment(final Hashtable<?, ?> environment) {
+    public void setEnvironment(final Hashtable<String, Object> environment) {
         this.environment = environment;
     }
 
