@@ -3,7 +3,6 @@
 	"http://www.seasar.org/dtd/components23.dtd">
 <components namespace="jms-activemq-cf">
 	<include path="j2ee.dicon"/>
-	<include path="jndi.dicon"/>
 	<include path="ra.dicon"/>
 
 	<component name="mcfDeployer"
@@ -21,7 +20,9 @@
 	<component class="org.seasar.jms.core.destination.impl.QueueFactory">
 		<property name="name">"queue"</property>
 	</component>
-	
+
+	<component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+
 	<component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
 	<component class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
 </components>

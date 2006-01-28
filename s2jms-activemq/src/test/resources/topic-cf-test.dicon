@@ -3,7 +3,6 @@
 	"http://www.seasar.org/dtd/components23.dtd">
 <components namespace="jms-activemq-cf">
 	<include path="j2ee.dicon"/>
-	<include path="jndi.dicon"/>
 	<include path="ra.dicon"/>
 
 	<component name="mcfDeployer"
@@ -17,11 +16,13 @@
 	<component name="connectionFactory" class="javax.jms.TopicConnectionFactory">
 		mcfDeployer.createConnectionFactory()
 	</component>
-	
+
 	<component class="org.seasar.jms.core.destination.impl.TopicFactory">
 		<property name="name">"topic"</property>
 	</component>
-	
+
+	<component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+
 	<component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
 	<component class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
 </components>
