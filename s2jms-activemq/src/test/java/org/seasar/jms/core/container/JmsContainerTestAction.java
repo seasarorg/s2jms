@@ -18,6 +18,10 @@ package org.seasar.jms.core.container;
 import org.seasar.jms.core.annotation.JMSPayload;
 import org.seasar.jms.core.annotation.MessageHandler;
 
+/**
+ * @author y-komori
+ *
+ */
 public class JmsContainerTestAction {
     private int callCount;
     private String textPaylord;

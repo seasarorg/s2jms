@@ -20,6 +20,10 @@ import javax.transaction.TransactionManager;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.jms.core.MessageSender;
 
+/**
+ * @author y-komori
+ *
+ */
 public class JmsContainerTest extends S2TestCase {
     protected TransactionManager tm;
     protected MessageSender sender;
