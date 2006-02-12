@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container.impl;
+package org.seasar.jms.container.impl;
 
 import java.lang.reflect.Method;
 
@@ -26,10 +26,10 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.log.Logger;
+import org.seasar.jms.container.JmsContainer;
+import org.seasar.jms.container.MessageBinder;
+import org.seasar.jms.container.MessageBinderFactory;
 import org.seasar.jms.core.annotation.MessageHandler;
-import org.seasar.jms.core.container.JmsContainer;
-import org.seasar.jms.core.container.MessageBinder;
-import org.seasar.jms.core.container.MessageBinderFactory;
 import org.seasar.jms.core.exception.NotSupportedMessageRuntimeException;
 
 /**

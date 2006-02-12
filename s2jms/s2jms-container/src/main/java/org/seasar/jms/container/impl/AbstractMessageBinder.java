@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container.impl;
+package org.seasar.jms.container.impl;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -21,7 +21,7 @@ import javax.jms.Message;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.jms.core.container.MessageBinder;
+import org.seasar.jms.container.MessageBinder;
 
 public abstract class AbstractMessageBinder implements MessageBinder {
     private static final String JMS_PREFIX = "JMS";
@@ -95,7 +95,7 @@ public abstract class AbstractMessageBinder implements MessageBinder {
                 headerValue = message.getJMSType();
             }
         } catch (JMSException ex) {
-            // TODO —áŠOˆ—
+            // TODO ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
         }
 
         return headerValue;

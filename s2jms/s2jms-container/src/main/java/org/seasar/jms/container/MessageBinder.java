@@ -13,14 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container;
+package org.seasar.jms.container;
 
-import javax.jms.MessageListener;
+import javax.jms.Message;
 
 /**
  * @author y-komori
  *
  */
-public interface JmsContainer extends MessageListener{
-    public void setMessageHandler(Object messageHandler);
+public interface MessageBinder {
+    public void bindMessage(Object target, Message message);
 }

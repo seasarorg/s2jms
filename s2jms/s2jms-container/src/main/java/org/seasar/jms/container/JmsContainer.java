@@ -13,24 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container.impl;
+package org.seasar.jms.container;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
+import javax.jms.MessageListener;
 
 /**
  * @author y-komori
  *
  */
-public class ObjectMessageBinder extends AnnotationMessageBinder {
-    @Override
-    protected Object getPayload(Message message) throws JMSException {
-        Object payload = null;
-        if (message instanceof ObjectMessage) {
-            ObjectMessage objectMessage = (ObjectMessage) message;
-            payload = objectMessage.getObject();
-        }
-        return payload;
-    }
+public interface JmsContainer extends MessageListener{
+    public void setMessageHandler(Object messageHandler);
 }

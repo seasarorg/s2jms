@@ -13,14 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container;
+package org.seasar.jms.container.impl;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 
-/**
- * @author y-komori
- *
- */
-public interface MessageBinder {
-    public void bindMessage(Object target, Message message);
+public class BytesMessageBinder extends AnnotationMessageBinder {
+
+    @Override
+    protected Object getPayload(Message message) throws JMSException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

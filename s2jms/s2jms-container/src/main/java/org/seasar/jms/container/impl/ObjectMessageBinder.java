@@ -13,33 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container.impl;
+package org.seasar.jms.container.impl;
 
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.Message;
-
-import org.seasar.framework.beans.PropertyDesc;
+import javax.jms.ObjectMessage;
 
 /**
  * @author y-komori
  *
  */
-public class MapMessageBinder extends AbstractMessageBinder {
-
+public class ObjectMessageBinder extends AnnotationMessageBinder {
     @Override
-    protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
-            Message message) throws JMSException {
-        boolean hasBound = false;
-        
-        if (message instanceof MapMessage) {
-            MapMessage mapMessage = (MapMessage) message;
-
-            if (mapMessage.itemExists(propertyName)) {
-                setValue(pd, target, mapMessage.getObject(propertyName));
-                hasBound = true;
-            }
+    protected Object getPayload(Message message) throws JMSException {
+        Object payload = null;
+        if (message instanceof ObjectMessage) {
+            ObjectMessage objectMessage = (ObjectMessage) message;
+            payload = objectMessage.getObject();
         }
-        return hasBound;
+        return payload;
     }
 }

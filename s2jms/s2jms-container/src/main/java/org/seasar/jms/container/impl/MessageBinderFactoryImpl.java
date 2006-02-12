@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.core.container.impl;
+package org.seasar.jms.container.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +24,8 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
-import org.seasar.jms.core.container.MessageBinder;
-import org.seasar.jms.core.container.MessageBinderFactory;
+import org.seasar.jms.container.MessageBinder;
+import org.seasar.jms.container.MessageBinderFactory;
 
 /**
  * @author y-komori
