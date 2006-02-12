@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components namespace="jms-activemq-cf">
+	<include path="j2ee.dicon"/>
+	<include path="jms-activemq-ra.dicon"/>
+
+	<component
+		class="org.seasar.jca.deploy.impl.MessageEndpointDeployer"
+	>
+		<property name="activationSpecClassName">"org.activemq.ra.ActiveMQActivationSpec"</property>
+		<initMethod name="setProperty">
+			<arg>"destination"</arg>
+			<arg>"foo"</arg>
+		</initMethod>
+		<initMethod name="setProperty">
+			<arg>"destinationType"</arg>
+			<arg>"javax.jms.Queue"</arg>
+		</initMethod>
+		<initMethod name="activate"/>
+		<destroyMethod name="deactivate"/>
+	</component>
+
+	<component name="mcfDeployer"
+		class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer"
+	>
+		<property name="managedConnectionFactoryClass">
+			"org.activemq.ra.ActiveMQManagedConnectionFactory"
+		</property>
+	</component>
+
+	<component name="connectionFactory" class="javax.jms.ConnectionFactory">
+		mcfDeployer.createConnectionFactory()
+	</component>
+	
+	<component
+		class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"
+	/>
+
+	<component class="org.seasar.jms.core.destination.impl.QueueFactory">
+		<property name="name">"foo"</property>
+	</component>
+
+	<component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+
+	<component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
+	
+	<component name="testAction" class="org.seasar.jms.core.container.JmsContainerTestAction" />
+	<component class="org.seasar.jms.core.container.impl.JmsContainerImpl">
+		<property name="messageHandler">testAction</property>
+	</component>
+	
+</components>
