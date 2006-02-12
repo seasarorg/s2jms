@@ -45,8 +45,8 @@
 
 	<component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
 	
-	<component name="testAction" class="org.seasar.jms.core.container.JmsContainerTestAction" />
-	<component class="org.seasar.jms.core.container.impl.JmsContainerImpl">
+	<component name="testAction" class="org.seasar.jms.container.JmsContainerTestAction" />
+	<component class="org.seasar.jms.container.impl.JmsContainerImpl">
 		<property name="messageHandler">testAction</property>
 	</component>
 	
