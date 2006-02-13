@@ -21,7 +21,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.jms.core.annotation.JMSPayload;
+import org.seasar.jms.container.annotation.JMSPayload;
 
 /**
  * @author y-komori

@@ -29,7 +29,7 @@ import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.JmsContainer;
 import org.seasar.jms.container.MessageBinder;
 import org.seasar.jms.container.MessageBinderFactory;
-import org.seasar.jms.core.annotation.MessageHandler;
+import org.seasar.jms.container.annotation.MessageHandler;
 import org.seasar.jms.core.exception.NotSupportedMessageRuntimeException;
 
 /**
