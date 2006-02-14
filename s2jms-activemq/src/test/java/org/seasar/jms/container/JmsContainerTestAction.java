@@ -15,8 +15,9 @@
  */
 package org.seasar.jms.container;
 
-import org.seasar.jms.core.annotation.JMSPayload;
-import org.seasar.jms.core.annotation.MessageHandler;
+import org.seasar.jms.container.annotation.JMSPayload;
+import org.seasar.jms.container.annotation.MessageHandler;
+
 
 /**
  * @author y-komori
