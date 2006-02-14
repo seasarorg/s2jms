@@ -13,24 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.activemq;
+package org.seasar.jms.core;
 
 /**
  * <p>
- * ActiveMQ ‚Ì XAConnectionFactory ‚ğg‚Á‚½ƒeƒXƒgD
+ * ActiveMQ ï¿½ï¿½ QueueConnectionFactory ï¿½ï¿½gï¿½Bï¿½ï¿½eï¿½Xï¿½gï¿½D
  * </p>
  * 
  * @author koichik
  */
-public class XAConnectionFactoryTest extends AbstractTestCase {
-    public XAConnectionFactoryTest(String name) {
+public class QueueConnectionFactoryTest extends AbstractTestCase {
+    public QueueConnectionFactoryTest(String name) {
         super(name);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include("xacf-test.dicon");
+        include("queue-cf-test.dicon");
         super.setUp();
     }
 
