@@ -15,14 +15,23 @@
  */
 package org.seasar.jms.container.impl;
 
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
+/**
+ * @author Kenichiro Murata
+ * 
+ */
 public class BytesMessageBinder extends AnnotationMessageBinder {
 
     @Override
     protected Object getPayload(Message message) throws JMSException {
-        // TODO Auto-generated method stub
-        return null;
+        byte[] payload = new byte[0];
+        if (message instanceof BytesMessage) {
+            BytesMessage bytesMessage = (BytesMessage) message;
+            bytesMessage.readBytes(payload);
+        }
+        return payload;
     }
 }
