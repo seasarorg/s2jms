@@ -15,32 +15,26 @@
  */
 package org.seasar.jms.container.impl;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.transaction.TransactionManager;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.easymock.MockControl;
+import org.seasar.jca.unit.EasyMockTestCase;
 
 /**
  * @author Kenichiro Murata
  * 
  */
-public class TextMessageBinderTest extends S2TestCase {
-
-    private static final String PATH = "s2jms-container.dicon";
-
-    private TransactionManager tm;
-    private ConnectionFactory cf;
-
+public class TextMessageBinderTest extends EasyMockTestCase {
     private TextMessageBinder binder;
+    private TextMessage message;
+    private MockControl messageControl;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include(PATH);
-        include("jms-activemq-outbound.dicon");
+        binder = new TextMessageBinder();
+        messageControl = createStrictControl(TextMessage.class);
+        message = (TextMessage) messageControl.getMock();
     }
 
     public TextMessageBinderTest(String name) {
@@ -48,61 +42,32 @@ public class TextMessageBinderTest extends S2TestCase {
     }
 
     public void testGetPeyLoad() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                TextMessage message = session.createTextMessage("TEST");
-
-                assertEquals("TEST", (String) binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
+                assertEquals("1", "TEST", binder.getPayload(message));
             }
-        } finally {
-            tm.commit();
-        }
-    }
 
-    public void testGetPeyLoadBlank() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                TextMessage message = session.createTextMessage();
-
-                assertNull(binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
+            @Override
+            public void verify() throws Exception {
+                message.getText();
+                messageControl.setReturnValue("TEST");
             }
-        } finally {
-            tm.commit();
-        }
+        }.doTest();
     }
 
     public void testGetPeyLoadNull() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                TextMessage message = session.createTextMessage(null);
-
-                assertNull(binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
+                assertNull("1", binder.getPayload(message));
             }
-        } finally {
-            tm.commit();
-        }
-    }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { TextMessageBinderTest.class.getName() });
+            @Override
+            public void verify() throws Exception {
+                message.getText();
+                messageControl.setReturnValue(null);
+            }
+        }.doTest();
     }
-
 }
