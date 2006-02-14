@@ -27,7 +27,7 @@ import org.seasar.jms.container.annotation.JMSPayload;
  * @author y-komori
  * 
  */
-public abstract class AnnotationMessageBinder<MSGTYPE extends Message> extends AbstractMessageBinder {
+public abstract class AnnotationMessageBinder extends AbstractMessageBinder {
     @Override
     protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
             Message message) throws JMSException {

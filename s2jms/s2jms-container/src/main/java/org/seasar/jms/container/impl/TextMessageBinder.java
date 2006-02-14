@@ -33,4 +33,8 @@ public class TextMessageBinder extends AnnotationMessageBinder {
         }
         return payload;
     }
+
+    public Class<? extends Message> getTargetMessageClass() {
+        return TextMessage.class;
+    }
 }

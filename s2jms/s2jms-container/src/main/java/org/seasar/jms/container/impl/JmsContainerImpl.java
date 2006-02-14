@@ -18,39 +18,48 @@ package org.seasar.jms.container.impl;
 import java.lang.reflect.Method;
 
 import javax.jms.Message;
+import javax.transaction.TransactionManager;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.JmsContainer;
 import org.seasar.jms.container.MessageBinder;
 import org.seasar.jms.container.MessageBinderFactory;
 import org.seasar.jms.container.annotation.MessageHandler;
-import org.seasar.jms.core.exception.NotSupportedMessageRuntimeException;
+import org.seasar.jms.container.exception.MessageHandlerNotFoundRuntimeException;
+import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 
 /**
  * @author y-komori
  * 
  */
-@Component(instance = InstanceType.PROTOTYPE)
+@Component(instance = InstanceType.SINGLETON)
 public class JmsContainerImpl implements JmsContainer {
     private static final String DEFAULT_MESSAGE_HANDLER_NAME = "onMessage";
-    private Object messageHandler;
+
     private MessageBinderFactory messageBinderFactory = new MessageBinderFactoryImpl();
+    private TransactionManager transactionManager;
     private static Logger logger = Logger.getLogger(JmsContainerImpl.class);
+
+    private Object messageHandler;
+    private Method messageHandlerMethod;
 
     public void onMessage(Message message) {
         logger.debug("[S2JMS-Container] onMessage called.");
 
-        Method messageHandlerMethod = findMessageHandler(messageHandler.getClass());
-        if (messageHandlerMethod != null) {
-            bindMessage(message);
-            invokeMessageaHandler(messageHandlerMethod.getName());
-        }
+        bindMessage(message);
+        invokeMessageaHandler(messageHandlerMethod.getName());
+    }
+
+    @InitMethod
+    public void initialize() {
+        messageHandlerMethod = findMessageHandler(messageHandler.getClass());
     }
 
     private void bindMessage(Message message) {
@@ -58,14 +67,28 @@ public class JmsContainerImpl implements JmsContainer {
         if (binder != null) {
             binder.bindMessage(messageHandler, message);
         } else {
-            throw new NotSupportedMessageRuntimeException("EJMS2001", message);
+            throw new NotSupportedMessageRuntimeException("EJMS2002", message);
         }
     }
 
     private void invokeMessageaHandler(String methodName) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(messageHandler.getClass());
         if (beanDesc != null) {
-            beanDesc.invoke(messageHandler, methodName, null);
+            if (logger.isDebugEnabled()) {
+                logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - "
+                        + messageHandler.getClass().getName() + "#" + methodName);
+            }
+
+            try {
+                beanDesc.invoke(messageHandler, methodName, null);
+            } catch (Exception ex) {
+                logger.error("[S2JMS-Container] メッセージハンドラ内で例外が発生しました.", ex);
+                rollBack();
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - "
+                        + messageHandler.getClass().getName() + "#" + methodName);
+            }
         }
     }
 
@@ -85,11 +108,22 @@ public class JmsContainerImpl implements JmsContainer {
                 messageHandlerMethod = clazz.getDeclaredMethod(DEFAULT_MESSAGE_HANDLER_NAME,
                         (Class[]) null);
             } catch (NoSuchMethodException e) {
-                // Don't care.
+                throw new MessageHandlerNotFoundRuntimeException(clazz.getName());
             }
         }
 
         return messageHandlerMethod;
+    }
+
+    private void rollBack() {
+        try {
+            if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {
+                logger.info("[S2JMS-Container] トランザクションをロールバックします.");
+                transactionManager.setRollbackOnly();
+            }
+        } catch (Exception ex) {
+            logger.error("[S2JMS-Container] トランザクションのロールバック中に例外が発生しました.", ex);
+        }
     }
 
     @Binding(bindingType = BindingType.MUST)

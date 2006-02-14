@@ -13,29 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.exception;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author Kenichiro Murata
- * 
+ * @author y-komori
+ *
  */
-public class BytesMessageBinder extends AnnotationMessageBinder {
+public class MessageHandlerNotFoundRuntimeException extends SRuntimeException {
+    private static final long serialVersionUID = 1L;
 
-    @Override
-    protected Object getPayload(Message message) throws JMSException {
-        byte[] payload = new byte[0];
-        if (message instanceof BytesMessage) {
-            BytesMessage bytesMessage = (BytesMessage) message;
-            bytesMessage.readBytes(payload);
-        }
-        return payload;
-    }
-
-    public Class<? extends Message> getTargetMessageClass() {
-        return BytesMessage.class;
+    public MessageHandlerNotFoundRuntimeException(String className) {
+        super("EJMS2003", new String[]{className});
     }
 }

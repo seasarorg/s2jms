@@ -22,17 +22,18 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jms.container.MessageBinder;
+import org.seasar.jms.core.exception.SJMSRuntimeException;
 
 public abstract class AbstractMessageBinder implements MessageBinder {
     private static final String JMS_PREFIX = "JMS";
-    private static final String JMS_DELIVERY_MODE = "JMSDeliveryMode";
-    private static final String JMS_MESSAGE_ID = "JMSMessageID";
-    private static final String JMS_TIMESTAMP = "JMSTimestamp";
-    private static final String JMS_EXPIRATION = "JMSExpiration";
-    private static final String JMS_REDELIVERED = "JMSRedelivered";
-    private static final String JMS_PRIORITY = "JMSPriority";
-    private static final String JMS_CORRELATION_ID = "JMSCorrelationID";
-    private static final String JMS_TYPE = "JMSType";
+    private static final String JMS_DELIVERY_MODE = "DeliveryMode";
+    private static final String JMS_MESSAGE_ID = "MessageID";
+    private static final String JMS_TIMESTAMP = "Timestamp";
+    private static final String JMS_EXPIRATION = "Expiration";
+    private static final String JMS_REDELIVERED = "Redelivered";
+    private static final String JMS_PRIORITY = "Priority";
+    private static final String JMS_CORRELATION_ID = "CorrelationID";
+    private static final String JMS_TYPE = "Type";
 
     public void bindMessage(Object target, Message message) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(target.getClass());
@@ -60,8 +61,8 @@ public abstract class AbstractMessageBinder implements MessageBinder {
                             setValue(pd, target, headerValue);
                         }
                     }
-                } catch (JMSException e) {
-                    // TODO: handle exception
+                } catch (JMSException ex) {
+                    throw new SJMSRuntimeException("EJMS2001",ex);
                 }
             }
         }
@@ -95,7 +96,7 @@ public abstract class AbstractMessageBinder implements MessageBinder {
                 headerValue = message.getJMSType();
             }
         } catch (JMSException ex) {
-            // TODO ��O����
+            throw new SJMSRuntimeException("EJMS2001",ex);
         }
 
         return headerValue;

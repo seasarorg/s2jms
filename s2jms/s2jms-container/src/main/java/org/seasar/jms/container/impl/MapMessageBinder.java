@@ -23,7 +23,7 @@ import org.seasar.framework.beans.PropertyDesc;
 
 /**
  * @author y-komori
- *
+ * 
  */
 public class MapMessageBinder extends AbstractMessageBinder {
 
@@ -31,7 +31,7 @@ public class MapMessageBinder extends AbstractMessageBinder {
     protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
             Message message) throws JMSException {
         boolean hasBound = false;
-        
+
         if (message instanceof MapMessage) {
             MapMessage mapMessage = (MapMessage) message;
 
@@ -41,5 +41,9 @@ public class MapMessageBinder extends AbstractMessageBinder {
             }
         }
         return hasBound;
+    }
+
+    public Class<? extends Message> getTargetMessageClass() {
+        return MapMessage.class;
     }
 }

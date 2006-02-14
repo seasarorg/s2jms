@@ -15,14 +15,10 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.jms.BytesMessage;
-import javax.jms.MapMessage;
 import javax.jms.Message;
-import javax.jms.ObjectMessage;
-import javax.jms.TextMessage;
 
 import org.seasar.jms.container.MessageBinder;
 import org.seasar.jms.container.MessageBinderFactory;
@@ -32,31 +28,32 @@ import org.seasar.jms.container.MessageBinderFactory;
  * 
  */
 public class MessageBinderFactoryImpl implements MessageBinderFactory {
-    private final Map<Class, MessageBinder> messageBinderMap = new HashMap<Class, MessageBinder>();
+    private final List<MessageBinder> messageBinderList = new ArrayList<MessageBinder>();
+    private int messageBinderNum;
 
     public MessageBinderFactoryImpl() {
-        addMessageBinder(MapMessage.class, new MapMessageBinder());
-        addMessageBinder(TextMessage.class, new TextMessageBinder());
-        addMessageBinder(ObjectMessage.class, new ObjectMessageBinder());
-        addMessageBinder(BytesMessage.class, new BytesMessageBinder());
+        addMessageBinder(new MapMessageBinder());
+        addMessageBinder(new TextMessageBinder());
+        addMessageBinder(new ObjectMessageBinder());
+        addMessageBinder(new BytesMessageBinder());
     }
 
-    public void addMessageBinder(Class clazz, MessageBinder messageBinder) {
-        if ((clazz != null) && (messageBinder != null)) {
-            messageBinderMap.put(clazz, messageBinder);
-        }
+    public void addMessageBinder(MessageBinder messageBinder) {
+        messageBinderList.add(messageBinder);
+        messageBinderNum = messageBinderList.size();
     }
 
     public MessageBinder getMessageBinder(Message message) {
-        MessageBinder messageBinder = null;
-        Class[] interfaces = message.getClass().getInterfaces();
-        for (Class msgInterface : interfaces) {
-            messageBinder = messageBinderMap.get(msgInterface);
-            if (messageBinder != null)
-            {
-                break;
+        MessageBinder retMessageBinder = null;
+        
+        for (int index = 0; index < messageBinderNum; index++) {
+            MessageBinder messageBinder = messageBinderList.get(index);
+            
+            Class<? extends Message> messageClass = messageBinder.getTargetMessageClass();
+            if (messageClass.isAssignableFrom(message.getClass())) {
+                retMessageBinder = messageBinder;
             }
         }
-        return messageBinder;
+        return retMessageBinder;
     }
 }

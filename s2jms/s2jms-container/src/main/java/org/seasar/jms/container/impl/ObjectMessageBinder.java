@@ -21,7 +21,7 @@ import javax.jms.ObjectMessage;
 
 /**
  * @author y-komori
- *
+ * 
  */
 public class ObjectMessageBinder extends AnnotationMessageBinder {
     @Override
@@ -32,5 +32,9 @@ public class ObjectMessageBinder extends AnnotationMessageBinder {
             payload = objectMessage.getObject();
         }
         return payload;
+    }
+
+    public Class<? extends Message> getTargetMessageClass() {
+        return ObjectMessage.class;
     }
 }

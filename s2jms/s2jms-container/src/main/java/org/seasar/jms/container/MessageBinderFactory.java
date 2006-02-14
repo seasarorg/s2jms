@@ -23,7 +23,7 @@ import javax.jms.Message;
  */
 public interface MessageBinderFactory {
 
-    public void addMessageBinder(Class clazz, MessageBinder messageBinder);
+    public void addMessageBinder(MessageBinder messageBinder);
 
     public MessageBinder getMessageBinder(Message message);
 }
