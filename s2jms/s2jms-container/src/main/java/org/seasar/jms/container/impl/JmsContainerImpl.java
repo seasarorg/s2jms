@@ -75,18 +75,18 @@ public class JmsContainerImpl implements JmsContainer {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(messageHandler.getClass());
         if (beanDesc != null) {
             if (logger.isDebugEnabled()) {
-                logger.debug("[S2JMS-Container] ƒƒbƒZ[ƒWƒnƒ“ƒhƒ‰‚ğŒÄ‚Ño‚µ‚Ü‚·. - "
+                logger.debug("[S2JMS-Container] ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©ã‚’å‘¼ã³å‡ºã—ã¾ã™. - "
                         + messageHandler.getClass().getName() + "#" + methodName);
             }
 
             try {
                 beanDesc.invoke(messageHandler, methodName, null);
             } catch (Exception ex) {
-                logger.error("[S2JMS-Container] ƒƒbƒZ[ƒWƒnƒ“ƒhƒ‰“à‚Å—áŠO‚ª”­¶‚µ‚Ü‚µ‚½.", ex);
+                logger.error("[S2JMS-Container] ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©å†…ã§ä¾‹å¤–ãŒç™ºç”Ÿã—ã¾ã—ãŸ.", ex);
                 rollBack();
             }
             if (logger.isDebugEnabled()) {
-                logger.debug("[S2JMS-Container] ƒƒbƒZ[ƒWƒnƒ“ƒhƒ‰‚ÌŒÄ‚Ño‚µ‚ªI—¹‚µ‚Ü‚µ‚½. - "
+                logger.debug("[S2JMS-Container] ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©ã®å‘¼ã³å‡ºã—ãŒçµ‚äº†ã—ã¾ã—ãŸ. - "
                         + messageHandler.getClass().getName() + "#" + methodName);
             }
         }
@@ -118,11 +118,11 @@ public class JmsContainerImpl implements JmsContainer {
     private void rollBack() {
         try {
             if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {
-                logger.info("[S2JMS-Container] ƒgƒ‰ƒ“ƒUƒNƒVƒ‡ƒ“‚ğƒ[ƒ‹ƒoƒbƒN‚µ‚Ü‚·.");
+                logger.info("[S2JMS-Container] ãƒˆãƒ©ãƒ³ã‚¶ã‚¯ã‚·ãƒ§ãƒ³ã‚’ãƒ­ãƒ¼ãƒ«ãƒãƒƒã‚¯ã—ã¾ã™.");
                 transactionManager.setRollbackOnly();
             }
         } catch (Exception ex) {
-            logger.error("[S2JMS-Container] ƒgƒ‰ƒ“ƒUƒNƒVƒ‡ƒ“‚Ìƒ[ƒ‹ƒoƒbƒN’†‚É—áŠO‚ª”­¶‚µ‚Ü‚µ‚½.", ex);
+            logger.error("[S2JMS-Container] ãƒˆãƒ©ãƒ³ã‚¶ã‚¯ã‚·ãƒ§ãƒ³ã®ãƒ­ãƒ¼ãƒ«ãƒãƒƒã‚¯ä¸­ã«ä¾‹å¤–ãŒç™ºç”Ÿã—ã¾ã—ãŸ.", ex);
         }
     }
 
