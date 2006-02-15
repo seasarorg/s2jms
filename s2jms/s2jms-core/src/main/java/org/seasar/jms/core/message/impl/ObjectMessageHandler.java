@@ -15,6 +15,8 @@
  */
 package org.seasar.jms.core.message.impl;
 
+import java.io.Serializable;
+
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 
@@ -25,12 +27,12 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
-public class ObjectMessageHandler extends AbstractMessageHandler<ObjectMessage, Object> {
+public class ObjectMessageHandler extends AbstractMessageHandler<ObjectMessage, Serializable> {
     public ObjectMessageHandler() {
     }
 
     @Override
-    public Object getBody() throws JMSException {
+    public Serializable getPayload() throws JMSException {
         return getMessage().getObject();
     }
 

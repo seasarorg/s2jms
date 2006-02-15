@@ -18,7 +18,6 @@ package org.seasar.jms.core.impl;
 import java.io.Serializable;
 import java.util.Map;
 
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -27,6 +26,7 @@ import javax.jms.Session;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.jms.core.MessageSender;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.message.MessageFactory;
@@ -41,7 +41,6 @@ import org.seasar.jms.core.session.SessionHandler;
  * @author koichik
  */
 public class MessageSenderImpl implements MessageSender {
-    protected ConnectionFactory connectionFactory;
     protected SessionFactory sessionFactory;
     protected DestinationFactory destinationFactory;
     protected MessageFactory messageFactory;
@@ -56,11 +55,6 @@ public class MessageSenderImpl implements MessageSender {
 
     public int getDeliveryMode() {
         return deliveryMode;
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setConnectionFactory(final ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
     }
 
     @Binding(bindingType = BindingType.MUST)
@@ -104,6 +98,9 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     public void send() {
+        if (messageFactory == null) {
+            throw new EmptyRuntimeException("messageFactory");
+        }
         send(messageFactory);
     }
 
@@ -124,7 +121,7 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     public void send(final MessageFactory messageFactory) {
-        sessionFactory.createSession(false, new SessionHandler() {
+        sessionFactory.operateSession(false, new SessionHandler() {
             public void handleSession(Session session) throws JMSException {
                 final MessageProducer producer = createMessageProducer(session);
                 final Message message = messageFactory.createMessage(session);

@@ -26,6 +26,9 @@ import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.session.SessionFactory;
 import org.seasar.jms.core.session.SessionHandler;
 
+/**
+ * @author koichik
+ */
 public class SessionFactoryImpl implements SessionFactory {
     protected ConnectionFactory connectionFactory;
     protected boolean transacted = true;
@@ -49,7 +52,7 @@ public class SessionFactoryImpl implements SessionFactory {
         this.acknowledgeMode = acknowledgeMode;
     }
 
-    public void createSession(final boolean startConnection, final SessionHandler handler) {
+    public void operateSession(final boolean startConnection, final SessionHandler handler) {
         try {
             final Connection connection = connectionFactory.createConnection();
             try {

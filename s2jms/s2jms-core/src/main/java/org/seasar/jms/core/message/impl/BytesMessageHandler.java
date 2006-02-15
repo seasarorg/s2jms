@@ -30,7 +30,7 @@ public class BytesMessageHandler extends AbstractMessageHandler<BytesMessage, by
     }
 
     @Override
-    public byte[] getBody() throws JMSException {
+    public byte[] getPayload() throws JMSException {
         final byte[] bytes = new byte[(int) getMessage().getBodyLength()];
         getMessage().readBytes(bytes);
         return bytes;

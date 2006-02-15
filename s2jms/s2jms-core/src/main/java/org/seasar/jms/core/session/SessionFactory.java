@@ -15,6 +15,9 @@
  */
 package org.seasar.jms.core.session;
 
+/**
+ * @author koichik
+ */
 public interface SessionFactory {
-    void createSession(boolean startConnection, SessionHandler handler);
+    void operateSession(boolean startConnection, SessionHandler handler);
 }

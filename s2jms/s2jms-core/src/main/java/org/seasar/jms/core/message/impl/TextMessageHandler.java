@@ -30,7 +30,7 @@ public class TextMessageHandler extends AbstractMessageHandler<TextMessage, Stri
     }
 
     @Override
-    public String getBody() throws JMSException {
+    public String getPayload() throws JMSException {
         return getMessage().getText();
     }
 

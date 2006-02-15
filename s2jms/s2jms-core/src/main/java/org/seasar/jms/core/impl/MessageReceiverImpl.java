@@ -31,6 +31,7 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.jms.core.MessageReceiver;
 import org.seasar.jms.core.destination.DestinationFactory;
+import org.seasar.jms.core.exception.SIllegalStateException;
 import org.seasar.jms.core.message.MessageHandler;
 import org.seasar.jms.core.message.impl.BytesMessageHandler;
 import org.seasar.jms.core.message.impl.MapMessageHandler;
@@ -105,7 +106,7 @@ public class MessageReceiverImpl implements MessageReceiver {
     }
 
     public Serializable receiveObject() {
-        return (Serializable) receive(new ObjectMessageHandler());
+        return receive(new ObjectMessageHandler());
     }
 
     public Map<String, Object> receiveMap() {
@@ -119,7 +120,7 @@ public class MessageReceiverImpl implements MessageReceiver {
 
     public Message receive() {
         final SessionHandlerImpl sessionHandler = new SessionHandlerImpl();
-        sessionFactory.createSession(true, sessionHandler);
+        sessionFactory.operateSession(true, sessionHandler);
         return sessionHandler.getMessage();
     }
 
@@ -130,10 +131,10 @@ public class MessageReceiverImpl implements MessageReceiver {
         }
 
         if (!(destination instanceof Topic)) {
-            throw new IllegalStateException("destination is not topic.");
+            throw new SIllegalStateException("EJMS1000");
         }
         if (subscriptionName == null) {
-            throw new IllegalStateException("subscriptionName is not specified.");
+            throw new SIllegalStateException("EJMS1001");
         }
         return session.createDurableSubscriber((Topic) destination, subscriptionName,
                 messageSelector, noLocal);

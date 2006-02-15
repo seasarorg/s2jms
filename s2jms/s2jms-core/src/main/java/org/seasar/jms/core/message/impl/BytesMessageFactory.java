@@ -53,7 +53,7 @@ public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
     }
 
     @Override
-    protected void setupBody(final BytesMessage message) throws JMSException {
+    protected void setupPayload(final BytesMessage message) throws JMSException {
         message.writeBytes(bytes);
     }
 }

@@ -18,6 +18,9 @@ package org.seasar.jms.core.session;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
+/**
+ * @author koichik
+ */
 public interface SessionHandler {
     void handleSession(Session session) throws JMSException;
 }

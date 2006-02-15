@@ -20,8 +20,8 @@ import javax.jms.Message;
 /**
  * @author koichik
  */
-public interface MessageHandler<MSGTYPE extends Message, T extends Object> {
+public interface MessageHandler<MSGTYPE extends Message, PAYLOADTYPE> {
     Class<MSGTYPE> getMessageType();
 
-    T handleMessage(MSGTYPE message);
+    PAYLOADTYPE handleMessage(MSGTYPE message);
 }

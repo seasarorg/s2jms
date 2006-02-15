@@ -44,7 +44,11 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
         this.textProvider = textProvider;
     }
 
-    @Binding(bindingType = BindingType.MAY)
+    public TextProvider getTextProvider() {
+        return textProvider;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
     public void setTextProvider(final TextProvider textProvider) {
         this.textProvider = textProvider;
     }
@@ -55,7 +59,7 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
     }
 
     @Override
-    protected void setupBody(final TextMessage message) throws JMSException {
+    protected void setupPayload(final TextMessage message) throws JMSException {
         message.setText(textProvider.getText());
     }
 }

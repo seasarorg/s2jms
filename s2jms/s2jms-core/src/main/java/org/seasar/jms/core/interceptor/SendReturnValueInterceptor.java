@@ -16,68 +16,66 @@
 package org.seasar.jms.core.interceptor;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.annotation.tiger.Binding;
-import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.framework.container.annotation.tiger.InitMethod;
-import org.seasar.framework.util.MethodUtil;
-import org.seasar.jms.core.MessageSender;
+import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.exception.SIllegalStateException;
+import org.seasar.jca.util.ReflectionUtil;
 import org.seasar.jms.core.message.MessageFactory;
+import org.seasar.jms.core.message.impl.BytesMessageFactory;
+import org.seasar.jms.core.message.impl.MapMessageFactory;
+import org.seasar.jms.core.message.impl.ObjectMessageFactory;
+import org.seasar.jms.core.message.impl.TextMessageFactory;
 
-public class SendReturnValueInterceptor implements MethodInterceptor {
-    protected S2Container container;
-    protected String messageSenderName;
-    protected ComponentDef componentDef;
+/**
+ * @author koichik
+ */
+@Component
+public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
+    protected Map<Class<?>, Class<? extends MessageFactory>> factories = new LinkedHashMap<Class<?>, Class<? extends MessageFactory>>();
 
     public SendReturnValueInterceptor() {
+        factories.put(String.class, TextMessageFactory.class);
+        factories.put(byte[].class, BytesMessageFactory.class);
+        factories.put(Map.class, MapMessageFactory.class);
+        factories.put(Serializable.class, ObjectMessageFactory.class);
     }
 
-    @Binding(bindingType = BindingType.MUST)
-    public void setContainer(final S2Container container) {
-        this.container = container;
+    public void clearFactories() {
+        factories.clear();
     }
 
-    @Binding(bindingType = BindingType.MAY)
-    public void setMessageSenderName(final String messageSenderName) {
-        this.messageSenderName = messageSenderName;
+    public void addMessageFactory(final Class<?> payloadClass,
+            final Class<? extends MessageFactory> messageFactoryClass) {
+        factories.put(payloadClass, messageFactoryClass);
     }
 
-    @InitMethod
-    public void initialize() {
-        componentDef = container.getComponentDef(messageSenderName == null ? MessageFactory.class
-                : messageSenderName);
-    }
-
-    @SuppressWarnings("unchecked")
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        final Object result = proceed(invocation);
-        if (result instanceof String) {
-            getMessageSender().send(String.class.cast(result));
-        } else if (result instanceof byte[]) {
-            getMessageSender().send(byte[].class.cast(result));
-        } else if (result instanceof Map) {
-            getMessageSender().send((Map<String, Object>) result);
-        } else if (result instanceof Serializable) {
-            getMessageSender().send(Serializable.class.cast(result));
-        } else {
-            throw new IllegalStateException();
+        final Method method = invocation.getMethod();
+        final Class<?> returnType = method.getReturnType();
+        if (returnType == void.class) {
+            throw new SIllegalStateException("EJMS1002", new Object[] { method });
         }
+
+        final Object result = proceed(invocation);
+        getMessageSender().send(createMessageFactory(result, returnType));
         return result;
     }
 
-    protected Object proceed(final MethodInvocation invocation) throws Throwable {
-        if (MethodUtil.isAbstract(invocation.getMethod())) {
-            return null;
+    protected MessageFactory<?> createMessageFactory(final Object returnValue,
+            final Class<?> returnType) {
+        for (Class<?> payloadType : factories.keySet()) {
+            if (payloadType.isAssignableFrom(returnType)) {
+                final Class<? extends MessageFactory> factoryClass = factories.get(payloadType);
+                final Constructor<? extends MessageFactory> ctor = ReflectionUtil.getConstructor(
+                        factoryClass, payloadType);
+                return ReflectionUtil.newInstance(ctor, returnValue);
+            }
         }
-        return invocation.proceed();
-    }
-
-    protected MessageSender getMessageSender() {
-        return (MessageSender) componentDef.getComponent();
+        throw new SIllegalStateException("EJMS1003", new Object[] { returnType });
     }
 }

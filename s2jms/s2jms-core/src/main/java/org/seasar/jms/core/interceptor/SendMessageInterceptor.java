@@ -15,59 +15,17 @@
  */
 package org.seasar.jms.core.interceptor;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.annotation.tiger.Binding;
-import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
-import org.seasar.framework.container.annotation.tiger.InitMethod;
-import org.seasar.framework.util.MethodUtil;
-import org.seasar.jms.core.MessageSender;
 
 /**
  * @author koichik
  */
 @Component
-public class SendMessageInterceptor implements MethodInterceptor {
-    protected S2Container container;
-    protected String messageSenderName;
-    protected ComponentDef componentDef;
-
-    public SendMessageInterceptor() {
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setContainer(final S2Container container) {
-        this.container = container;
-    }
-
-    @Binding(bindingType = BindingType.MAY)
-    public void setMessageSenderName(final String messageSenderName) {
-        this.messageSenderName = messageSenderName;
-    }
-
-    @InitMethod
-    public void initialize() {
-        componentDef = container.getComponentDef(messageSenderName == null ? MessageSender.class
-                : messageSenderName);
-    }
-
+public class SendMessageInterceptor extends AbstractSendMessageInterceptor {
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         final Object result = proceed(invocation);
         getMessageSender().send();
         return result;
-    }
-
-    protected Object proceed(final MethodInvocation invocation) throws Throwable {
-        if (MethodUtil.isAbstract(invocation.getMethod())) {
-            return null;
-        }
-        return invocation.proceed();
-    }
-
-    protected MessageSender getMessageSender() {
-        return (MessageSender) componentDef.getComponent();
     }
 }

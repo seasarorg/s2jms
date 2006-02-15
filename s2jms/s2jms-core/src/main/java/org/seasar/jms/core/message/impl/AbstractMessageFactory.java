@@ -30,7 +30,8 @@ import org.seasar.jms.core.message.MessageFactory;
 /**
  * @author koichik
  */
-public abstract class AbstractMessageFactory<T extends Message> implements MessageFactory<T> {
+public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
+        MessageFactory<MSGTYPE> {
     protected String correlationId;
     protected byte[] correlationIdAsBytes;
     protected Map<String, Object> properties = new HashMap<String, Object>();
@@ -66,19 +67,19 @@ public abstract class AbstractMessageFactory<T extends Message> implements Messa
         properties.put(name, value);
     }
 
-    public T createMessage(final Session session) {
+    public MSGTYPE createMessage(final Session session) {
         try {
-            final T message = createMessageInstance(session);
+            final MSGTYPE message = createMessageInstance(session);
             setupHeader(message);
             setupProperties(message);
-            setupBody(message);
+            setupPayload(message);
             return message;
         } catch (final JMSException e) {
             throw new SJMSRuntimeException("EJMS0000", e);
         }
     }
 
-    protected abstract T createMessageInstance(final Session session) throws JMSException;
+    protected abstract MSGTYPE createMessageInstance(final Session session) throws JMSException;
 
     protected void setupHeader(final Message message) throws JMSException {
         if (correlationId != null) {
@@ -114,5 +115,5 @@ public abstract class AbstractMessageFactory<T extends Message> implements Messa
         }
     }
 
-    protected abstract void setupBody(T message) throws JMSException;
+    protected abstract void setupPayload(MSGTYPE message) throws JMSException;
 }

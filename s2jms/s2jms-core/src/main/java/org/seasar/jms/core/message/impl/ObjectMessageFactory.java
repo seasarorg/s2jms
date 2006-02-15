@@ -55,7 +55,7 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
     }
 
     @Override
-    protected void setupBody(final ObjectMessage message) throws JMSException {
+    protected void setupPayload(final ObjectMessage message) throws JMSException {
         message.setObject(object);
     }
 }

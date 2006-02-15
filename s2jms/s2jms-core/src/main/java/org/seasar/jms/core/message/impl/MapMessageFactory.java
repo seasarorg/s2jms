@@ -63,7 +63,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     }
 
     @Override
-    protected void setupBody(final MapMessage message) throws JMSException {
+    protected void setupPayload(final MapMessage message) throws JMSException {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             final String name = entry.getKey();
             final Object value = entry.getValue();

@@ -40,13 +40,13 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
     public T handleMessage(final MSGTYPE message) {
         try {
             this.message = message;
-            return getBody();
+            return getPayload();
         } catch (final JMSException e) {
             throw new SJMSRuntimeException("EJMS0000", e);
         }
     }
 
-    public abstract T getBody() throws JMSException;
+    public abstract T getPayload() throws JMSException;
 
     public MSGTYPE getMessage() {
         return message;
