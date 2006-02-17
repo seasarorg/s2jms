@@ -15,94 +15,101 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Session;
-import javax.transaction.TransactionManager;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.easymock.ArgumentsMatcher;
+import org.easymock.MockControl;
+import org.seasar.jca.unit.EasyMockTestCase;
 
 /**
  * @author Kenichiro Murata
  * 
  */
-public class BytesMessageBinderTest extends S2TestCase {
-
-    private static final String PATH = "s2jms-container.dicon";
-
-    private TransactionManager tm;
-    private ConnectionFactory cf;
+public class BytesMessageBinderTest extends EasyMockTestCase {
 
     private BytesMessageBinder binder;
+    private BytesMessage message;
+
+    private MockControl messageControl;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include(PATH);
-        include("jms-activemq-outbound.dicon");
+        binder = new BytesMessageBinder();
+        messageControl = createStrictControl(BytesMessage.class);
+        message = (BytesMessage) messageControl.getMock();
     }
 
     public BytesMessageBinderTest(String name) {
         super(name);
     }
 
-    public void testGetPeyLoad() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                BytesMessage message = session.createBytesMessage();
-                message.writeObject(new Integer(1));
-                message.reset();
-
-                FileOutputStream fos = new FileOutputStream("t.tmp");
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(new Integer(1));
-                FileInputStream fis = new FileInputStream("t.tmp");
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                byte[] except = new byte[0];
-                ois.read(except);
-
-                assertTrue(Arrays.equals(except, (byte[]) binder.getPayload(message)));
-
-                session.close();
-            } finally {
-                con.close();
+    public void testGetPayLoad() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
+                byte[] obj = new byte[] { 1, 2, 3, 4, 5 };
+                assertTrue(Arrays.equals(obj, (byte[]) binder.getPayload(message)));
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                byte[] obj = new byte[] { 1, 2, 3, 4, 5 };
+                message.getBodyLength();
+                messageControl.setReturnValue(obj.length);
+                message.readBytes(obj);
+                messageControl.setMatcher(new ArgumentsMatcher() {
+                    public boolean matches(Object[] expected, Object[] actual) {
+                        byte[] expectedBytes = (byte[]) expected[0];
+                        byte[] actualBytes = (byte[]) actual[0];
+
+                        if (expectedBytes.length != actualBytes.length) {
+                            return false;
+                        }
+                        System.arraycopy(expectedBytes, 0, actualBytes, 0, expectedBytes.length);
+                        return true;
+                    }
+
+                    public String toString(Object[] argument) {
+                        return super.toString();
+                    }
+                });
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadBlank() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                BytesMessage message = session.createBytesMessage();
-                message.reset();
-
+    public void testGetPayLoadNull() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 assertTrue(Arrays.equals(new byte[0], (byte[]) binder.getPayload(message)));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
-    }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { BytesMessageBinderTest.class.getName() });
-    }
+            @Override
+            public void verify() throws Exception {
+                byte[] obj = new byte[0];
+                message.getBodyLength();
+                messageControl.setReturnValue(obj.length);
+                message.readBytes(obj);
+                messageControl.setMatcher(new ArgumentsMatcher() {
+                    public boolean matches(Object[] expected, Object[] actual) {
+                        byte[] expectedBytes = (byte[]) expected[0];
+                        byte[] actualBytes = (byte[]) actual[0];
 
+                        if (expectedBytes.length != actualBytes.length) {
+                            return false;
+                        }
+                        System.arraycopy(expectedBytes, 0, actualBytes, 0, expectedBytes.length);
+                        return true;
+                    }
+
+                    public String toString(Object[] argument) {
+                        return super.toString();
+                    }
+                });
+            }
+        }.doTest();
+    }
 }

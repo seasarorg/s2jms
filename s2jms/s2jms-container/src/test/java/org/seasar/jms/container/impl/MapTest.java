@@ -123,19 +123,22 @@ public class MapTest {
         this.relIds = relIds;
     }
 
-    @Override
+@Override
     public boolean equals(Object obj) {
         if (null != obj) {
             MapTest tmp = (MapTest) obj;
             return (this.extendId == tmp.getExtendId()
                     && this.extendSerialNumber == tmp.getExtendSerialNumber()
                     && this.head == tmp.getHead() && this.hight == tmp.getHight()
-                    && this.id == tmp.getId() && this.name.equals(tmp.getName())
-                    && this.invalid == tmp.isInvalid() && this.obj.equals(tmp.getObj())
+                    && this.id == tmp.getId()
+                    && ((this.name != null && this.name.equals(tmp.getName()))
+                            || (this.name == null && tmp.getName() == null))
+                    && this.invalid == tmp.isInvalid()
+                    && ((this.obj != null && this.obj.equals(tmp.getObj()))
+                            || (this.obj == null && tmp.getObj() == null))
                     && Arrays.equals(this.relIds, tmp.getRelIds())
-                    && this.serialNumber == tmp.getSerialNumber() && this.weight == tmp.getWeight());
+                    && this.serialNumber == tmp.getSerialNumber()
+                    && this.weight == tmp.getWeight());
         }
         return super.equals(obj);
-    }
-
-}
+    }}

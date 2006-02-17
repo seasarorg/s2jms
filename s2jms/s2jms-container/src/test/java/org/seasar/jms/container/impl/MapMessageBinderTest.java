@@ -15,36 +15,32 @@
  */
 package org.seasar.jms.container.impl;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.MapMessage;
-import javax.jms.Session;
-import javax.transaction.TransactionManager;
 
-import org.seasar.extension.unit.S2TestCase;
+import org.easymock.MockControl;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.jca.unit.EasyMockTestCase;
 
 /**
  * @author Kenichiro Murata
  * 
  */
-public class MapMessageBinderTest extends S2TestCase {
-
-    private static final String PATH = "s2jms-container.dicon";
-
-    private TransactionManager tm;
-    private ConnectionFactory cf;
+public class MapMessageBinderTest extends EasyMockTestCase {
 
     private MapMessageBinder binder;
+    private MapMessage message;
     private MapTest target;
+
+    private MockControl messageControl;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include(PATH);
-        include("jms-activemq-outbound.dicon");
+        binder = new MapMessageBinder();
+        messageControl = createStrictControl(MapMessage.class);
+        message = (MapMessage) messageControl.getMock();
 
         target = new MapTest();
         target.setExtendId((short) 1);
@@ -64,77 +60,146 @@ public class MapMessageBinderTest extends S2TestCase {
         super(name);
     }
 
-    public void testBindPeyLoad() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                MapMessage message = session.createMapMessage();
-                message.setBoolean("invalid", false);
-                message.setByte("id", (byte) 1);
-                message.setBytes("relIds", new byte[] { 1, 2, 3, 4, 5 });
-                message.setChar("head", (char) 1);
-                message.setDouble("weight", 60.5d);
-                message.setFloat("hight", 172.1f);
-                message.setInt("serialNumber", 123456789);
-                message.setLong("extendSerialNumber", 123456789L);
-                message.setObject("obj", new Integer(1));
-                message.setShort("extendId", (short) 1);
-                message.setString("name", "Kenichiro Murata");
-                message.setString("false", "Kenichiro Murata");
-
+    public void testBindPayLoad() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 MapTest srcTarget = new MapTest();
                 BeanDesc beanDesc = BeanDescFactory.getBeanDesc(srcTarget.getClass());
-                int propertySize = beanDesc.getPropertyDescSize();
-                for (int idx = 0; idx < propertySize; idx++) {
-                    PropertyDesc pd = beanDesc.getPropertyDesc(idx);
-                    if (pd.getPropertyName().equals("false")) {
-                        assertFalse(binder
-                                .bindPayload(pd, srcTarget, pd.getPropertyName(), message));
-                    } else {
-                        assertTrue(binder.bindPayload(pd, srcTarget, pd.getPropertyName(), message));
-                    }
-                }
+                PropertyDesc pd = beanDesc.getPropertyDesc("invalid");
+                assertTrue(binder.bindPayload(pd, srcTarget, "invalid", message));
+                pd = beanDesc.getPropertyDesc("id");
+                assertTrue(binder.bindPayload(pd, srcTarget, "id", message));
+                pd = beanDesc.getPropertyDesc("relIds");
+                assertTrue(binder.bindPayload(pd, srcTarget, "relIds", message));
+                pd = beanDesc.getPropertyDesc("head");
+                assertTrue(binder.bindPayload(pd, srcTarget, "head", message));
+                pd = beanDesc.getPropertyDesc("weight");
+                assertTrue(binder.bindPayload(pd, srcTarget, "weight", message));
+                pd = beanDesc.getPropertyDesc("hight");
+                assertTrue(binder.bindPayload(pd, srcTarget, "hight", message));
+                pd = beanDesc.getPropertyDesc("serialNumber");
+                assertTrue(binder.bindPayload(pd, srcTarget, "serialNumber", message));
+                pd = beanDesc.getPropertyDesc("extendSerialNumber");
+                assertTrue(binder.bindPayload(pd, srcTarget, "extendSerialNumber", message));
+                pd = beanDesc.getPropertyDesc("obj");
+                assertTrue(binder.bindPayload(pd, srcTarget, "obj", message));
+                pd = beanDesc.getPropertyDesc("extendId");
+                assertTrue(binder.bindPayload(pd, srcTarget, "extendId", message));
+                pd = beanDesc.getPropertyDesc("name");
+                assertTrue(binder.bindPayload(pd, srcTarget, "name", message));
 
                 assertEquals(srcTarget, target);
-
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                message.itemExists("invalid");
+                messageControl.setReturnValue(true);
+                message.getObject("invalid");
+                messageControl.setReturnValue((Object)false);
+                message.itemExists("id");
+                messageControl.setReturnValue(true);
+                message.getObject("id");
+                messageControl.setReturnValue((Object)(byte) 1);
+                message.itemExists("relIds");
+                messageControl.setReturnValue(true);
+                message.getObject("relIds");
+                messageControl.setReturnValue(new byte[] { 1, 2, 3, 4, 5 });
+                message.itemExists("head");
+                messageControl.setReturnValue(true);
+                message.getObject("head");
+                messageControl.setReturnValue((Object)(char) 1);
+                message.itemExists("weight");
+                messageControl.setReturnValue(true);
+                message.getObject("weight");
+                messageControl.setReturnValue((Object)60.5d);
+                message.itemExists("hight");
+                messageControl.setReturnValue(true);
+                message.getObject("hight");
+                messageControl.setReturnValue((Object)172.1f);
+                message.itemExists("serialNumber");
+                messageControl.setReturnValue(true);
+                message.getObject("serialNumber");
+                messageControl.setReturnValue((Object)123456789);
+                message.itemExists("extendSerialNumber");
+                messageControl.setReturnValue(true);
+                message.getObject("extendSerialNumber");
+                messageControl.setReturnValue((Object)123456789L);
+                message.itemExists("obj");
+                messageControl.setReturnValue(true);
+                message.getObject("obj");
+                messageControl.setReturnValue(new Integer(1));
+                message.itemExists("extendId");
+                messageControl.setReturnValue(true);
+                message.getObject("extendId");
+                messageControl.setReturnValue((Object)(short) 1);
+                message.itemExists("name");
+                messageControl.setReturnValue(true);
+                message.getObject("name");
+                messageControl.setReturnValue("Kenichiro Murata");
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadBlank() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                MapMessage message = session.createMapMessage();
-
+    public void testBindPayLoadNull() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 MapTest srcTarget = new MapTest();
                 BeanDesc beanDesc = BeanDescFactory.getBeanDesc(srcTarget.getClass());
-                int propertySize = beanDesc.getPropertyDescSize();
-                for (int idx = 0; idx < propertySize; idx++) {
-                    PropertyDesc pd = beanDesc.getPropertyDesc(idx);
-                    assertFalse(binder.bindPayload(pd, srcTarget, pd.getPropertyName(), message));
-                }
+                PropertyDesc pd = beanDesc.getPropertyDesc("invalid");
+                assertFalse(binder.bindPayload(pd, srcTarget, "invalid", message));
+                pd = beanDesc.getPropertyDesc("id");
+                assertFalse(binder.bindPayload(pd, srcTarget, "id", message));
+                pd = beanDesc.getPropertyDesc("relIds");
+                assertFalse(binder.bindPayload(pd, srcTarget, "relIds", message));
+                pd = beanDesc.getPropertyDesc("head");
+                assertFalse(binder.bindPayload(pd, srcTarget, "head", message));
+                pd = beanDesc.getPropertyDesc("weight");
+                assertFalse(binder.bindPayload(pd, srcTarget, "weight", message));
+                pd = beanDesc.getPropertyDesc("hight");
+                assertFalse(binder.bindPayload(pd, srcTarget, "hight", message));
+                pd = beanDesc.getPropertyDesc("serialNumber");
+                assertFalse(binder.bindPayload(pd, srcTarget, "serialNumber", message));
+                pd = beanDesc.getPropertyDesc("extendSerialNumber");
+                assertFalse(binder.bindPayload(pd, srcTarget, "extendSerialNumber", message));
+                pd = beanDesc.getPropertyDesc("obj");
+                assertFalse(binder.bindPayload(pd, srcTarget, "obj", message));
+                pd = beanDesc.getPropertyDesc("extendId");
+                assertFalse(binder.bindPayload(pd, srcTarget, "extendId", message));
+                pd = beanDesc.getPropertyDesc("name");
+                assertFalse(binder.bindPayload(pd, srcTarget, "name", message));
 
-                session.close();
-            } finally {
-                con.close();
+                assertEquals(srcTarget, new MapTest());
             }
-        } finally {
-            tm.commit();
-        }
-    }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { MapMessageBinderTest.class.getName() });
+            @Override
+            public void verify() throws Exception {
+                message.itemExists("invalid");
+                messageControl.setReturnValue(false);
+                message.itemExists("id");
+                messageControl.setReturnValue(false);
+                message.itemExists("relIds");
+                messageControl.setReturnValue(false);
+                message.itemExists("head");
+                messageControl.setReturnValue(false);
+                message.itemExists("weight");
+                messageControl.setReturnValue(false);
+                message.itemExists("hight");
+                messageControl.setReturnValue(false);
+                message.itemExists("serialNumber");
+                messageControl.setReturnValue(false);
+                message.itemExists("extendSerialNumber");
+                messageControl.setReturnValue(false);
+                message.itemExists("obj");
+                messageControl.setReturnValue(false);
+                message.itemExists("extendId");
+                messageControl.setReturnValue(false);
+                message.itemExists("name");
+                messageControl.setReturnValue(false);
+            }
+        }.doTest();
     }
 
 }

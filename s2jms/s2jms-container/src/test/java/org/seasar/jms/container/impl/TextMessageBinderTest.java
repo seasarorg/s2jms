@@ -41,7 +41,7 @@ public class TextMessageBinderTest extends EasyMockTestCase {
         super(name);
     }
 
-    public void testGetPeyLoad() throws Exception {
+    public void testGetPayLoad() throws Exception {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
@@ -56,7 +56,7 @@ public class TextMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPeyLoadNull() throws Exception {
+    public void testGetPayLoadNull() throws Exception {
         new Subsequence() {
             @Override
             public void replay() throws Exception {

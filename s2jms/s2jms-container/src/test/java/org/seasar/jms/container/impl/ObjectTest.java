@@ -39,4 +39,13 @@ public class ObjectTest implements Serializable {
         this.message = message;
     }
 
+    public boolean equals(Object obj) {
+        if (null != obj) {
+            return obj.equals(this.message);
+        } else if (null == this.message) {
+            return true;
+        }
+        return super.equals(obj);
+    }
+
 }

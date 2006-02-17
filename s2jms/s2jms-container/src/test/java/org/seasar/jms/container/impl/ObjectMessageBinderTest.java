@@ -15,267 +15,222 @@
  */
 package org.seasar.jms.container.impl;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
-import javax.transaction.TransactionManager;
+import java.util.Arrays;
 
-import org.seasar.extension.unit.S2TestCase;
+import javax.jms.ObjectMessage;
+
+import org.easymock.MockControl;
+import org.seasar.jca.unit.EasyMockTestCase;
 
 /**
  * @author Kenichiro Murata
  * 
  */
-public class ObjectMessageBinderTest extends S2TestCase {
-
-    private static final String PATH = "s2jms-container.dicon";
-
-    private TransactionManager tm;
-    private ConnectionFactory cf;
+public class ObjectMessageBinderTest extends EasyMockTestCase {
 
     private ObjectMessageBinder binder;
+    private ObjectMessage message;
+
+    private MockControl messageControl;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include(PATH);
-        include("jms-activemq-outbound.dicon");
+        binder = new ObjectMessageBinder();
+        messageControl = createStrictControl(ObjectMessage.class);
+        message = (ObjectMessage) messageControl.getMock();
     }
 
     public ObjectMessageBinderTest(String name) {
         super(name);
     }
 
-    public void testGetPeyLoadBlank() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                ObjectMessage message = session.createObjectMessage();
-
+    public void testGetPayLoadNull() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 assertNull(binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                message.getObject();
+                messageControl.setReturnValue(null);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadNull() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                ObjectMessage message = session.createObjectMessage(null);
-
-                assertNull(binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
-            }
-        } finally {
-            tm.commit();
-        }
-    }
-
-    public void testGetPeyLoadArray() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadArray() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 int[] obj = { 1, 2, 3, 4, 5 };
-                ObjectMessage message = session.createObjectMessage(obj);
-
-                assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
+                assertTrue(Arrays.equals(obj, (int[]) binder.getPayload(message)));
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                int[] obj = { 1, 2, 3, 4, 5 };
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadBoolean() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadBoolean() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 Boolean obj = new Boolean(true);
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Boolean obj = new Boolean(true);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadByte() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadByte() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 Byte obj = new Byte((byte) 1);
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Byte obj = new Byte((byte) 1);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadFloat() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadFloat() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 Float obj = new Float(1.0f);
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Float obj = new Float(1.0f);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadDouble() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
-                Double obj = new Double(1.0);
-                ObjectMessage message = session.createObjectMessage(obj);
-
+    public void testGetPayLoadDouble() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
+                Double obj = new Double(1.0d);
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Double obj = new Double(1.0d);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadInteger() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadInteger() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 Integer obj = new Integer(1);
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Integer obj = new Integer(1);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadLong() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadLong() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 Long obj = new Long(1);
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Long obj = new Long(1);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadShort() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadShort() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 Short obj = new Short((short) 1);
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                Short obj = new Short((short) 1);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadString() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadString() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 String obj = "TEST";
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
+
+            @Override
+            public void verify() throws Exception {
+                String obj = "TEST";
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
-    public void testGetPeyLoadCustom() throws Exception {
-        tm.begin();
-        try {
-            Connection con = cf.createConnection();
-            try {
-                Session session = con.createSession(true, Session.SESSION_TRANSACTED);
+    public void testGetPayLoadCustom() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
                 ObjectTest obj = new ObjectTest();
-                ObjectMessage message = session.createObjectMessage(obj);
-
                 assertEquals(obj, binder.getPayload(message));
                 assertEquals("hello", ((ObjectTest) binder.getPayload(message)).getMessage());
-                session.close();
-            } finally {
-                con.close();
             }
-        } finally {
-            tm.commit();
-        }
-    }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.main(new String[] { ObjectMessageBinderTest.class.getName() });
+            @Override
+            public void verify() throws Exception {
+                ObjectTest obj = new ObjectTest();
+                message.getObject();
+                messageControl.setReturnValue(obj);
+                message.getObject();
+                messageControl.setReturnValue(obj);
+            }
+        }.doTest();
     }
 
 }
