@@ -25,6 +25,6 @@ public class MessageHandlerNotFoundRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
     public MessageHandlerNotFoundRuntimeException(String className) {
-        super("EJMS2003", new String[]{className});
+        super("EJMS2001", new String[]{className});
     }
 }

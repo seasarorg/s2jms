@@ -62,7 +62,7 @@ public abstract class AbstractMessageBinder implements MessageBinder {
                         }
                     }
                 } catch (JMSException ex) {
-                    throw new SJMSRuntimeException("EJMS2001",ex);
+                    throw new SJMSRuntimeException("EJMS0001",ex);
                 }
             }
         }
@@ -96,7 +96,7 @@ public abstract class AbstractMessageBinder implements MessageBinder {
                 headerValue = message.getJMSType();
             }
         } catch (JMSException ex) {
-            throw new SJMSRuntimeException("EJMS2001",ex);
+            throw new SJMSRuntimeException("EJMS0001",ex);
         }
 
         return headerValue;

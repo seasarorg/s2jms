@@ -67,7 +67,7 @@ public class JmsContainerImpl implements JmsContainer {
         if (binder != null) {
             binder.bindMessage(messageHandler, message);
         } else {
-            throw new NotSupportedMessageRuntimeException("EJMS2002", message);
+            throw new NotSupportedMessageRuntimeException(message);
         }
     }
 

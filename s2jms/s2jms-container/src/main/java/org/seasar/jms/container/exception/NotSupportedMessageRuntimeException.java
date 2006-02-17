@@ -22,7 +22,7 @@ import org.seasar.framework.exception.SRuntimeException;
 public class NotSupportedMessageRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public NotSupportedMessageRuntimeException(String messageCode, Message message) {
-        super(messageCode, new Object[]{message.getClass()});
+    public NotSupportedMessageRuntimeException(Message message) {
+        super("EJMS2000", new Object[]{message.getClass()});
     }
 }
