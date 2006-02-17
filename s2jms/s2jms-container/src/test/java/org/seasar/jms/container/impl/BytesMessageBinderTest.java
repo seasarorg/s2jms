@@ -76,6 +76,7 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
                         return super.toString();
                     }
                 });
+                messageControl.setReturnValue(obj.length);
             }
         }.doTest();
     }
@@ -109,6 +110,7 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
                         return super.toString();
                     }
                 });
+                messageControl.setReturnValue(obj.length);
             }
         }.doTest();
     }
