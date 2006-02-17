@@ -27,9 +27,11 @@ public class BytesMessageBinder extends AnnotationMessageBinder {
 
     @Override
     protected Object getPayload(Message message) throws JMSException {
-        byte[] payload = new byte[0];
+        byte[] payload = null;
         if (message instanceof BytesMessage) {
             BytesMessage bytesMessage = (BytesMessage) message;
+            int length = (int) bytesMessage.getBodyLength();
+            payload = new byte[length];
             bytesMessage.readBytes(payload);
         }
         return payload;
