@@ -19,9 +19,11 @@ import java.util.Arrays;
 
 import javax.jms.BytesMessage;
 
-import org.easymock.ArgumentsMatcher;
-import org.easymock.MockControl;
+import org.easymock.IArgumentMatcher;
 import org.seasar.jca.unit.EasyMockTestCase;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.reportMatcher;
 
 /**
  * @author Kenichiro Murata
@@ -32,14 +34,11 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
     private BytesMessageBinder binder;
     private BytesMessage message;
 
-    private MockControl messageControl;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new BytesMessageBinder();
-        messageControl = createStrictControl(BytesMessage.class);
-        message = (BytesMessage) messageControl.getMock();
+        message = createStrictMock(BytesMessage.class);
     }
 
     public BytesMessageBinderTest(String name) {
@@ -47,71 +46,53 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
     }
 
     public void testGetPayLoad() throws Exception {
+        final byte[] expected = new byte[] { 1, 2, 3, 4, 5 };
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                byte[] obj = new byte[] { 1, 2, 3, 4, 5 };
-                assertTrue(Arrays.equals(obj, (byte[]) binder.getPayload(message)));
+                assertTrue(Arrays.equals(expected, (byte[]) binder.getPayload(message)));
             }
 
             @Override
             public void verify() throws Exception {
-                byte[] obj = new byte[] { 1, 2, 3, 4, 5 };
-                message.getBodyLength();
-                messageControl.setReturnValue(obj.length);
-                message.readBytes(obj);
-                messageControl.setMatcher(new ArgumentsMatcher() {
-                    public boolean matches(Object[] expected, Object[] actual) {
-                        byte[] expectedBytes = (byte[]) expected[0];
-                        byte[] actualBytes = (byte[]) actual[0];
-
-                        if (expectedBytes.length != actualBytes.length) {
-                            return false;
-                        }
-                        System.arraycopy(expectedBytes, 0, actualBytes, 0, expectedBytes.length);
-                        return true;
-                    }
-
-                    public String toString(Object[] argument) {
-                        return super.toString();
-                    }
-                });
-                messageControl.setReturnValue(obj.length);
+                expect(message.getBodyLength()).andReturn((long) expected.length);
+                expect(message.readBytes(eqBytes(expected))).andReturn(expected.length);
             }
         }.doTest();
     }
 
     public void testGetPayLoadNull() throws Exception {
+        final byte[] expected = new byte[0];
+
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                assertTrue(Arrays.equals(new byte[0], (byte[]) binder.getPayload(message)));
+                assertTrue(Arrays.equals(expected, (byte[]) binder.getPayload(message)));
             }
 
             @Override
             public void verify() throws Exception {
-                byte[] obj = new byte[0];
-                message.getBodyLength();
-                messageControl.setReturnValue(obj.length);
-                message.readBytes(obj);
-                messageControl.setMatcher(new ArgumentsMatcher() {
-                    public boolean matches(Object[] expected, Object[] actual) {
-                        byte[] expectedBytes = (byte[]) expected[0];
-                        byte[] actualBytes = (byte[]) actual[0];
-
-                        if (expectedBytes.length != actualBytes.length) {
-                            return false;
-                        }
-                        System.arraycopy(expectedBytes, 0, actualBytes, 0, expectedBytes.length);
-                        return true;
-                    }
-
-                    public String toString(Object[] argument) {
-                        return super.toString();
-                    }
-                });
-                messageControl.setReturnValue(obj.length);
+                expect(message.getBodyLength()).andReturn((long) expected.length);
+                expect(message.readBytes(eqBytes(expected))).andReturn(expected.length);
             }
         }.doTest();
+    }
+
+    private static byte[] eqBytes(final byte[] expected) {
+        reportMatcher(new IArgumentMatcher() {
+            public boolean matches(Object arg) {
+                byte[] actual = byte[].class.cast(arg);
+                if (expected.length != actual.length) {
+                    return false;
+                }
+                System.arraycopy(expected, 0, actual, 0, expected.length);
+                return true;
+            }
+
+            public void appendTo(StringBuffer buf) {
+                buf.append("eqBytes");
+            }
+        });
+        return expected;
     }
 }

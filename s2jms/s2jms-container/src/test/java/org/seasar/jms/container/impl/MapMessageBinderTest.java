@@ -15,13 +15,16 @@
  */
 package org.seasar.jms.container.impl;
 
+import java.util.Arrays;
+
 import javax.jms.MapMessage;
 
-import org.easymock.MockControl;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jca.unit.EasyMockTestCase;
+
+import static org.easymock.EasyMock.expect;
 
 /**
  * @author Kenichiro Murata
@@ -33,14 +36,11 @@ public class MapMessageBinderTest extends EasyMockTestCase {
     private MapMessage message;
     private MapTest target;
 
-    private MockControl messageControl;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new MapMessageBinder();
-        messageControl = createStrictControl(MapMessage.class);
-        message = (MapMessage) messageControl.getMock();
+        message = createStrictMock(MapMessage.class);
 
         target = new MapTest();
         target.setExtendId((short) 1);
@@ -94,50 +94,28 @@ public class MapMessageBinderTest extends EasyMockTestCase {
 
             @Override
             public void verify() throws Exception {
-                message.itemExists("invalid");
-                messageControl.setReturnValue(true);
-                message.getObject("invalid");
-                messageControl.setReturnValue((Object)false);
-                message.itemExists("id");
-                messageControl.setReturnValue(true);
-                message.getObject("id");
-                messageControl.setReturnValue((Object)(byte) 1);
-                message.itemExists("relIds");
-                messageControl.setReturnValue(true);
-                message.getObject("relIds");
-                messageControl.setReturnValue(new byte[] { 1, 2, 3, 4, 5 });
-                message.itemExists("head");
-                messageControl.setReturnValue(true);
-                message.getObject("head");
-                messageControl.setReturnValue((Object)(char) 1);
-                message.itemExists("weight");
-                messageControl.setReturnValue(true);
-                message.getObject("weight");
-                messageControl.setReturnValue((Object)60.5d);
-                message.itemExists("hight");
-                messageControl.setReturnValue(true);
-                message.getObject("hight");
-                messageControl.setReturnValue((Object)172.1f);
-                message.itemExists("serialNumber");
-                messageControl.setReturnValue(true);
-                message.getObject("serialNumber");
-                messageControl.setReturnValue((Object)123456789);
-                message.itemExists("extendSerialNumber");
-                messageControl.setReturnValue(true);
-                message.getObject("extendSerialNumber");
-                messageControl.setReturnValue((Object)123456789L);
-                message.itemExists("obj");
-                messageControl.setReturnValue(true);
-                message.getObject("obj");
-                messageControl.setReturnValue(new Integer(1));
-                message.itemExists("extendId");
-                messageControl.setReturnValue(true);
-                message.getObject("extendId");
-                messageControl.setReturnValue((Object)(short) 1);
-                message.itemExists("name");
-                messageControl.setReturnValue(true);
-                message.getObject("name");
-                messageControl.setReturnValue("Kenichiro Murata");
+                expect(message.itemExists("invalid")).andReturn(true);
+                expect(message.getObject("invalid")).andReturn(false);
+                expect(message.itemExists("id")).andReturn(true);
+                expect(message.getObject("id")).andReturn(new Byte((byte) 1));
+                expect(message.itemExists("relIds")).andReturn(true);
+                expect(message.getObject("relIds")).andReturn(new byte[] { 1, 2, 3, 4, 5 });
+                expect(message.itemExists("head")).andReturn(true);
+                expect(message.getObject("head")).andReturn((char) 1);
+                expect(message.itemExists("weight")).andReturn(true);
+                expect(message.getObject("weight")).andReturn(60.5d);
+                expect(message.itemExists("hight")).andReturn(true);
+                expect(message.getObject("hight")).andReturn(172.1f);
+                expect(message.itemExists("serialNumber")).andReturn(true);
+                expect(message.getObject("serialNumber")).andReturn(123456789);
+                expect(message.itemExists("extendSerialNumber")).andReturn(true);
+                expect(message.getObject("extendSerialNumber")).andReturn(123456789L);
+                expect(message.itemExists("obj")).andReturn(true);
+                expect(message.getObject("obj")).andReturn(new Integer(1));
+                expect(message.itemExists("extendId")).andReturn(true);
+                expect(message.getObject("extendId")).andReturn(1);
+                expect(message.itemExists("name")).andReturn(true);
+                expect(message.getObject("name")).andReturn("Kenichiro Murata");
             }
         }.doTest();
     }
@@ -176,30 +154,141 @@ public class MapMessageBinderTest extends EasyMockTestCase {
 
             @Override
             public void verify() throws Exception {
-                message.itemExists("invalid");
-                messageControl.setReturnValue(false);
-                message.itemExists("id");
-                messageControl.setReturnValue(false);
-                message.itemExists("relIds");
-                messageControl.setReturnValue(false);
-                message.itemExists("head");
-                messageControl.setReturnValue(false);
-                message.itemExists("weight");
-                messageControl.setReturnValue(false);
-                message.itemExists("hight");
-                messageControl.setReturnValue(false);
-                message.itemExists("serialNumber");
-                messageControl.setReturnValue(false);
-                message.itemExists("extendSerialNumber");
-                messageControl.setReturnValue(false);
-                message.itemExists("obj");
-                messageControl.setReturnValue(false);
-                message.itemExists("extendId");
-                messageControl.setReturnValue(false);
-                message.itemExists("name");
-                messageControl.setReturnValue(false);
+                expect(message.itemExists("invalid")).andReturn(false);
+                expect(message.itemExists("id")).andReturn(false);
+                expect(message.itemExists("relIds")).andReturn(false);
+                expect(message.itemExists("head")).andReturn(false);
+                expect(message.itemExists("weight")).andReturn(false);
+                expect(message.itemExists("hight")).andReturn(false);
+                expect(message.itemExists("serialNumber")).andReturn(false);
+                expect(message.itemExists("extendSerialNumber")).andReturn(false);
+                expect(message.itemExists("obj")).andReturn(false);
+                expect(message.itemExists("extendId")).andReturn(false);
+                expect(message.itemExists("name")).andReturn(false);
             }
         }.doTest();
     }
 
+    public static class MapTest {
+
+        private boolean invalid;
+        private byte id;
+        private byte[] relIds;
+        private char head;
+        private double weight;
+        private float hight;
+        private int serialNumber;
+        private long extendSerialNumber;
+        private short extendId;
+        private String name;
+        private Object obj;
+
+        public short getExtendId() {
+            return extendId;
+        }
+
+        public void setExtendId(short extendId) {
+            this.extendId = extendId;
+        }
+
+        public long getExtendSerialNumber() {
+            return extendSerialNumber;
+        }
+
+        public void setExtendSerialNumber(long extendSerialNumber) {
+            this.extendSerialNumber = extendSerialNumber;
+        }
+
+        public char getHead() {
+            return head;
+        }
+
+        public void setHead(char head) {
+            this.head = head;
+        }
+
+        public float getHight() {
+            return hight;
+        }
+
+        public void setHight(float hight) {
+            this.hight = hight;
+        }
+
+        public byte getId() {
+            return id;
+        }
+
+        public void setId(byte id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Object getObj() {
+            return obj;
+        }
+
+        public void setObj(Object obj) {
+            this.obj = obj;
+        }
+
+        public int getSerialNumber() {
+            return serialNumber;
+        }
+
+        public void setSerialNumber(int serialNumber) {
+            this.serialNumber = serialNumber;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public void setWeight(double weight) {
+            this.weight = weight;
+        }
+
+        public boolean isInvalid() {
+            return invalid;
+        }
+
+        public void setInvalid(boolean invalid) {
+            this.invalid = invalid;
+        }
+
+        public byte[] getRelIds() {
+            return relIds;
+        }
+
+        public void setRelIds(byte[] relIds) {
+            this.relIds = relIds;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (null != obj) {
+                MapTest tmp = (MapTest) obj;
+                return (this.extendId == tmp.getExtendId()
+                        && this.extendSerialNumber == tmp.getExtendSerialNumber()
+                        && this.head == tmp.getHead()
+                        && this.hight == tmp.getHight()
+                        && this.id == tmp.getId()
+                        && ((this.name != null && this.name.equals(tmp.getName())) || (this.name == null && tmp
+                                .getName() == null))
+                        && this.invalid == tmp.isInvalid()
+                        && ((this.obj != null && this.obj.equals(tmp.getObj())) || (this.obj == null && tmp
+                                .getObj() == null)) && Arrays.equals(this.relIds, tmp.getRelIds())
+                        && this.serialNumber == tmp.getSerialNumber() && this.weight == tmp
+                        .getWeight());
+            }
+            return super.equals(obj);
+        }
+    }
 }

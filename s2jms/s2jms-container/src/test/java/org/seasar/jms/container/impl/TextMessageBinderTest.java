@@ -17,8 +17,9 @@ package org.seasar.jms.container.impl;
 
 import javax.jms.TextMessage;
 
-import org.easymock.MockControl;
 import org.seasar.jca.unit.EasyMockTestCase;
+
+import static org.easymock.EasyMock.expect;
 
 /**
  * @author Kenichiro Murata
@@ -27,14 +28,12 @@ import org.seasar.jca.unit.EasyMockTestCase;
 public class TextMessageBinderTest extends EasyMockTestCase {
     private TextMessageBinder binder;
     private TextMessage message;
-    private MockControl messageControl;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new TextMessageBinder();
-        messageControl = createStrictControl(TextMessage.class);
-        message = (TextMessage) messageControl.getMock();
+        message = createStrictMock(TextMessage.class);
     }
 
     public TextMessageBinderTest(String name) {
@@ -50,8 +49,7 @@ public class TextMessageBinderTest extends EasyMockTestCase {
 
             @Override
             public void verify() throws Exception {
-                message.getText();
-                messageControl.setReturnValue("TEST");
+                expect(message.getText()).andReturn("TEST");
             }
         }.doTest();
     }
@@ -65,8 +63,7 @@ public class TextMessageBinderTest extends EasyMockTestCase {
 
             @Override
             public void verify() throws Exception {
-                message.getText();
-                messageControl.setReturnValue(null);
+                expect(message.getText()).andReturn(null);
             }
         }.doTest();
     }

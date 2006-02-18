@@ -15,12 +15,14 @@
  */
 package org.seasar.jms.container.impl;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.jms.ObjectMessage;
 
-import org.easymock.MockControl;
 import org.seasar.jca.unit.EasyMockTestCase;
+
+import static org.easymock.EasyMock.expect;
 
 /**
  * @author Kenichiro Murata
@@ -31,14 +33,11 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
     private ObjectMessageBinder binder;
     private ObjectMessage message;
 
-    private MockControl messageControl;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new ObjectMessageBinder();
-        messageControl = createStrictControl(ObjectMessage.class);
-        message = (ObjectMessage) messageControl.getMock();
+        message = createStrictMock(ObjectMessage.class);
     }
 
     public ObjectMessageBinderTest(String name) {
@@ -54,183 +53,190 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
 
             @Override
             public void verify() throws Exception {
-                message.getObject();
-                messageControl.setReturnValue(null);
+                expect(message.getObject()).andReturn(null);
             }
         }.doTest();
     }
 
     public void testGetPayLoadArray() throws Exception {
+        final int[] exptected = { 1, 2, 3, 4, 5 };
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                int[] obj = { 1, 2, 3, 4, 5 };
-                assertTrue(Arrays.equals(obj, (int[]) binder.getPayload(message)));
+                assertTrue(Arrays.equals(exptected, (int[]) binder.getPayload(message)));
             }
 
             @Override
             public void verify() throws Exception {
-                int[] obj = { 1, 2, 3, 4, 5 };
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(exptected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadBoolean() throws Exception {
+        final boolean expected = true;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Boolean obj = new Boolean(true);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Boolean obj = new Boolean(true);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadByte() throws Exception {
+        final byte expected = 1;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Byte obj = new Byte((byte) 1);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Byte obj = new Byte((byte) 1);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadFloat() throws Exception {
+        final float expected = 1.0f;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Float obj = new Float(1.0f);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Float obj = new Float(1.0f);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadDouble() throws Exception {
+        final double expected = 1.0d;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Double obj = new Double(1.0d);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Double obj = new Double(1.0d);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadInteger() throws Exception {
+        final int expected = 1;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Integer obj = new Integer(1);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Integer obj = new Integer(1);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadLong() throws Exception {
+        final long expected = 1L;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Long obj = new Long(1);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Long obj = new Long(1);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadShort() throws Exception {
+        final short expected = 1;
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                Short obj = new Short((short) 1);
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                Short obj = new Short((short) 1);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadString() throws Exception {
+        final String expected = "TEST";
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                String obj = "TEST";
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
             }
 
             @Override
             public void verify() throws Exception {
-                String obj = "TEST";
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
     public void testGetPayLoadCustom() throws Exception {
+        final ObjectTest expected = new ObjectTest();
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                ObjectTest obj = new ObjectTest();
-                assertEquals(obj, binder.getPayload(message));
+                assertEquals(expected, binder.getPayload(message));
                 assertEquals("hello", ((ObjectTest) binder.getPayload(message)).getMessage());
             }
 
             @Override
             public void verify() throws Exception {
-                ObjectTest obj = new ObjectTest();
-                message.getObject();
-                messageControl.setReturnValue(obj);
-                message.getObject();
-                messageControl.setReturnValue(obj);
+                expect(message.getObject()).andReturn(expected);
+                expect(message.getObject()).andReturn(expected);
             }
         }.doTest();
     }
 
+    public static class ObjectTest implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private String message = "hello";
+
+        public ObjectTest() {
+
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (null != obj) {
+                return obj.equals(this.message);
+            } else if (null == this.message) {
+                return true;
+            }
+            return super.equals(obj);
+        }
+
+    }
 }
