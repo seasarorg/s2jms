@@ -44,7 +44,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         super(name);
     }
 
-    public void testGetPayLoadNull() throws Exception {
+    public void testGetPayloadNull() throws Exception {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
@@ -58,7 +58,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadArray() throws Exception {
+    public void testGetPayloadArray() throws Exception {
         final int[] exptected = { 1, 2, 3, 4, 5 };
         new Subsequence() {
             @Override
@@ -73,7 +73,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadBoolean() throws Exception {
+    public void testGetPayloadBoolean() throws Exception {
         final boolean expected = true;
         new Subsequence() {
             @Override
@@ -88,7 +88,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadByte() throws Exception {
+    public void testGetPayloadByte() throws Exception {
         final byte expected = 1;
         new Subsequence() {
             @Override
@@ -103,7 +103,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadFloat() throws Exception {
+    public void testGetPayloadFloat() throws Exception {
         final float expected = 1.0f;
         new Subsequence() {
             @Override
@@ -118,7 +118,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadDouble() throws Exception {
+    public void testGetPayloadDouble() throws Exception {
         final double expected = 1.0d;
         new Subsequence() {
             @Override
@@ -133,7 +133,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadInteger() throws Exception {
+    public void testGetPayloadInteger() throws Exception {
         final int expected = 1;
         new Subsequence() {
             @Override
@@ -148,7 +148,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadLong() throws Exception {
+    public void testGetPayloadLong() throws Exception {
         final long expected = 1L;
         new Subsequence() {
             @Override
@@ -163,7 +163,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadShort() throws Exception {
+    public void testGetPayloadShort() throws Exception {
         final short expected = 1;
         new Subsequence() {
             @Override
@@ -178,7 +178,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadString() throws Exception {
+    public void testGetPayloadString() throws Exception {
         final String expected = "TEST";
         new Subsequence() {
             @Override
@@ -193,7 +193,7 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadCustom() throws Exception {
+    public void testGetPayloadCustom() throws Exception {
         final ObjectTest expected = new ObjectTest();
         new Subsequence() {
             @Override

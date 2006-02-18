@@ -45,7 +45,7 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
         super(name);
     }
 
-    public void testGetPayLoad() throws Exception {
+    public void testGetPayload() throws Exception {
         final byte[] expected = new byte[] { 1, 2, 3, 4, 5 };
         new Subsequence() {
             @Override
@@ -61,7 +61,7 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayLoadNull() throws Exception {
+    public void testGetPayloadNull() throws Exception {
         final byte[] expected = new byte[0];
 
         new Subsequence() {

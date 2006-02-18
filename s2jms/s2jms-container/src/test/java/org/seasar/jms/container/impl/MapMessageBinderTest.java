@@ -60,7 +60,7 @@ public class MapMessageBinderTest extends EasyMockTestCase {
         super(name);
     }
 
-    public void testBindPayLoad() throws Exception {
+    public void testBindPayload() throws Exception {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
@@ -120,7 +120,7 @@ public class MapMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testBindPayLoadNull() throws Exception {
+    public void testBindPayloadNull() throws Exception {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
