@@ -33,6 +33,7 @@ public class JmsContainerTest extends S2TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         include("jms-container-test.dicon");
+        include("cf-test.dicon");
     }
 
     public void test() throws Exception {

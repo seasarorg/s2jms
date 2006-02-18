@@ -6,7 +6,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/s2jms"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2jca-activemq"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2jca"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="output" path="target/test-classes"/>
 </classpath>
