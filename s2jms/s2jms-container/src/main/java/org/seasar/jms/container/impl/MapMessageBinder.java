@@ -20,6 +20,7 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 
 /**
  * @author y-komori
@@ -39,6 +40,8 @@ public class MapMessageBinder extends AbstractMessageBinder {
                 setValue(pd, target, mapMessage.getObject(propertyName));
                 hasBound = true;
             }
+        } else {
+            throw new NotSupportedMessageRuntimeException(message);
         }
         return hasBound;
     }

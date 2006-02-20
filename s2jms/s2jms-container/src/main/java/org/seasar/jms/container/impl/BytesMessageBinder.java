@@ -19,6 +19,8 @@ import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
+import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
+
 /**
  * @author Kenichiro Murata
  * 
@@ -33,6 +35,8 @@ public class BytesMessageBinder extends AnnotationMessageBinder {
             int length = (int) bytesMessage.getBodyLength();
             payload = new byte[length];
             bytesMessage.readBytes(payload);
+        } else {
+            throw new NotSupportedMessageRuntimeException(message);
         }
         return payload;
     }

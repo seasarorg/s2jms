@@ -19,6 +19,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
+
 /**
  * @author y-komori
  * 
@@ -30,6 +32,8 @@ public class TextMessageBinder extends AnnotationMessageBinder {
         if (message instanceof TextMessage) {
             TextMessage textMessage = (TextMessage) message;
             payload = textMessage.getText();
+        } else {
+            throw new NotSupportedMessageRuntimeException(message);
         }
         return payload;
     }
