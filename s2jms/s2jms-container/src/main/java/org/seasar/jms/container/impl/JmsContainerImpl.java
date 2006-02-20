@@ -51,7 +51,7 @@ public class JmsContainerImpl implements JmsContainer {
     private Method messageHandlerMethod;
 
     public void onMessage(Message message) {
-        logger.debug("[S2JMS-Container] onMessage called.");
+        logger.debug("[S2JMS-Container] onMessage が呼び出されました.");
 
         bindMessage(message);
         invokeMessageaHandler(messageHandlerMethod.getName());
