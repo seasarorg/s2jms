@@ -51,10 +51,18 @@ public class JmsContainerImpl implements JmsContainer {
     private Method messageHandlerMethod;
 
     public void onMessage(Message message) {
-        logger.debug("[S2JMS-Container] onMessage が呼び出されました.");
+        try {
+            if (logger.isDebugEnabled()) {
+                logger.debug("[S2JMS-Container] onMessage が呼び出されました.");
+            }
 
-        bindMessage(message);
-        invokeMessageaHandler(messageHandlerMethod.getName());
+            bindMessage(message);
+            invokeMessageaHandler(messageHandlerMethod.getName());
+            
+        } catch (Exception ex) {
+            logger.error("[S2JMS-Container] onMessage 処理中に例外が発生しました.", ex);
+            rollBack();
+        }
     }
 
     @InitMethod
@@ -78,13 +86,9 @@ public class JmsContainerImpl implements JmsContainer {
                 logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - "
                         + messageHandler.getClass().getName() + "#" + methodName);
             }
-
-            try {
-                beanDesc.invoke(messageHandler, methodName, null);
-            } catch (Exception ex) {
-                logger.error("[S2JMS-Container] メッセージハンドラ内で例外が発生しました.", ex);
-                rollBack();
-            }
+            
+            beanDesc.invoke(messageHandler, methodName, null);
+            
             if (logger.isDebugEnabled()) {
                 logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - "
                         + messageHandler.getClass().getName() + "#" + methodName);
