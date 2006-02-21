@@ -24,7 +24,7 @@ import javax.jms.Message;
 
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
-import org.seasar.jms.core.message.impl.AbstractMessageHandler.IterableAdapter;
+import org.seasar.jms.core.util.IterableAdapter;
 
 /**
  * @author y-komori

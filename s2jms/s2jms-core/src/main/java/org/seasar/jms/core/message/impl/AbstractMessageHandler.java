@@ -15,9 +15,7 @@
  */
 package org.seasar.jms.core.message.impl;
 
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jms.Destination;
@@ -26,6 +24,7 @@ import javax.jms.Message;
 
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageHandler;
+import org.seasar.jms.core.util.IterableAdapter;
 
 /**
  * @author koichik
@@ -157,30 +156,6 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
             return map;
         } catch (final JMSException e) {
             throw new SJMSRuntimeException("EJMS0000", e);
-        }
-    }
-
-    public static class IterableAdapter implements Iterable<String>, Iterator<String> {
-        Enumeration enumeration;
-
-        public IterableAdapter(final Enumeration enumeration) {
-            this.enumeration = enumeration;
-        }
-
-        public Iterator<String> iterator() {
-            return this;
-        }
-
-        public boolean hasNext() {
-            return enumeration.hasMoreElements();
-        }
-
-        public String next() {
-            return (String) enumeration.nextElement();
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException("remove");
         }
     }
 }

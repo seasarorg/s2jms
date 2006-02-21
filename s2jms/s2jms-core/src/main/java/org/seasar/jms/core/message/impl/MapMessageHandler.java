@@ -23,6 +23,7 @@ import javax.jms.MapMessage;
 
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.jms.core.util.IterableAdapter;
 
 /**
  * @author koichik

@@ -65,31 +65,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     @Override
     protected void setupPayload(final MapMessage message) throws JMSException {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            final String name = entry.getKey();
-            final Object value = entry.getValue();
-            if (value instanceof Boolean) {
-                message.setBoolean(name, (Boolean) value);
-            } else if (value instanceof Byte) {
-                message.setByte(name, (Byte) value);
-            } else if (value instanceof Short) {
-                message.setShort(name, (Short) value);
-            } else if (value instanceof Character) {
-                message.setChar(name, (Character) value);
-            } else if (value instanceof Integer) {
-                message.setInt(name, (Integer) value);
-            } else if (value instanceof Long) {
-                message.setLong(name, (Long) value);
-            } else if (value instanceof Float) {
-                message.setFloat(name, (Float) value);
-            } else if (value instanceof Double) {
-                message.setDouble(name, (Double) value);
-            } else if (value instanceof String) {
-                message.setString(name, (String) value);
-            } else if (value instanceof byte[]) {
-                message.setBytes(name, (byte[]) value);
-            } else {
-                message.setObject(name, value);
-            }
+            message.setObject(entry.getKey(), entry.getValue());
         }
     }
 }
