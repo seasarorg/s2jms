@@ -19,8 +19,10 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
 
 import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 
 import static org.easymock.EasyMock.expect;
 
@@ -32,12 +34,14 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
 
     private ObjectMessageBinder binder;
     private ObjectMessage message;
-
+    private TextMessage notSupportedMessage;
+    
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new ObjectMessageBinder();
         message = createStrictMock(ObjectMessage.class);
+        notSupportedMessage = createStrictMock(TextMessage.class);
     }
 
     public ObjectMessageBinderTest(String name) {
@@ -210,6 +214,20 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
+    public void testGetPayloadException() throws Exception {
+        new Subsequence() {
+            @Override
+            public void replay() throws Exception {
+                try{
+                    binder.getPayload(notSupportedMessage);
+                    fail("2");
+                }
+                catch (NotSupportedMessageRuntimeException ex) {
+                }
+            }
+        }.doTest();
+    }
+    
     public static class ObjectTest implements Serializable {
 
         private static final long serialVersionUID = 1L;
