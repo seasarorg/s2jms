@@ -15,23 +15,30 @@
  */
 package org.seasar.jms.container.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
+import org.seasar.jms.core.message.impl.AbstractMessageHandler.IterableAdapter;
 
 /**
  * @author y-komori
  * 
  */
-public class MapMessageBinder extends AbstractMessageBinder {
+public class MapMessageBinder extends AnnotationMessageBinder {
 
     @Override
     protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
             Message message) throws JMSException {
-        boolean hasBound = false;
+        boolean hasBound = super.bindPayload(pd, target, propertyName, message);
+        if (hasBound) {
+            return hasBound;
+        }
 
         if (message instanceof MapMessage) {
             MapMessage mapMessage = (MapMessage) message;
@@ -44,6 +51,22 @@ public class MapMessageBinder extends AbstractMessageBinder {
             throw new NotSupportedMessageRuntimeException(message);
         }
         return hasBound;
+    }
+
+    @Override
+    protected Object getPayload(Message message) throws JMSException {
+        Map<String, Object> map;
+        if (message instanceof MapMessage) {
+            MapMessage mapMessage = (MapMessage) message;
+
+            map = new HashMap<String, Object>();
+            for (final String name : new IterableAdapter(message.getPropertyNames())) {
+                map.put(name, mapMessage.getObject(name));
+            }
+        } else {
+            throw new NotSupportedMessageRuntimeException(message);
+        }
+        return map;
     }
 
     public Class<? extends Message> getTargetMessageClass() {
