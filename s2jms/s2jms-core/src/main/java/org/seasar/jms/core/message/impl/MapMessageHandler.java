@@ -36,7 +36,7 @@ public class MapMessageHandler extends AbstractMessageHandler<MapMessage, Map<St
     @Override
     public Map<String, Object> getPayload() throws JMSException {
         final Map<String, Object> map = new HashMap<String, Object>();
-        for (final String name : new IterableAdapter(message.getPropertyNames())) {
+        for (final String name : new IterableAdapter(message.getMapNames())) {
             map.put(name, getMessage().getObject(name));
         }
         return map;

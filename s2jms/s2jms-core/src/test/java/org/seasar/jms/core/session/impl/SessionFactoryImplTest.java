@@ -24,6 +24,9 @@ import org.seasar.jms.core.session.SessionHandler;
 
 import static org.easymock.EasyMock.expect;
 
+/**
+ * @author koichik
+ */
 public class SessionFactoryImplTest extends EasyMockTestCase {
     SessionFactoryImpl target;
     ConnectionFactory cf;

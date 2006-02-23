@@ -91,27 +91,7 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
 
     protected void setupProperties(final Message message) throws JMSException {
         for (final Map.Entry<String, Object> entry : properties.entrySet()) {
-            final String name = entry.getKey();
-            final Object value = entry.getValue();
-            if (value instanceof Boolean) {
-                message.setBooleanProperty(name, (Boolean) value);
-            } else if (value instanceof Byte) {
-                message.setByteProperty(name, (Byte) value);
-            } else if (value instanceof Short) {
-                message.setShortProperty(name, (Short) value);
-            } else if (value instanceof Integer) {
-                message.setIntProperty(name, (Integer) value);
-            } else if (value instanceof Long) {
-                message.setLongProperty(name, (Long) value);
-            } else if (value instanceof Float) {
-                message.setFloatProperty(name, (Float) value);
-            } else if (value instanceof Double) {
-                message.setDoubleProperty(name, (Double) value);
-            } else if (value instanceof String) {
-                message.setStringProperty(name, (String) value);
-            } else {
-                message.setObjectProperty(name, value);
-            }
+            message.setObjectProperty(entry.getKey(), entry.getValue());
         }
     }
 

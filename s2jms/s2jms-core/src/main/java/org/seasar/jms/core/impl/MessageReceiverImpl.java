@@ -115,7 +115,11 @@ public class MessageReceiverImpl implements MessageReceiver {
 
     public <MSGTYPE extends Message, T> T receive(final MessageHandler<MSGTYPE, T> messageHandler) {
         Class<MSGTYPE> clazz = messageHandler.getMessageType();
-        return messageHandler.handleMessage(clazz.cast(receive()));
+        final Message message = receive();
+        if (message == null) {
+            return null;
+        }
+        return messageHandler.handleMessage(clazz.cast(message));
     }
 
     public Message receive() {

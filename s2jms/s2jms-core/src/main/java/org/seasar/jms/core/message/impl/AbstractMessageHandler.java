@@ -15,7 +15,7 @@
  */
 package org.seasar.jms.core.message.impl;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.jms.Destination;
@@ -149,7 +149,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
 
     public Map<String, Object> getProperties() {
         try {
-            final Map<String, Object> map = new HashMap<String, Object>();
+            final Map<String, Object> map = new LinkedHashMap<String, Object>();
             for (final String name : new IterableAdapter(message.getPropertyNames())) {
                 map.put(name, message.getObjectProperty(name));
             }
