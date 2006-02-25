@@ -17,7 +17,6 @@ package org.seasar.jms.core.interceptor;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -55,19 +54,15 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        final Method method = invocation.getMethod();
-        final Class<?> returnType = method.getReturnType();
-        if (returnType == void.class) {
-            throw new SIllegalStateException("EJMS1002", new Object[] { method });
-        }
-
         final Object result = proceed(invocation);
-        getMessageSender().send(createMessageFactory(result, returnType));
+        if (result != null) {
+            getMessageSender().send(createMessageFactory(result));
+        }
         return result;
     }
 
-    protected MessageFactory<?> createMessageFactory(final Object returnValue,
-            final Class<?> returnType) {
+    protected MessageFactory<?> createMessageFactory(final Object returnValue) {
+        final Class<?> returnType = returnValue.getClass();
         for (Class<?> payloadType : factories.keySet()) {
             if (payloadType.isAssignableFrom(returnType)) {
                 final Class<? extends MessageFactory> factoryClass = factories.get(payloadType);

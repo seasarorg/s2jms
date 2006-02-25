@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components>
+	<component name="interceptor"
+		class="org.seasar.jms.core.interceptor.SendReturnValueInterceptor"/>
+
+	<component name="function"
+		class="org.seasar.jms.core.interceptor.SendReturnValueInterceptorTest$FunctionImpl">
+		<aspect>interceptor</aspect>
+	</component>
+</components>
