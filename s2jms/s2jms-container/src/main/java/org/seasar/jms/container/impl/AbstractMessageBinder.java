@@ -15,7 +15,6 @@
  */
 package org.seasar.jms.container.impl;
 
-import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
@@ -23,9 +22,7 @@ import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jms.container.MessageBinder;
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
-import org.seasar.jms.core.message.MessageHandler;
 
 public abstract class AbstractMessageBinder implements MessageBinder {
     private static final String JMS_PREFIX = "JMS";
