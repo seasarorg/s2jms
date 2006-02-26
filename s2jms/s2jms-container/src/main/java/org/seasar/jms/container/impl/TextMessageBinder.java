@@ -20,25 +20,24 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
+import org.seasar.jms.core.message.impl.TextMessageHandler;
 
 /**
  * @author y-komori
  * 
  */
 public class TextMessageBinder extends AnnotationMessageBinder {
+    private TextMessageHandler messageHandler = new TextMessageHandler();
+    
     @Override
     protected Object getPayload(Message message) throws JMSException {
-        Object payload = null;
-        if (message instanceof TextMessage) {
-            TextMessage textMessage = (TextMessage) message;
-            payload = textMessage.getText();
-        } else {
+        if (!(message instanceof TextMessage)) {
             throw new NotSupportedMessageRuntimeException(message);
         }
-        return payload;
+        return messageHandler.handleMessage((TextMessage)message);
     }
 
-    public Class<? extends Message> getTargetMessageClass() {
+    public Class<? extends Message> getMessageType() {
         return TextMessage.class;
     }
 }

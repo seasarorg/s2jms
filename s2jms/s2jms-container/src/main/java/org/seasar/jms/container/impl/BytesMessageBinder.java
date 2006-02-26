@@ -20,28 +20,24 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
+import org.seasar.jms.core.message.impl.BytesMessageHandler;
 
 /**
  * @author Kenichiro Murata
  * 
  */
 public class BytesMessageBinder extends AnnotationMessageBinder {
+    private BytesMessageHandler messageHandler = new BytesMessageHandler();
 
     @Override
     protected Object getPayload(Message message) throws JMSException {
-        byte[] payload = null;
-        if (message instanceof BytesMessage) {
-            BytesMessage bytesMessage = (BytesMessage) message;
-            int length = (int) bytesMessage.getBodyLength();
-            payload = new byte[length];
-            bytesMessage.readBytes(payload);
-        } else {
+        if (!(message instanceof BytesMessage)) {
             throw new NotSupportedMessageRuntimeException(message);
         }
-        return payload;
+        return messageHandler.handleMessage((BytesMessage)message);
     }
 
-    public Class<? extends Message> getTargetMessageClass() {
+    public Class<? extends Message> getMessageType() {
         return BytesMessage.class;
     }
 }

@@ -49,7 +49,7 @@ public class MessageBinderFactoryImpl implements MessageBinderFactory {
         for (int index = 0; index < messageBinderNum; index++) {
             MessageBinder messageBinder = messageBinderList.get(index);
             
-            Class<? extends Message> messageClass = messageBinder.getTargetMessageClass();
+            Class<? extends Message> messageClass = messageBinder.getMessageType();
             if (messageClass.isAssignableFrom(message.getClass())) {
                 retMessageBinder = messageBinder;
             }

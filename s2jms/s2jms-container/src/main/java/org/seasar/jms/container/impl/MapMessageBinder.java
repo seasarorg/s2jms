@@ -15,22 +15,20 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
-import org.seasar.jms.core.util.IterableAdapter;
+import org.seasar.jms.core.message.impl.MapMessageHandler;
 
 /**
  * @author y-komori
  * 
  */
 public class MapMessageBinder extends AnnotationMessageBinder {
+    private MapMessageHandler messageHandler = new MapMessageHandler();
 
     @Override
     protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
@@ -55,21 +53,13 @@ public class MapMessageBinder extends AnnotationMessageBinder {
 
     @Override
     protected Object getPayload(Message message) throws JMSException {
-        Map<String, Object> map;
-        if (message instanceof MapMessage) {
-            MapMessage mapMessage = (MapMessage) message;
-
-            map = new HashMap<String, Object>();
-            for (final String name : new IterableAdapter(message.getPropertyNames())) {
-                map.put(name, mapMessage.getObject(name));
-            }
-        } else {
+        if (!(message instanceof MapMessage)) {
             throw new NotSupportedMessageRuntimeException(message);
         }
-        return map;
+        return messageHandler.handleMessage((MapMessage)message);
     }
 
-    public Class<? extends Message> getTargetMessageClass() {
+    public Class<? extends Message> getMessageType() {
         return MapMessage.class;
     }
 }
