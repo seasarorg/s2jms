@@ -33,22 +33,20 @@ public class MapMessageBinder extends AnnotationMessageBinder {
     @Override
     protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
             Message message) throws JMSException {
-        boolean hasBound = super.bindPayload(pd, target, propertyName, message);
-        if (hasBound) {
-            return hasBound;
+        if(super.bindPayload(pd, target, propertyName, message)){
+            return true;
         }
 
-        if (message instanceof MapMessage) {
-            MapMessage mapMessage = (MapMessage) message;
-
-            if (mapMessage.itemExists(propertyName)) {
-                setValue(pd, target, mapMessage.getObject(propertyName));
-                hasBound = true;
-            }
-        } else {
+        if (!(message instanceof MapMessage)) {
             throw new NotSupportedMessageRuntimeException(message);
         }
-        return hasBound;
+        
+        MapMessage mapMessage = (MapMessage) message;
+        if (mapMessage.itemExists(propertyName)) {
+            setValue(pd, target, mapMessage.getObject(propertyName));
+            return true;
+        }
+        return false;
     }
 
     @Override
