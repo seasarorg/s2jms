@@ -168,6 +168,10 @@ public class MapMessageBinderTest extends EasyMockTestCase {
             }
         }.doTest();
     }
+    
+    public void testGetMessageType() throws Exception{
+        assertEquals(MapMessage.class, binder.getMessageType());
+    }
 
     public static class MapTest {
 
@@ -270,7 +274,7 @@ public class MapMessageBinderTest extends EasyMockTestCase {
         public void setRelIds(byte[] relIds) {
             this.relIds = relIds;
         }
-
+        
         @Override
         public boolean equals(Object obj) {
             if (null != obj) {

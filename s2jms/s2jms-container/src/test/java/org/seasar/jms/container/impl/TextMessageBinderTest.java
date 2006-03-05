@@ -67,4 +67,8 @@ public class TextMessageBinderTest extends EasyMockTestCase {
             }
         }.doTest();
     }
+    
+    public void testGetMessageType() throws Exception {
+        assertEquals(TextMessage.class, binder.getMessageType());
+    }
 }

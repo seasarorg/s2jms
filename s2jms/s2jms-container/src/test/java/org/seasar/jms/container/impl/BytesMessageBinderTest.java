@@ -95,4 +95,8 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
         });
         return expected;
     }
+    
+    public void testGetMessageType() throws Exception {
+        assertEquals(BytesMessage.class, binder.getMessageType());
+    }
 }

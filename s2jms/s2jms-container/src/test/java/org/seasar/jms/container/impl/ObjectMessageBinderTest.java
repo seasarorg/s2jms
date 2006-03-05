@@ -209,6 +209,10 @@ public class ObjectMessageBinderTest extends EasyMockTestCase {
             }
         }.doTest();
     }
+    
+    public void testGetMessageType() throws Exception{
+        assertEquals(ObjectMessage.class, binder.getMessageType());
+    }
 
     public static class ObjectTest implements Serializable {
 
