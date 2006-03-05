@@ -107,5 +107,5 @@ public abstract class AbstractMessageBinder implements MessageBinder {
     }
 
     abstract protected boolean bindPayload(final PropertyDesc pd, final Object target,
-            final String propertyName, Message message) throws JMSException;
+            final String propertyName, final Message message) throws JMSException;
 }

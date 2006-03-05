@@ -30,7 +30,7 @@ public class ObjectMessageBinder extends AnnotationMessageBinder {
     private ObjectMessageHandler messageHandler = new ObjectMessageHandler();
     
     @Override
-    protected Object getPayload(Message message) throws JMSException {
+    protected Object getPayload(final Message message) throws JMSException {
         if (!(message instanceof ObjectMessage)) {
             throw new NotSupportedMessageRuntimeException(message);
         }

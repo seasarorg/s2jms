@@ -38,12 +38,12 @@ public class MessageBinderFactoryImpl implements MessageBinderFactory {
         addMessageBinder(new BytesMessageBinder());
     }
 
-    public void addMessageBinder(MessageBinder messageBinder) {
+    public void addMessageBinder(final MessageBinder messageBinder) {
         messageBinderList.add(messageBinder);
         messageBinderNum = messageBinderList.size();
     }
 
-    public MessageBinder getMessageBinder(Message message) {
+    public MessageBinder getMessageBinder(final Message message) {
         MessageBinder retMessageBinder = null;
         
         for (int index = 0; index < messageBinderNum; index++) {

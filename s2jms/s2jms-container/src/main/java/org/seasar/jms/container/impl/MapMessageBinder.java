@@ -31,7 +31,7 @@ public class MapMessageBinder extends AnnotationMessageBinder {
     private MapMessageHandler messageHandler = new MapMessageHandler();
 
     @Override
-    protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
+    protected boolean bindPayload(final PropertyDesc pd, final Object target, final String propertyName,
             Message message) throws JMSException {
         if(super.bindPayload(pd, target, propertyName, message)){
             return true;
@@ -50,7 +50,7 @@ public class MapMessageBinder extends AnnotationMessageBinder {
     }
 
     @Override
-    protected Object getPayload(Message message) throws JMSException {
+    protected Object getPayload(final Message message) throws JMSException {
         if (!(message instanceof MapMessage)) {
             throw new NotSupportedMessageRuntimeException(message);
         }
