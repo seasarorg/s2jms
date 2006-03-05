@@ -24,9 +24,9 @@
 		class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"
 	/>
 
-	<component class="org.seasar.jms.container.impl.JmsContainerImpl">
+	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
 		<property name="messageHandler">testAction</property>
 	</component>
 
-	<component name="testAction" class="org.seasar.jms.container.JmsContainerTestAction" />
+	<component name="testAction" class="org.seasar.jms.container.JMSContainerTest$TestAction" />
 </components>
