@@ -25,17 +25,24 @@ import org.seasar.jms.container.MessageBinder;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 
 public abstract class AbstractMessageBinder implements MessageBinder {
-    private static final String JMS_PREFIX = "JMS";
-    private static final String JMS_DELIVERY_MODE = "DeliveryMode";
-    private static final String JMS_MESSAGE_ID = "MessageID";
-    private static final String JMS_TIMESTAMP = "Timestamp";
-    private static final String JMS_EXPIRATION = "Expiration";
-    private static final String JMS_REDELIVERED = "Redelivered";
-    private static final String JMS_PRIORITY = "Priority";
-    private static final String JMS_CORRELATION_ID = "CorrelationID";
-    private static final String JMS_TYPE = "Type";
+    private static final String JMS_DELIVERY_MODE = "jmsDeliveryMode";
+    private static final String JMS_MESSAGE_ID = "jmsMessageID";
+    private static final String JMS_TIMESTAMP = "jmsTimestamp";
+    private static final String JMS_EXPIRATION = "jmsExpiration";
+    private static final String JMS_REDELIVERED = "jmsRedelivered";
+    private static final String JMS_PRIORITY = "jmsPriority";
+    private static final String JMS_CORRELATION_ID = "jmsCorrelationID";
+    private static final String JMS_TYPE = "jmsType";
+    private static final String DELIVERY_MODE = "deliveryMode";
+    private static final String MESSAGE_ID = "messageID";
+    private static final String TIMESTAMP = "timestamp";
+    private static final String EXPIRATION = "expiration";
+    private static final String REDELIVERED = "redelivered";
+    private static final String PRIORITY = "priority";
+    private static final String CORRELATION_ID = "correlationID";
+    private static final String TYPE = "type";
 
-    public void bindMessage(Object target, Message message) {
+    public void bindMessage(final Object target, final Message message) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(target.getClass());
         int propertySize = beanDesc.getPropertyDescSize();
 
@@ -68,31 +75,24 @@ public abstract class AbstractMessageBinder implements MessageBinder {
         }
     }
 
-    private Object getJMSHeader(Message message, String headerName) {
+    private Object getJMSHeader(final Message message, final String headerName) {
         Object headerValue = null;
         try {
-            if (JMS_DELIVERY_MODE.equals(headerName)
-                    || (JMS_PREFIX + JMS_DELIVERY_MODE).equals(headerName)) {
+            if (JMS_DELIVERY_MODE.equals(headerName) || DELIVERY_MODE.equals(headerName)) {
                 headerValue = new Integer(message.getJMSDeliveryMode());
-            } else if (JMS_MESSAGE_ID.equals(headerName)
-                    || (JMS_PREFIX + JMS_MESSAGE_ID).equals(headerName)) {
+            } else if (JMS_MESSAGE_ID.equals(headerName) || MESSAGE_ID.equals(headerName)) {
                 headerValue = message.getJMSMessageID();
-            } else if (JMS_TIMESTAMP.equals(headerName)
-                    || (JMS_PREFIX + JMS_TIMESTAMP).equals(headerName)) {
+            } else if (JMS_TIMESTAMP.equals(headerName) || TIMESTAMP.equals(headerName)) {
                 headerValue = new Long(message.getJMSTimestamp());
-            } else if (JMS_EXPIRATION.equals(headerName)
-                    || (JMS_PREFIX + JMS_EXPIRATION).equals(headerName)) {
+            } else if (JMS_EXPIRATION.equals(headerName) || EXPIRATION.equals(headerName)) {
                 headerValue = new Long(message.getJMSExpiration());
-            } else if (JMS_REDELIVERED.equals(headerName)
-                    || (JMS_PREFIX + JMS_REDELIVERED).equals(headerName)) {
+            } else if (JMS_REDELIVERED.equals(headerName) || REDELIVERED.equals(headerName)) {
                 headerValue = new Boolean(message.getJMSRedelivered());
-            } else if (JMS_PRIORITY.equals(headerName)
-                    || (JMS_PREFIX + JMS_PRIORITY).equals(headerName)) {
+            } else if (JMS_PRIORITY.equals(headerName) || PRIORITY.equals(headerName)) {
                 headerValue = new Integer(message.getJMSPriority());
-            } else if (JMS_CORRELATION_ID.equals(headerName)
-                    || (JMS_PREFIX + JMS_CORRELATION_ID).equals(headerName)) {
+            } else if (JMS_CORRELATION_ID.equals(headerName) || CORRELATION_ID.equals(headerName)) {
                 headerValue = message.getJMSCorrelationID();
-            } else if (JMS_TYPE.equals(headerName) || (JMS_PREFIX + JMS_TYPE).equals(headerName)) {
+            } else if (JMS_TYPE.equals(headerName) || TYPE.equals(headerName)) {
                 headerValue = message.getJMSType();
             }
         } catch (JMSException ex) {
@@ -102,10 +102,10 @@ public abstract class AbstractMessageBinder implements MessageBinder {
         return headerValue;
     }
 
-    protected void setValue(PropertyDesc pd, Object target, Object value) {
+    protected void setValue(final PropertyDesc pd, final Object target, final Object value) {
         pd.setValue(target, pd.convertIfNeed(value));
     }
 
-    abstract protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
-            Message message) throws JMSException;
+    abstract protected boolean bindPayload(final PropertyDesc pd, final Object target,
+            final String propertyName, Message message) throws JMSException;
 }
