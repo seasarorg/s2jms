@@ -27,10 +27,12 @@ import org.seasar.jms.container.annotation.JMSPayload;
  * @author y-komori
  * 
  */
-public abstract class AnnotationMessageBinder extends AbstractMessageBinder {
+public abstract class AnnotationMessageBinder<MSGTYPE extends Message> extends
+        AbstractMessageBinder<MSGTYPE> {
+
     @Override
-    protected boolean bindPayload(final PropertyDesc pd, final Object target,
-            final String propertyName, final Message message) throws JMSException {
+    protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
+            MSGTYPE message) throws JMSException {
         boolean hasBound = false;
 
         Method writeMethod = pd.getWriteMethod();
@@ -45,5 +47,5 @@ public abstract class AnnotationMessageBinder extends AbstractMessageBinder {
         return hasBound;
     }
 
-    abstract protected Object getPayload(final Message message) throws JMSException;
+    abstract protected Object getPayload(MSGTYPE message) throws JMSException;
 }

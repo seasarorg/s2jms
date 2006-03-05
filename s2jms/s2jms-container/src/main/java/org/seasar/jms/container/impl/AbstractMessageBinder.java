@@ -24,7 +24,8 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jms.container.MessageBinder;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 
-public abstract class AbstractMessageBinder implements MessageBinder {
+public abstract class AbstractMessageBinder<MSGTYPE extends Message> implements
+        MessageBinder<MSGTYPE> {
     private static final String JMS_DELIVERY_MODE = "jmsDeliveryMode";
     private static final String JMS_MESSAGE_ID = "jmsMessageID";
     private static final String JMS_TIMESTAMP = "jmsTimestamp";
@@ -53,8 +54,8 @@ public abstract class AbstractMessageBinder implements MessageBinder {
 
                 try {
                     // Binds payload
-                    boolean hasBound = bindPayload(pd, target, propertyName, message);
-                    if (hasBound) {
+                    Class<MSGTYPE> clazz = getMessageType();
+                    if (bindPayload(pd, target, propertyName, clazz.cast(message))) {
                         continue;
                     }
 
@@ -102,10 +103,10 @@ public abstract class AbstractMessageBinder implements MessageBinder {
         return headerValue;
     }
 
-    protected void setValue(final PropertyDesc pd, final Object target, final Object value) {
+    protected void setValue(PropertyDesc pd, Object target, Object value) {
         pd.setValue(target, pd.convertIfNeed(value));
     }
 
-    abstract protected boolean bindPayload(final PropertyDesc pd, final Object target,
-            final String propertyName, final Message message) throws JMSException;
+    abstract protected boolean bindPayload(PropertyDesc pd, Object target, String propertyName,
+            MSGTYPE message) throws JMSException;
 }

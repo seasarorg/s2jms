@@ -70,7 +70,7 @@ public class JMSContainerImpl implements JMSContainer {
         messageHandlerMethod = findMessageHandler(messageHandler.getClass());
     }
 
-    private void bindMessage(final Message message) {
+    private <MSGTYPE extends Message> void bindMessage(final Message message) {
         MessageBinder binder = messageBinderFactory.getMessageBinder(message);
         if (binder != null) {
             binder.bindMessage(messageHandler, message);

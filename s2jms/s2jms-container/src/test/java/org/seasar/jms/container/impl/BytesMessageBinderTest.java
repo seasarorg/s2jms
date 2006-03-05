@@ -18,11 +18,9 @@ package org.seasar.jms.container.impl;
 import java.util.Arrays;
 
 import javax.jms.BytesMessage;
-import javax.jms.ObjectMessage;
 
 import org.easymock.IArgumentMatcher;
 import org.seasar.jca.unit.EasyMockTestCase;
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.reportMatcher;
@@ -35,14 +33,12 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
 
     private BytesMessageBinder binder;
     private BytesMessage message;
-    private ObjectMessage notSupportedMessage;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new BytesMessageBinder();
         message = createStrictMock(BytesMessage.class);
-        notSupportedMessage = createStrictMock(ObjectMessage.class);
     }
 
     public BytesMessageBinderTest(String name) {
@@ -82,20 +78,6 @@ public class BytesMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayloadException() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try{
-                    binder.getPayload(notSupportedMessage);
-                    fail("2");
-                }
-                catch (NotSupportedMessageRuntimeException ex) {
-                }
-            }
-        }.doTest();
-    }
-    
     private static byte[] eqBytes(final byte[] expected) {
         reportMatcher(new IArgumentMatcher() {
             public boolean matches(Object arg) {

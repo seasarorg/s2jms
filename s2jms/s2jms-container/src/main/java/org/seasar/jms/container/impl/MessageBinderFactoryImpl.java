@@ -44,16 +44,14 @@ public class MessageBinderFactoryImpl implements MessageBinderFactory {
     }
 
     public MessageBinder getMessageBinder(final Message message) {
-        MessageBinder retMessageBinder = null;
-        
         for (int index = 0; index < messageBinderNum; index++) {
-            MessageBinder messageBinder = messageBinderList.get(index);
-            
+            MessageBinder<?> messageBinder = messageBinderList.get(index);
+
             Class<? extends Message> messageClass = messageBinder.getMessageType();
             if (messageClass.isAssignableFrom(message.getClass())) {
-                retMessageBinder = messageBinder;
+                return messageBinder;
             }
         }
-        return retMessageBinder;
+        return null;
     }
 }

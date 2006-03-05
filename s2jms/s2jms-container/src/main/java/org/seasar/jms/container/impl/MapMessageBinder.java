@@ -17,47 +17,37 @@ package org.seasar.jms.container.impl;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
-import javax.jms.Message;
 
 import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 import org.seasar.jms.core.message.impl.MapMessageHandler;
 
 /**
  * @author y-komori
  * 
  */
-public class MapMessageBinder extends AnnotationMessageBinder {
+public class MapMessageBinder extends AnnotationMessageBinder<MapMessage> {
     private MapMessageHandler messageHandler = new MapMessageHandler();
 
     @Override
     protected boolean bindPayload(final PropertyDesc pd, final Object target, final String propertyName,
-            Message message) throws JMSException {
+            MapMessage message) throws JMSException {
         if(super.bindPayload(pd, target, propertyName, message)){
             return true;
         }
-
-        if (!(message instanceof MapMessage)) {
-            throw new NotSupportedMessageRuntimeException(message);
-        }
         
-        MapMessage mapMessage = (MapMessage) message;
-        if (mapMessage.itemExists(propertyName)) {
-            setValue(pd, target, mapMessage.getObject(propertyName));
+        if (message.itemExists(propertyName)) {
+            setValue(pd, target, message.getObject(propertyName));
             return true;
         }
         return false;
     }
 
     @Override
-    protected Object getPayload(final Message message) throws JMSException {
-        if (!(message instanceof MapMessage)) {
-            throw new NotSupportedMessageRuntimeException(message);
-        }
-        return messageHandler.handleMessage((MapMessage)message);
+    protected Object getPayload(final MapMessage message) throws JMSException {
+        return messageHandler.handleMessage(message);
     }
-
-    public Class<? extends Message> getMessageType() {
+    
+    public Class<MapMessage> getMessageType() {
         return MapMessage.class;
     }
 }

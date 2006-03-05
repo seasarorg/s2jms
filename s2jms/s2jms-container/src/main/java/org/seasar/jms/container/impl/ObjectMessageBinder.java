@@ -16,29 +16,23 @@
 package org.seasar.jms.container.impl;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 import org.seasar.jms.core.message.impl.ObjectMessageHandler;
 
 /**
  * @author y-komori
  * 
  */
-public class ObjectMessageBinder extends AnnotationMessageBinder {
+public class ObjectMessageBinder extends AnnotationMessageBinder<ObjectMessage> {
     private ObjectMessageHandler messageHandler = new ObjectMessageHandler();
     
     @Override
-    protected Object getPayload(final Message message) throws JMSException {
-        if (!(message instanceof ObjectMessage)) {
-            throw new NotSupportedMessageRuntimeException(message);
-        }
-        
-        return messageHandler.handleMessage((ObjectMessage)message);
+    protected Object getPayload(final ObjectMessage message) throws JMSException {
+        return messageHandler.handleMessage(message);
     }
 
-    public Class<? extends Message> getMessageType() {
+    public Class<ObjectMessage> getMessageType() {
         return ObjectMessage.class;
     }
 }

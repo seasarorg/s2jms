@@ -15,11 +15,9 @@
  */
 package org.seasar.jms.container.impl;
 
-import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 import org.seasar.jca.unit.EasyMockTestCase;
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 
 import static org.easymock.EasyMock.expect;
 
@@ -30,14 +28,12 @@ import static org.easymock.EasyMock.expect;
 public class TextMessageBinderTest extends EasyMockTestCase {
     private TextMessageBinder binder;
     private TextMessage message;
-    private ObjectMessage notSupportedMessage;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new TextMessageBinder();
         message = createStrictMock(TextMessage.class);
-        notSupportedMessage = createStrictMock(ObjectMessage.class);
     }
 
     public TextMessageBinderTest(String name) {
@@ -68,20 +64,6 @@ public class TextMessageBinderTest extends EasyMockTestCase {
             @Override
             public void verify() throws Exception {
                 expect(message.getText()).andReturn(null);
-            }
-        }.doTest();
-    }
-
-    public void testGetPayloadException() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try{
-                    binder.getPayload(notSupportedMessage);
-                    fail("2");
-                }
-                catch (NotSupportedMessageRuntimeException ex) {
-                }
             }
         }.doTest();
     }

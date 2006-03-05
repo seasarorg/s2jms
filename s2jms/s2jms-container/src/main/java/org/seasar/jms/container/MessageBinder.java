@@ -21,8 +21,8 @@ import javax.jms.Message;
  * @author y-komori
  *
  */
-public interface MessageBinder {
+public interface MessageBinder<MSGTYPE extends Message> {
     public void bindMessage(Object target, Message message);
     
-    public Class<? extends Message> getMessageType();
+    public Class<MSGTYPE> getMessageType();
 }

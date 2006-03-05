@@ -18,13 +18,11 @@ package org.seasar.jms.container.impl;
 import java.util.Arrays;
 
 import javax.jms.MapMessage;
-import javax.jms.ObjectMessage;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.jca.unit.EasyMockTestCase;
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
 
 import static org.easymock.EasyMock.expect;
 
@@ -37,15 +35,13 @@ public class MapMessageBinderTest extends EasyMockTestCase {
     private MapMessageBinder binder;
     private MapMessage message;
     private MapTest target;
-    private ObjectMessage notSupportedMessage;
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         binder = new MapMessageBinder();
         message = createStrictMock(MapMessage.class);
-        notSupportedMessage = createStrictMock(ObjectMessage.class);
-        
+
         target = new MapTest();
         target.setExtendId((short) 1);
         target.setExtendSerialNumber(123456789L);
@@ -173,20 +169,6 @@ public class MapMessageBinderTest extends EasyMockTestCase {
         }.doTest();
     }
 
-    public void testGetPayloadException() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try{
-                    binder.getPayload(notSupportedMessage);
-                    fail("2");
-                }
-                catch (NotSupportedMessageRuntimeException ex) {
-                }
-            }
-        }.doTest();
-    }
-    
     public static class MapTest {
 
         private boolean invalid;
