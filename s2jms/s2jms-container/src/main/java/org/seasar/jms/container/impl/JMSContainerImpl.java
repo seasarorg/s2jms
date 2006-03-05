@@ -39,7 +39,7 @@ import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
  * @author y-komori
  * 
  */
-@Component(instance = InstanceType.SINGLETON)
+@Component(instance = InstanceType.PROTOTYPE)
 public class JMSContainerImpl implements JMSContainer {
     private static final String DEFAULT_MESSAGE_HANDLER_NAME = "onMessage";
 
@@ -70,7 +70,7 @@ public class JMSContainerImpl implements JMSContainer {
         messageHandlerMethod = findMessageHandler(messageHandler.getClass());
     }
 
-    private void bindMessage(Message message) {
+    private void bindMessage(final Message message) {
         MessageBinder binder = messageBinderFactory.getMessageBinder(message);
         if (binder != null) {
             binder.bindMessage(messageHandler, message);
@@ -79,7 +79,7 @@ public class JMSContainerImpl implements JMSContainer {
         }
     }
 
-    private void invokeMessageaHandler(String methodName) {
+    private void invokeMessageaHandler(final String methodName) {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(messageHandler.getClass());
         if (beanDesc != null) {
             if (logger.isDebugEnabled()) {
@@ -96,7 +96,7 @@ public class JMSContainerImpl implements JMSContainer {
         }
     }
 
-    private Method findMessageHandler(Class clazz) {
+    private Method findMessageHandler(final Class clazz) {
         Method messageHandlerMethod = null;
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
