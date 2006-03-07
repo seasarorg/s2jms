@@ -13,23 +13,10 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.annotation;
+package org.seasar.jms.container;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.jms.Message;
 
-import org.seasar.framework.container.annotation.tiger.BindingType;
-
-/**
- * @author y-komori
- * 
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface JMSPayload {
-    String name() default "";
-
-    BindingType bindingType() default BindingType.SHOULD;
+public interface Binder {
+    void bind(Object target, Message message, Object payload);
 }

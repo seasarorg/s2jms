@@ -22,13 +22,9 @@ import java.lang.annotation.Target;
 
 import org.seasar.framework.container.annotation.tiger.BindingType;
 
-/**
- * @author y-komori
- * 
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
-public @interface JMSPayload {
+public @interface JMSHeader {
     String name() default "";
 
     BindingType bindingType() default BindingType.SHOULD;

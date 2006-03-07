@@ -13,23 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.annotation;
+package org.seasar.jms.container.impl;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.jms.container.BindingSupport;
 
-import org.seasar.framework.container.annotation.tiger.BindingType;
+public class PropertyBindingSupport implements BindingSupport {
+    protected PropertyDesc property;
 
-/**
- * @author y-komori
- * 
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface JMSPayload {
-    String name() default "";
+    public PropertyBindingSupport(final PropertyDesc property) {
+        this.property = property;
+    }
 
-    BindingType bindingType() default BindingType.SHOULD;
+    public void bind(final Object target, final Object value) {
+        property.setValue(target, value);
+    }
 }

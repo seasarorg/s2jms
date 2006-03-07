@@ -13,23 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.annotation;
+package org.seasar.jms.container.exception;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.seasar.framework.exception.SRuntimeException;
 
-import org.seasar.framework.container.annotation.tiger.BindingType;
+public class NotBoundException extends SRuntimeException {
+    private static final long serialVersionUID = 1L;
 
-/**
- * @author y-komori
- * 
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface JMSPayload {
-    String name() default "";
-
-    BindingType bindingType() default BindingType.SHOULD;
+    public NotBoundException(final String className, final String propertyName) {
+        super("EJMS2002", new Object[] { className, propertyName });
+    }
 }
