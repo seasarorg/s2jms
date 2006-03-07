@@ -19,10 +19,10 @@ import javax.jms.Message;
 
 import org.seasar.framework.exception.SRuntimeException;
 
-public class NotSupportedMessageRuntimeException extends SRuntimeException {
+public class NotSupportedMessageException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public NotSupportedMessageRuntimeException(Message message) {
+    public NotSupportedMessageException(Message message) {
         super("EJMS2000", new Object[]{message.getClass()});
     }
 }

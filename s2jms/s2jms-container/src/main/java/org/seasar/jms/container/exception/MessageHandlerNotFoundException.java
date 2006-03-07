@@ -21,10 +21,10 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author y-komori
  *
  */
-public class MessageHandlerNotFoundRuntimeException extends SRuntimeException {
+public class MessageHandlerNotFoundException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public MessageHandlerNotFoundRuntimeException(String className) {
+    public MessageHandlerNotFoundException(String className) {
         super("EJMS2001", new String[]{className});
     }
 }

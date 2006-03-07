@@ -32,8 +32,8 @@ import org.seasar.jms.container.JMSContainer;
 import org.seasar.jms.container.MessageBinder;
 import org.seasar.jms.container.MessageBinderFactory;
 import org.seasar.jms.container.annotation.MessageHandler;
-import org.seasar.jms.container.exception.MessageHandlerNotFoundRuntimeException;
-import org.seasar.jms.container.exception.NotSupportedMessageRuntimeException;
+import org.seasar.jms.container.exception.MessageHandlerNotFoundException;
+import org.seasar.jms.container.exception.NotSupportedMessageException;
 
 /**
  * @author y-komori
@@ -75,7 +75,7 @@ public class JMSContainerImpl implements JMSContainer {
         if (binder != null) {
             binder.bindMessage(messageHandler, message);
         } else {
-            throw new NotSupportedMessageRuntimeException(message);
+            throw new NotSupportedMessageException(message);
         }
     }
 
@@ -112,7 +112,7 @@ public class JMSContainerImpl implements JMSContainer {
                 messageHandlerMethod = clazz.getDeclaredMethod(DEFAULT_MESSAGE_HANDLER_NAME,
                         (Class[]) null);
             } catch (NoSuchMethodException e) {
-                throw new MessageHandlerNotFoundRuntimeException(clazz.getName());
+                throw new MessageHandlerNotFoundException(clazz.getName());
             }
         }
 
