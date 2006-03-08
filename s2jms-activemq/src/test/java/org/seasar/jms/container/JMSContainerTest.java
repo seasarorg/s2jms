@@ -24,7 +24,7 @@ import org.seasar.jms.core.MessageSender;
 
 /**
  * @author y-komori
- *
+ * 
  */
 public class JMSContainerTest extends S2TestCase {
     protected TransactionManager tm;
@@ -46,21 +46,20 @@ public class JMSContainerTest extends S2TestCase {
             tm.commit();
         }
 
-        Thread.sleep(3000);
+        Thread.sleep(500);
         assertEquals(1, testAction.getCallCount());
         assertEquals("TextPayloadMessage", testAction.getTextPaylord());
     }
-    
+
     public static class TestAction {
         private int callCount;
         private String textPaylord;
-        
+
         @MessageHandler
-        public void caller()
-        {
+        public void caller() {
             callCount++;
         }
-        
+
         public int getCallCount() {
             return callCount;
         }
@@ -73,5 +72,5 @@ public class JMSContainerTest extends S2TestCase {
         public String getTextPaylord() {
             return textPaylord;
         }
-    }    
+    }
 }

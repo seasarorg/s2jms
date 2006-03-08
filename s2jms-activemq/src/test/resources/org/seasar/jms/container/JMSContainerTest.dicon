@@ -17,8 +17,6 @@
 			<arg>"destinationType"</arg>
 			<arg>"javax.jms.Queue"</arg>
 		</initMethod>
-		<initMethod name="activate"/>
-		<destroyMethod name="deactivate"/>
 	</component>
 	<component
 		class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"
