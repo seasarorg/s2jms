@@ -22,4 +22,5 @@ import javax.jms.MessageListener;
  *
  */
 public interface JMSContainer extends MessageListener{
+    public void addMessageHandler(Object messageHandler);
 }
