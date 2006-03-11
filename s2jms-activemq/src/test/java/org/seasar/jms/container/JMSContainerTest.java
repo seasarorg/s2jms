@@ -19,7 +19,7 @@ import javax.transaction.TransactionManager;
 
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.jms.container.annotation.JMSPayload;
-import org.seasar.jms.container.annotation.MessageHandler;
+import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.core.MessageSender;
 
 /**
@@ -55,7 +55,7 @@ public class JMSContainerTest extends S2TestCase {
         private int callCount;
         private String textPaylord;
 
-        @MessageHandler
+        @OnMessage
         public void caller() {
             callCount++;
         }

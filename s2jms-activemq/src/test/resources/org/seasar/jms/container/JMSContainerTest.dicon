@@ -23,7 +23,7 @@
 	/>
 
 	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
-		<initMethod name="addMessageHandler">
+		<initMethod name="addMessageListener">
 			<arg>testAction</arg>
 		</initMethod>
 	</component>
