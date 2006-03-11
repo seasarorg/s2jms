@@ -23,7 +23,9 @@
 	/>
 
 	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
-		<property name="messageHandler">testAction</property>
+		<initMethod name="addMessageHandler">
+			<arg>testAction</arg>
+		</initMethod>
 	</component>
 
 	<component name="testAction" class="org.seasar.jms.container.JMSContainerTest$TestAction" />
