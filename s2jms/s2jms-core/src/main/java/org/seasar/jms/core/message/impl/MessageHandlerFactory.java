@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.core.message.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,31 +23,27 @@ import java.util.Map;
 import javax.jms.Message;
 
 import org.seasar.jms.core.message.MessageHandler;
-import org.seasar.jms.core.message.impl.BytesMessageHandler;
-import org.seasar.jms.core.message.impl.MapMessageHandler;
-import org.seasar.jms.core.message.impl.ObjectMessageHandler;
-import org.seasar.jms.core.message.impl.TextMessageHandler;
 
 /**
  * @author y-komori
  * 
  */
 public class MessageHandlerFactory {
-    protected static Map<Class<? extends Message>, MessageHandler> handlerMap = new HashMap<Class<? extends Message>, MessageHandler>();
-    protected static List<MessageHandler> handlers = new ArrayList<MessageHandler>();
+    protected static Map<Class<? extends Message>, MessageHandler<?, ?>> handlerMap = new HashMap<Class<? extends Message>, MessageHandler<?, ?>>();
+    protected static List<MessageHandler<?, ?>> handlers = new ArrayList<MessageHandler<?, ?>>();
     static {
         handlers.add(new TextMessageHandler());
         handlers.add(new MapMessageHandler());
-        handlers.add(new ObjectMessageHandler());
         handlers.add(new BytesMessageHandler());
+        handlers.add(new ObjectMessageHandler());
     }
 
     private MessageHandlerFactory() {
     }
 
-    protected static MessageHandler getMessageHandler(Class<? extends Message> messageClass) {
-        for (MessageHandler messageHandler : handlers) {
-            if (messageHandler.getMessageType().isAssignableFrom(messageClass)){
+    public static MessageHandler<?, ?> getMessageHandler(final Class<? extends Message> messageClass) {
+        for (final MessageHandler<?, ?> messageHandler : handlers) {
+            if (messageHandler.getMessageType().isAssignableFrom(messageClass)) {
                 return messageHandler;
             }
         }

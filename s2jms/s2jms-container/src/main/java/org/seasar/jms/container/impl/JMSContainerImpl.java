@@ -32,6 +32,7 @@ import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.JMSContainer;
 import org.seasar.jms.container.exception.NotSupportedMessageException;
 import org.seasar.jms.core.message.MessageHandler;
+import org.seasar.jms.core.message.impl.MessageHandlerFactory;
 
 /**
  * @author y-komori
@@ -39,70 +40,69 @@ import org.seasar.jms.core.message.MessageHandler;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class JMSContainerImpl implements JMSContainer {
-    protected TransactionManager transactionManager;
     protected static Logger logger = Logger.getLogger(JMSContainerImpl.class);
 
-    protected List<Object> messageHandlers = new ArrayList<Object>();
-    protected Map<Class, MessageHandlerSupport> handlerSupportMap = new HashMap<Class, MessageHandlerSupport>();
+    protected TransactionManager transactionManager;
+    protected List<Object> messageListeners = new ArrayList<Object>();
+    protected Map<Class<?>, MessageListenerSupport> listenerSupportMap = new HashMap<Class<?>, MessageListenerSupport>();
 
-    public void onMessage(Message message) {
+    public void onMessage(final Message message) {
         try {
             if (logger.isDebugEnabled()) {
                 logger.debug("[S2JMS-Container] onMessage が呼び出されました.");
             }
 
-            MessageHandler messageHandler = getMessageHandler(message);
+            final MessageHandler<?, ?> messageHandler = getMessageHandler(message);
 
-            for (Object target : messageHandlers) {
+            for (final Object target : messageListeners) {
                 bindMessage(target, messageHandler, message);
                 invokeMessageHandler(target);
             }
-            
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             logger.error("[S2JMS-Container] onMessage 処理中に例外が発生しました.", ex);
             rollBack();
         }
     }
 
-    public void addMessageHandler(final Object messageHandler) {       
-        if (messageHandler != null) {
-            this.messageHandlers.add(messageHandler);
-            Class clazz = messageHandler.getClass();
-            this.handlerSupportMap.put(clazz, new MessageHandlerSupport(clazz));
-        } else {
+    public void addMessageListener(final Object messageListener) {
+        if (messageListener == null) {
             throw new SIllegalArgumentException("EJMS2005", null);
         }
+        messageListeners.add(messageListener);
+        final Class<?> clazz = messageListener.getClass();
+        listenerSupportMap.put(clazz, new MessageListenerSupport(clazz));
     }
 
-    protected MessageHandler getMessageHandler(Message message) {
-        MessageHandler messageHandler = MessageHandlerFactory.getMessageHandler(message.getClass());
+    protected MessageHandler<?, ?> getMessageHandler(final Message message) {
+        final MessageHandler<?, ?> messageHandler = MessageHandlerFactory.getMessageHandler(message
+                .getClass());
         if (messageHandler == null) {
             throw new NotSupportedMessageException(message);
         }
         return messageHandler;
     }
 
-    protected void bindMessage(final Object bindTarget, final MessageHandler handler,
-            final Message message) {
-        Object payload = handler.handleMessage(message);
-        MessageHandlerSupport support = handlerSupportMap.get(bindTarget.getClass());
+    protected <MSGTYPE extends Message, PAYLOADTYPE> void bindMessage(final Object bindTarget,
+            final MessageHandler<MSGTYPE, PAYLOADTYPE> handler, final Message message) {
+        final Object payload = handler.handleMessage(handler.getMessageType().cast(message));
+        final MessageListenerSupport support = listenerSupportMap.get(bindTarget.getClass());
         support.bind(bindTarget, message, payload);
     }
 
     protected void invokeMessageHandler(final Object invokeTarget) {
-        MessageHandlerSupport support = handlerSupportMap.get(invokeTarget.getClass());
+        final MessageListenerSupport support = listenerSupportMap.get(invokeTarget.getClass());
 
         if (logger.isDebugEnabled()) {
-            String className = invokeTarget.getClass().getName();
-            String methodName = support.getHandlerName();
+            final String className = invokeTarget.getClass().getName();
+            final String methodName = support.getListenerMethodName();
             logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - " + className + "#" + methodName);
         }
 
         support.invoke(invokeTarget);
 
         if (logger.isDebugEnabled()) {
-            String className = invokeTarget.getClass().getName();
-            String methodName = support.getHandlerName();
+            final String className = invokeTarget.getClass().getName();
+            final String methodName = support.getListenerMethodName();
             logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - " + className + "#"
                     + methodName);
         }
@@ -114,13 +114,13 @@ public class JMSContainerImpl implements JMSContainer {
                 logger.info("[S2JMS-Container] トランザクションをロールバックします.");
                 transactionManager.setRollbackOnly();
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             logger.error("[S2JMS-Container] トランザクションのロールバック中に例外が発生しました.", ex);
         }
     }
 
-    @Binding(bindingType=BindingType.MAY)
-    public void setTransactionManager(TransactionManager transactionManager) {
+    @Binding(bindingType = BindingType.MAY)
+    public void setTransactionManager(final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 }

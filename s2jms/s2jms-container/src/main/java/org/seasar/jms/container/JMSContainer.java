@@ -19,8 +19,8 @@ import javax.jms.MessageListener;
 
 /**
  * @author y-komori
- *
+ * 
  */
-public interface JMSContainer extends MessageListener{
-    public void addMessageHandler(Object messageHandler);
+public interface JMSContainer extends MessageListener {
+    public void addMessageListener(Object messageHandler);
 }

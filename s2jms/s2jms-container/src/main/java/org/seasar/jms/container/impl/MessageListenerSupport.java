@@ -34,21 +34,21 @@ import org.seasar.jms.container.Binder;
 import org.seasar.jms.container.annotation.JMSHeader;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.JMSProperty;
-import org.seasar.jms.container.annotation.MessageHandler;
+import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.exception.IllegalMessageHandlerException;
 import org.seasar.jms.container.exception.MessageHandlerNotFoundException;
 
-public class MessageHandlerSupport {
+public class MessageListenerSupport {
     public static final String DEFAULT_MESSAGE_HANDLER_NAME = "onMessage";
 
     protected final List<Binder> binders = new ArrayList<Binder>();
     protected Method method;
 
-    public MessageHandlerSupport(final Class<?> clazz) {
+    public MessageListenerSupport(final Class<?> clazz) {
         final BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
         setupBinderFromProperty(beanDesc);
         setupBinderFromField(beanDesc);
-        setupHandlerMethod(clazz);
+        setupListenerMethod(clazz);
     }
 
     public void bind(final Object target, final Message message, final Object payload) {
@@ -61,7 +61,7 @@ public class MessageHandlerSupport {
         MethodUtil.invoke(method, target, null);
     }
 
-    public String getHandlerName() {
+    public String getListenerMethodName() {
         return method.getName();
     }
 
@@ -69,8 +69,7 @@ public class MessageHandlerSupport {
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             final Method method = propertyDesc.getWriteMethod();
-            if (method == null)
-            {
+            if (method == null) {
                 continue;
             }
 
@@ -142,10 +141,10 @@ public class MessageHandlerSupport {
         }
     }
 
-    protected void setupHandlerMethod(final Class<?> clazz) {
+    protected void setupListenerMethod(final Class<?> clazz) {
         for (Class<?> type = clazz; type != Object.class; type = type.getSuperclass()) {
             for (final Method method : type.getDeclaredMethods()) {
-                final MessageHandler annotation = method.getAnnotation(MessageHandler.class);
+                final OnMessage annotation = method.getAnnotation(OnMessage.class);
                 if (annotation == null) {
                     continue;
                 }
@@ -163,7 +162,7 @@ public class MessageHandlerSupport {
                     null);
             method.setAccessible(true);
             this.method = method;
-        } catch (NoSuchMethodRuntimeException e) {
+        } catch (final NoSuchMethodRuntimeException e) {
             throw new MessageHandlerNotFoundException(clazz.getName());
         }
     }

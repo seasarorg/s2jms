@@ -25,20 +25,20 @@ import org.seasar.jca.unit.EasyMockTestCase;
 import org.seasar.jms.container.annotation.JMSHeader;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.JMSProperty;
-import org.seasar.jms.container.annotation.MessageHandler;
+import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.exception.IllegalMessageHandlerException;
 import org.seasar.jms.container.exception.MessageHandlerNotFoundException;
 import org.seasar.jms.container.exception.NotBoundException;
 
 import static org.easymock.EasyMock.expect;
 
-public class MessageHandlerSupportTest extends EasyMockTestCase {
+public class MessageListenerSupportTest extends EasyMockTestCase {
     Message message;
 
-    public MessageHandlerSupportTest() {
+    public MessageListenerSupportTest() {
     }
 
-    public MessageHandlerSupportTest(String name) {
+    public MessageListenerSupportTest(String name) {
         super(name);
     }
 
@@ -56,7 +56,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
                 map.put("hoge hoge", "HOGE HOGE");
                 map.put("dummy", "DUMMY");
 
-                MessageHandlerSupport support = new MessageHandlerSupport(Test1.class);
+                MessageListenerSupport support = new MessageListenerSupport(Test1.class);
                 assertEquals("1", 8, support.binders.size());
                 assertEquals("2", "onMessage", support.method.getName());
 
@@ -93,7 +93,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                MessageHandlerSupport support = new MessageHandlerSupport(Test2.class);
+                MessageListenerSupport support = new MessageListenerSupport(Test2.class);
                 assertEquals("1", 1, support.binders.size());
                 assertEquals("2", "onMessage", support.method.getName());
 
@@ -115,7 +115,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
     }
 
     public void testMethod() throws Exception {
-        MessageHandlerSupport support = new MessageHandlerSupport(Test3.class);
+        MessageListenerSupport support = new MessageListenerSupport(Test3.class);
         assertEquals("1", 0, support.binders.size());
         assertEquals("2", "invoke", support.method.getName());
 
@@ -126,7 +126,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
 
     public void testMethodNotFound() throws Exception {
         try {
-            new MessageHandlerSupport(Test4.class);
+            new MessageListenerSupport(Test4.class);
             fail("1");
         } catch (MessageHandlerNotFoundException expected) {
             System.out.println(expected);
@@ -135,7 +135,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
 
     public void testIllegalMethod() throws Exception {
         try {
-            new MessageHandlerSupport(Test5.class);
+            new MessageListenerSupport(Test5.class);
             fail("1");
         } catch (IllegalMessageHandlerException expected) {
             System.out.println(expected);
@@ -203,7 +203,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
     public static class Test3 {
         boolean called;
 
-        @MessageHandler
+        @OnMessage
         public void invoke() {
             called = true;
         }
@@ -220,7 +220,7 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
     public static class Test5 {
         boolean called;
 
-        @MessageHandler
+        @OnMessage
         public void invoke(boolean b) {
             called = b;
         }

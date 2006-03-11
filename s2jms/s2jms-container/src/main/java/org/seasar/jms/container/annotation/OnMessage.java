@@ -13,26 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.annotation;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-
-import org.seasar.jms.core.message.impl.BytesMessageHandler;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @author Kenichiro Murata
- * 
+ * @author y-komori
+ *
  */
-public class BytesMessageBinder extends AnnotationMessageBinder<BytesMessage> {
-    private BytesMessageHandler messageHandler = new BytesMessageHandler();
-
-    @Override
-    protected Object getPayload(final BytesMessage message) throws JMSException {
-        return messageHandler.handleMessage(message);
-    }
-    
-    public Class<BytesMessage> getMessageType() {
-        return BytesMessage.class;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface OnMessage {
 }
