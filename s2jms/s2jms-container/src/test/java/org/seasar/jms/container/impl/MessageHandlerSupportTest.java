@@ -178,8 +178,12 @@ public class MessageHandlerSupportTest extends EasyMockTestCase {
         public void setHoge(String hoge) {
             this.hoge = hoge;
         }
-
+        
         String dummy;
+        
+        public String getDummy(){
+            return this.dummy;
+        }
 
         boolean called;
 

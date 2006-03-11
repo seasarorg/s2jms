@@ -61,10 +61,18 @@ public class MessageHandlerSupport {
         MethodUtil.invoke(method, target, null);
     }
 
+    public String getHandlerName() {
+        return method.getName();
+    }
+
     protected void setupBinderFromProperty(final BeanDesc beanDesc) {
         for (int i = 0; i < beanDesc.getPropertyDescSize(); ++i) {
             final PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             final Method method = propertyDesc.getWriteMethod();
+            if (method == null)
+            {
+                continue;
+            }
 
             final JMSHeader header = method.getAnnotation(JMSHeader.class);
             if (header != null) {
