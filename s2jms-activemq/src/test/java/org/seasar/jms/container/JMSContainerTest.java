@@ -29,7 +29,8 @@ import org.seasar.jms.core.MessageSender;
 public class JMSContainerTest extends S2TestCase {
     protected TransactionManager tm;
     protected MessageSender sender;
-    protected TestAction testAction;
+    protected TestAction1 testAction1;
+    protected TestAction1 testAction2;
 
     @Override
     protected void setUp() throws Exception {
@@ -47,23 +48,51 @@ public class JMSContainerTest extends S2TestCase {
         }
 
         Thread.sleep(500);
-        assertEquals(1, testAction.getCallCount());
-        assertEquals("TextPayloadMessage", testAction.getTextPaylord());
+        assertEquals(1, testAction1.getCallCount());
+        assertEquals("TextPayloadMessage", testAction1.getTextPaylord());
+        assertEquals(1, testAction2.getCallCount());
+        assertEquals("TextPayloadMessage", testAction2.getTextPaylord());
     }
-
-    public static class TestAction {
-        private int callCount;
-        private String textPaylord;
+    
+    public static class TestAction1 {
+        protected int callCount;
+        protected String textPaylord;
 
         @OnMessage
         public void caller() {
             callCount++;
         }
-
+        
         public int getCallCount() {
             return callCount;
         }
+        
+        @JMSPayload
+        public void setTextPaylord(String textPaylord) {
+            this.textPaylord = textPaylord;
+        }
 
+        public String getTextPaylord() {
+            return textPaylord;
+        }
+    }
+
+    public abstract static class AbstractTestAction {
+        protected int callCount;
+        
+        @OnMessage
+        public void caller() {
+            callCount++;
+        }
+        
+        public int getCallCount() {
+            return callCount;
+        }
+    }
+    
+    public static class TestAction2 extends AbstractTestAction{
+        private String textPaylord;
+        
         @JMSPayload
         public void setTextPaylord(String textPaylord) {
             this.textPaylord = textPaylord;

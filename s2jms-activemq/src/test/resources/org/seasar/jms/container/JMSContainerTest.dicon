@@ -24,9 +24,13 @@
 
 	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
 		<initMethod name="addMessageListener">
-			<arg>testAction</arg>
+			<arg>testAction1</arg>
+		</initMethod>
+		<initMethod name="addMessageListener">
+			<arg>testAction2</arg>
 		</initMethod>
 	</component>
 
-	<component name="testAction" class="org.seasar.jms.container.JMSContainerTest$TestAction" />
+	<component name="testAction1" class="org.seasar.jms.container.JMSContainerTest$TestAction1" />
+	<component name="testAction2" class="org.seasar.jms.container.JMSContainerTest$TestAction2" />
 </components>
