@@ -23,13 +23,17 @@ import java.util.Map;
 import javax.jms.Message;
 import javax.transaction.TransactionManager;
 
+import org.seasar.framework.container.ExternalContext;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.JMSContainer;
+import org.seasar.jms.container.JMSRequest;
 import org.seasar.jms.container.exception.NotSupportedMessageException;
 import org.seasar.jms.core.message.MessageHandler;
 import org.seasar.jms.core.message.impl.MessageHandlerFactory;
@@ -40,17 +44,21 @@ import org.seasar.jms.core.message.impl.MessageHandlerFactory;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class JMSContainerImpl implements JMSContainer {
+
     protected static Logger logger = Logger.getLogger(JMSContainerImpl.class);
 
     protected TransactionManager transactionManager;
     protected List<Object> messageListeners = new ArrayList<Object>();
     protected Map<Class<?>, MessageListenerSupport> listenerSupportMap = new HashMap<Class<?>, MessageListenerSupport>();
+    protected S2Container container;
 
     public void onMessage(final Message message) {
         try {
             if (logger.isDebugEnabled()) {
                 logger.debug("[S2JMS-Container] onMessage が呼び出されました.");
             }
+
+            setRequest(message);
 
             final MessageHandler<?, ?> messageHandler = getMessageHandler(message);
 
@@ -61,6 +69,9 @@ public class JMSContainerImpl implements JMSContainer {
         } catch (final Exception ex) {
             logger.error("[S2JMS-Container] onMessage 処理中に例外が発生しました.", ex);
             rollBack();
+        } finally {
+            ExternalContext externalContext = container.getExternalContext();
+            externalContext.setRequest(null);
         }
     }
 
@@ -71,6 +82,17 @@ public class JMSContainerImpl implements JMSContainer {
         messageListeners.add(messageListener);
         final Class<?> clazz = messageListener.getClass();
         listenerSupportMap.put(clazz, new MessageListenerSupport(clazz));
+    }
+
+    protected void setRequest(final Message message) {
+        ExternalContext externalContext = container.getExternalContext();
+        if (externalContext == null) {
+            throw new EmptyRuntimeException("externalContext");
+        }
+
+        JMSRequest request = new JMSRequestImpl();
+        request.setAttribute(MESSAGE_NAME, message);
+        externalContext.setRequest(request);
     }
 
     protected MessageHandler<?, ?> getMessageHandler(final Message message) {
@@ -122,5 +144,10 @@ public class JMSContainerImpl implements JMSContainer {
     @Binding(bindingType = BindingType.MAY)
     public void setTransactionManager(final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
+    }
+
+    @Binding(bindingType = BindingType.MUST)
+    public void setContainer(S2Container container) {
+        this.container = container;
     }
 }

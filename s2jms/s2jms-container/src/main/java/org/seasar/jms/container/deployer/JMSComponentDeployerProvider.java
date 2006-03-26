@@ -13,16 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container;
+package org.seasar.jms.container.deployer;
 
-import javax.jms.MessageListener;
+import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ComponentDeployer;
+import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 
 /**
  * @author y-komori
- * 
+ *
  */
-public interface JMSContainer extends MessageListener {
-    public static final String MESSAGE_NAME = "message";
-
-    public void addMessageListener(Object messageHandler);
+public class JMSComponentDeployerProvider extends ComponentDeployerFactory.DefaultProvider {
+    @Override
+    public ComponentDeployer createRequestComponentDeployer(final ComponentDef cd) {
+        return new JMSRequestComponentDeployer(cd);
+    }
 }

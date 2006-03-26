@@ -15,14 +15,14 @@
  */
 package org.seasar.jms.container;
 
-import javax.jms.MessageListener;
-
 /**
  * @author y-komori
- * 
+ *
  */
-public interface JMSContainer extends MessageListener {
-    public static final String MESSAGE_NAME = "message";
+public interface JMSRequest {
 
-    public void addMessageListener(Object messageHandler);
+    public Object getAttribute(String name);
+
+    public void setAttribute(String name, Object component);
+
 }
