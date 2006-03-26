@@ -30,7 +30,7 @@ public class JMSExternalContext implements ExternalContext {
     }
 
     public void setRequest(Object request) {
-        requests.set(JMSRequestImpl.class.cast(request));
+        requests.set(JMSRequest.class.cast(request));
     }
 
     public Object getResponse() {
@@ -44,7 +44,7 @@ public class JMSExternalContext implements ExternalContext {
     public Object getSession() {
         throw new UnsupportedOperationException("getSession");
     }
-
+    
     public Object getApplication() {
         throw new UnsupportedOperationException("getApplication");
     }
