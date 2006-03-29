@@ -22,7 +22,6 @@ import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.JMSRequest;
-import org.seasar.jms.container.impl.JMSExternalContext;
 
 /**
  * @author y-komori
@@ -42,7 +41,7 @@ public class JMSRequestComponentDeployer extends AbstractComponentDeployer {
         ComponentDef cd = getComponentDef();
         JMSRequest request = null;
         ExternalContext extCtx = cd.getContainer().getRoot().getExternalContext();
-        if (extCtx != null && extCtx.getRequest() instanceof JMSExternalContext) {
+        if (extCtx != null && extCtx.getRequest() instanceof JMSRequest) {
             request = JMSRequest.class.cast(extCtx.getRequest());
         }
         if (request == null) {
