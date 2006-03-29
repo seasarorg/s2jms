@@ -70,8 +70,7 @@ public class JMSContainerImpl implements JMSContainer {
             logger.error("[S2JMS-Container] onMessage 処理中に例外が発生しました.", ex);
             rollBack();
         } finally {
-            ExternalContext externalContext = container.getExternalContext();
-            externalContext.setRequest(null);
+            getExternalContext().setRequest(null);
         }
     }
 
@@ -85,14 +84,17 @@ public class JMSContainerImpl implements JMSContainer {
     }
 
     protected void setRequest(final Message message) {
+        JMSRequest request = new JMSRequestImpl();
+        request.setAttribute(MESSAGE_NAME, message);
+        getExternalContext().setRequest(request);
+    }
+
+    protected ExternalContext getExternalContext() {
         ExternalContext externalContext = container.getExternalContext();
         if (externalContext == null) {
             throw new EmptyRuntimeException("externalContext");
         }
-
-        JMSRequest request = new JMSRequestImpl();
-        request.setAttribute(MESSAGE_NAME, message);
-        externalContext.setRequest(request);
+        return externalContext;
     }
 
     protected MessageHandler<?, ?> getMessageHandler(final Message message) {
