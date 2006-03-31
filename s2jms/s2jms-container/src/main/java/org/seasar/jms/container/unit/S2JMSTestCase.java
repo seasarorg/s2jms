@@ -26,22 +26,29 @@ import org.seasar.jms.container.impl.JMSRequestImpl;
 
 /**
  * @author y-komori
- *
+ * 
  */
 public class S2JMSTestCase extends S2FrameworkTestCase {
 
     @Override
     protected void setUpContainer() throws Throwable {
         super.setUpContainer();
-        
+
         ExternalContext externalContext = new JMSExternalContext();
         externalContext.setRequest(new JMSRequestImpl());
-        
-        S2Container container = getContainer();
-        container.setExternalContext(externalContext);
-        container.setExternalContextComponentDefRegister(
-                new JMSExternalContextComponentDefRegister());
-        
+
+        setUpExternalContext(getContainer());
+
         ComponentDeployerFactory.setProvider(new JMSComponentDeployerProvider());
+
+    }
+
+    protected void setUpExternalContext(final S2Container container) {
+        ExternalContext externalContext = new JMSExternalContext();
+        externalContext.setRequest(new JMSRequestImpl());
+
+        container.setExternalContext(externalContext);
+        container
+                .setExternalContextComponentDefRegister(new JMSExternalContextComponentDefRegister());
     }
 }

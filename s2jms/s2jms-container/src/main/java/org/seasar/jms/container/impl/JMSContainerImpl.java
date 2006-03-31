@@ -86,11 +86,11 @@ public class JMSContainerImpl implements JMSContainer {
     protected void setRequest(final Message message) {
         JMSRequest request = new JMSRequestImpl();
         request.setAttribute(MESSAGE_NAME, message);
-        getExternalContext().setRequest(request);
+        container.getRoot().getExternalContext().setRequest(request);
     }
 
     protected ExternalContext getExternalContext() {
-        ExternalContext externalContext = container.getExternalContext();
+        ExternalContext externalContext = container.getRoot().getExternalContext();
         if (externalContext == null) {
             throw new EmptyRuntimeException("externalContext");
         }
