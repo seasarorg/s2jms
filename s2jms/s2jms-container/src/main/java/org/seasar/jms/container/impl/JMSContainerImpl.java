@@ -23,12 +23,16 @@ import java.util.Map;
 import javax.jms.Message;
 import javax.transaction.TransactionManager;
 
+import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
+import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.log.Logger;
@@ -48,7 +52,7 @@ public class JMSContainerImpl implements JMSContainer {
     protected static Logger logger = Logger.getLogger(JMSContainerImpl.class);
 
     protected TransactionManager transactionManager;
-    protected List<Object> messageListeners = new ArrayList<Object>();
+    protected List<String> messageListenerNames = new ArrayList<String>();
     protected Map<Class<?>, MessageListenerSupport> listenerSupportMap = new HashMap<Class<?>, MessageListenerSupport>();
     protected S2Container container;
 
@@ -62,7 +66,8 @@ public class JMSContainerImpl implements JMSContainer {
 
             final MessageHandler<?, ?> messageHandler = getMessageHandler(message);
 
-            for (final Object target : messageListeners) {
+            for (final String targetName : messageListenerNames) {
+                Object target = container.getComponent(targetName);
                 bindMessage(target, messageHandler, message);
                 invokeMessageHandler(target);
             }
@@ -74,11 +79,15 @@ public class JMSContainerImpl implements JMSContainer {
         }
     }
 
-    public void addMessageListener(final Object messageListener) {
-        if (messageListener == null) {
+    public void addMessageListener(final String messageListenerName) {
+        if (messageListenerName == null) {
             throw new SIllegalArgumentException("EJMS2005", null);
         }
-        messageListeners.add(messageListener);
+        messageListenerNames.add(messageListenerName);
+        Object messageListener = container.getComponent(messageListenerName);
+        if (messageListener == null) {
+            throw new EmptyRuntimeException(messageListenerName);
+        }
         final Class<?> clazz = messageListener.getClass();
         listenerSupportMap.put(clazz, new MessageListenerSupport(clazz));
     }
@@ -87,6 +96,10 @@ public class JMSContainerImpl implements JMSContainer {
         JMSRequest request = new JMSRequestImpl();
         request.setAttribute(MESSAGE_NAME, message);
         container.getRoot().getExternalContext().setRequest(request);
+
+        ComponentDef cd = new ComponentDefImpl(Message.class, MESSAGE_NAME);
+        cd.setInstanceDef(InstanceDefFactory.getInstanceDef(InstanceDef.REQUEST_NAME));
+        container.register(cd);
     }
 
     protected ExternalContext getExternalContext() {
@@ -115,20 +128,18 @@ public class JMSContainerImpl implements JMSContainer {
 
     protected void invokeMessageHandler(final Object invokeTarget) {
         final MessageListenerSupport support = listenerSupportMap.get(invokeTarget.getClass());
+        String signature = null;
 
         if (logger.isDebugEnabled()) {
-            final String className = invokeTarget.getClass().getName();
-            final String methodName = support.getListenerMethodName();
-            logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - " + className + "#" + methodName);
+            signature = invokeTarget.getClass().getName() + "#" + support.getListenerMethodName()
+                    + "@" + Integer.toHexString(invokeTarget.hashCode());
+            logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - " + signature);
         }
 
         support.invoke(invokeTarget);
 
         if (logger.isDebugEnabled()) {
-            final String className = invokeTarget.getClass().getName();
-            final String methodName = support.getListenerMethodName();
-            logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - " + className + "#"
-                    + methodName);
+            logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - " + signature);
         }
     }
 
