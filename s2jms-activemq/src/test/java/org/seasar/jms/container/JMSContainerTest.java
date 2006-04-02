@@ -15,22 +15,23 @@
  */
 package org.seasar.jms.container;
 
+import javax.jms.Message;
 import javax.transaction.TransactionManager;
 
-import org.seasar.extension.unit.S2TestCase;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.OnMessage;
+import org.seasar.jms.container.unit.S2JMSTestCase;
 import org.seasar.jms.core.MessageSender;
 
 /**
  * @author y-komori
  * 
  */
-public class JMSContainerTest extends S2TestCase {
+public class JMSContainerTest extends S2JMSTestCase {
     protected TransactionManager tm;
     protected MessageSender sender;
-    protected TestAction1 testAction1;
-    protected TestAction1 testAction2;
+    protected MessageListener1 listener1;
+    protected MessageListener2 listener2;
 
     @Override
     protected void setUp() throws Exception {
@@ -48,58 +49,68 @@ public class JMSContainerTest extends S2TestCase {
         }
 
         Thread.sleep(500);
-        assertEquals(1, testAction1.getCallCount());
-        assertEquals("TextPayloadMessage", testAction1.getTextPaylord());
-        assertEquals(1, testAction2.getCallCount());
-        assertEquals("TextPayloadMessage", testAction2.getTextPaylord());
+        assertEquals(1, MessageListener1.getCallCount());
+        assertEquals("TextPayloadMessage", MessageListener1.getTextPaylord());
+        assertEquals(1, MessageListener2.getCallCount());
+        assertEquals("TextPayloadMessage", MessageListener2.getTextPaylord());
+        assertNotNull("TextMessage", MessageListener2.getMessage());
     }
-    
-    public static class TestAction1 {
-        protected int callCount;
-        protected String textPaylord;
+
+    public static class MessageListener1 {
+        protected static int callCount;
+        protected static String textPaylord;
 
         @OnMessage
         public void caller() {
             callCount++;
         }
-        
-        public int getCallCount() {
+
+        public static int getCallCount() {
             return callCount;
         }
-        
+
         @JMSPayload
-        public void setTextPaylord(String textPaylord) {
-            this.textPaylord = textPaylord;
+        public static void setTextPaylord(String paylord) {
+            MessageListener1.textPaylord = paylord;
         }
 
-        public String getTextPaylord() {
+        public static String getTextPaylord() {
             return textPaylord;
         }
     }
 
-    public abstract static class AbstractTestAction {
-        protected int callCount;
-        
+    public abstract static class AbstractMessageListener {
+        protected static int callCount;
+
         @OnMessage
         public void caller() {
             callCount++;
         }
-        
-        public int getCallCount() {
+
+        public static int getCallCount() {
             return callCount;
         }
     }
-    
-    public static class TestAction2 extends AbstractTestAction{
-        private String textPaylord;
-        
-        @JMSPayload
-        public void setTextPaylord(String textPaylord) {
-            this.textPaylord = textPaylord;
+
+    public static class MessageListener2 extends AbstractMessageListener {
+        protected static String textPaylord;
+        protected static Message message;
+
+        public static void setMessage(Message message) {
+            MessageListener2.message = message;
         }
 
-        public String getTextPaylord() {
+        public static Message getMessage() {
+            return message;
+        }
+
+        public static String getTextPaylord() {
             return textPaylord;
+        }
+
+        @JMSPayload
+        public static void setTextPaylord(String textPaylord) {
+            MessageListener2.textPaylord = textPaylord;
         }
     }
 }
