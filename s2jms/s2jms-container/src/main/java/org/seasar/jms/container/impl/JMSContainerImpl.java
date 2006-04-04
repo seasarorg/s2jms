@@ -46,7 +46,7 @@ import org.seasar.jms.core.message.impl.MessageHandlerFactory;
  * @author y-komori
  * 
  */
-@Component(instance = InstanceType.PROTOTYPE)
+@Component(instance = InstanceType.SINGLETON)
 public class JMSContainerImpl implements JMSContainer {
 
     protected static Logger logger = Logger.getLogger(JMSContainerImpl.class);
