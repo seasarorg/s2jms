@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="s2jms-core/src/main/java"/>
-	<classpathentry kind="src" path="s2jms-core/src/main/resources"/>
-	<classpathentry output="s2jms-core/target/test-classes" kind="src" path="s2jms-core/src/test/java"/>
-	<classpathentry output="s2jms-core/target/test-classes" kind="src" path="s2jms-core/src/test/resources"/>
-	<classpathentry output="s2jms-container/target/classes" kind="src" path="s2jms-container/src/main/java"/>
-	<classpathentry output="s2jms-container/target/classes" kind="src" path="s2jms-container/src/main/resources"/>
-	<classpathentry output="s2jms-container/target/test-classes" kind="src" path="s2jms-container/src/test/java"/>
-	<classpathentry output="s2jms-container/target/test-classes" kind="src" path="s2jms-container/src/test/resources"/>
-	<classpathentry output="s2jms-server/target/classes" kind="src" path="s2jms-server/src/main/java"/>
-	<classpathentry output="s2jms-server/target/classes" kind="src" path="s2jms-server/src/main/resources"/>
-	<classpathentry output="s2jms-server/target/test-classes" kind="src" path="s2jms-server/src/test/java"/>
-	<classpathentry output="s2jms-server/target/test-classes" kind="src" path="s2jms-server/src/test/resources"/>
-	<classpathentry output="s2jms-connector/target/classes" kind="src" path="s2jms-connector/src/main/java"/>
-	<classpathentry output="s2jms-connector/target/classes" kind="src" path="s2jms-connector/src/main/resources"/>
-	<classpathentry output="s2jms-connector/target/test-classes" kind="src" path="s2jms-connector/src/test/java"/>
-	<classpathentry output="s2jms-connector/target/test-classes" kind="src" path="s2jms-connector/src/test/resources"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry output="target/test-classes" kind="src" path="src/test/java"/>
+	<classpathentry output="target/test-classes" kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2jca"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry exported="true" kind="lib" path="lib/velocity-dep-1.3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/velocity-tools-generic-1.1.jar"/>
-	<classpathentry kind="output" path="s2jms-core/target/classes"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
