@@ -17,6 +17,8 @@ package org.seasar.jms.server;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -24,15 +26,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.S2ContainerFactory;
-
 /**
  * @author bowez
  * 
  */
 public class Bootstrap {
-    private static final String DEFAULT_DICON_FILE = "app.dicon";
+    static final String DEFAULT_DICON_FILE = "app.dicon";
+    static final String S2_CONTAINER_FACTORY = "org.seasar.framework.container.factory.S2ContainerFactory";
     
     /**
      * @param args
@@ -50,21 +50,38 @@ public class Bootstrap {
 
     synchronized void run(final String[] args) throws Exception {
         final String dicon = getDicon(args);
-        final String patharg = getClasspath(args);
-        setupClasspath(patharg.split(File.pathSeparator));
-        final S2Container container = S2ContainerFactory.create(dicon);
+        final String classpathArg = getClasspath(args);
+        setupClasspath(classpathArg.split(File.pathSeparator));
+        final Object s2container = createS2Container(dicon);
+        final Method init = s2container.getClass().getDeclaredMethod("init");
+        final Method destoroy = s2container.getClass().getDeclaredMethod("destroy");
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                container.destroy();
+                try {
+                    destoroy.invoke(s2container);
+                } 
+                catch (final IllegalAccessException e) {
+                    e.printStackTrace();
+                } 
+                catch (final InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        container.init();
+        init.invoke(s2container);
         try {
             wait();
         } 
         catch (final InterruptedException ignore) {
         }
+    }
+    
+    Object createS2Container(String dicon) throws Exception {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final Class s2ContainerFactoryClass = classLoader.loadClass(S2_CONTAINER_FACTORY);
+        final Method createMethod = s2ContainerFactoryClass.getDeclaredMethod("create", String.class);
+        return createMethod.invoke(s2ContainerFactoryClass, dicon);
     }
     
     String getDicon(final String[] args) throws IllegalArgumentException {
@@ -97,7 +114,7 @@ public class Bootstrap {
                 final File[] jarFiles = getJarFiles(path);
                 if (0 < jarFiles.length) {
                     for (File jar : jarFiles) {
-                        urls.add(jar.toURL());
+                        urls.add(new URL("jar:" + jar.toURL().toString() + "!/"));
                     }
                 }
                 else {

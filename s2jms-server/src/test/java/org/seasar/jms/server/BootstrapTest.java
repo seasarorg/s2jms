@@ -17,27 +17,39 @@ package org.seasar.jms.server;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author bowez
  * 
  */
-public class BootstrapTest extends TestCase {
-    public void testGetDicon() {
+public class BootstrapTest {
+    public static junit.framework.Test suite() { 
+        return new JUnit4TestAdapter(BootstrapTest.class);
+    }
+    
+    @Test 
+    public void getDicon() {
         assertEquals("test.dicon", new Bootstrap().getDicon(new String[] {"--dicon", "test.dicon" }));
     }
     
-    public void testGetDicon2() {
+    @Test 
+    public void getDicon2() {
         assertEquals("test.dicon", 
                 new Bootstrap().getDicon(new String[] {"--classpath", "/usr/local/foo/bar", "--dicon", "test.dicon"}));
     }
     
-    public void testGetDiconDefault() {
+    @Test
+    public void getDiconDefault() {
         assertEquals("app.dicon", new Bootstrap().getDicon(new String[] {"--classpath", "/usr/local/foo/bar" }));
     }
     
-    public void testGetDiconError() {
+    @Test
+    public void getDiconError() {
         try {
             new Bootstrap().getDicon(new String[] {"--dicon"});
             fail();
@@ -46,7 +58,8 @@ public class BootstrapTest extends TestCase {
         }
     }
     
-    public void testIsJar() {
+    @Test
+    public void isJar() {
         assertTrue(new Bootstrap().isJar(new File("/foo/var/baz.jar")));
         assertTrue(new Bootstrap().isJar(new File("/foo/var/baz.JAR")));
         assertTrue(new Bootstrap().isJar(new File("/foo/var/baz.Jar")));
