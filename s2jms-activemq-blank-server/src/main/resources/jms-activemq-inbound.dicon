@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
+	"http://www.seasar.org/dtd/components23.dtd">
+<components namespace="jms-activemq-cf">
+	<include path="jms-activemq-ra.dicon"/>
+	<include path="jms-activemq-outbound.dicon"/><!-- 返信メッセージを送信する場合にインクルードします -->
+
+	<!-- メッセージを受信するための設定を行うコンポーネント -->
+	<component
+		class="org.seasar.jca.deploy.impl.MessageEndpointDeployer"
+	>
+		<property name="activationSpecClassName">"org.activemq.ra.ActiveMQActivationSpec"</property>
+
+		<!--
+			受信のためのActiveMQのプロパティを設定します．
+			設定可能なプロパティは
+				http://activemq.codehaus.org/Activation+Spec+Properties
+			を参照してください．
+		-->
+		<!-- 受信するデスティネーションを設定します -->
+		<initMethod name="setProperty">
+			<arg>"destination"</arg>
+			<arg>"inputQueue"</arg><!-- デスティネーションの名前 (キュー名またはトピック名) に変更してください -->
+		</initMethod>
+
+		<!-- 受信するデスティネーションの種類 (キューまたはトピック) を指定します -->
+		<initMethod name="setProperty">
+			<arg>"destinationType"</arg>
+			<arg>"javax.jms.Queue"</arg><!-- デスティネーションの種類に合わせて変更してください -->
+		</initMethod>
+	</component>
+	<component
+		class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"
+	>
+		<!-- メッセージをトランザクショナルに受信する場合は true を指定します -->
+		<property name="deliveryTransacted">true</property>
+	</component>
+
+	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
+		<!-- アプリケーション固有のメッセージリスナ・コンポーネントの名前を指定します -->
+		<initMethod name="addMessageListener">
+			<arg>"listener1"</arg>
+		</initMethod>
+		<!-- 複数のメッセージリスナ・コンポーネントを指定することもできます -->
+		<initMethod name="addMessageListener">
+			<arg>"listener2"</arg>
+		</initMethod>
+	</component>
+
+	<!-- 以下をアプリケーション固有のメッセージリスナ・コンポーネントに変更してください -->
+	<component name="listener1" instance="prototype"
+		class="org.seasar.jms.blank.Printer"
+	/>
+	<component name="listener2" instance="prototype"
+		class="org.seasar.jms.blank.Echo"
+	>
+		<aspect pointcut="echo">
+			<component class="org.seasar.jms.core.interceptor.SendReturnValueInterceptor"/>
+		</aspect>
+	</component>
+</components>
