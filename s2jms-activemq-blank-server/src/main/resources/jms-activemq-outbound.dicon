@@ -19,7 +19,7 @@
 	<!-- デスティネーション (キューまたはトピック) ファクトリを設定します -->
 	<component class="org.seasar.jms.core.destination.impl.QueueFactory">
 		<!-- キュー名を指定します -->
-		<property name="name">"outputQueue"</property>
+		<property name="name">"Bar"</property>
 	</component>
 
 	<!-- セッションファクトリを設定します -->
