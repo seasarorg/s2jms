@@ -1,0 +1,14 @@
+<project name="S2JMS-ActiveMQ-Blank-JSF" default="dist" basedir=".">
+	<property name="ver" value="1.0.0-M1"/>
+
+	<target name="dist">
+		<mkdir dir="target"/>
+		<zip zipfile="target/S2JMS-ActiveMQ-Blank-JSF-${ver}.zip">
+			<zipfileset prefix="s2jms-activemq-blank-jsf" dir=".">
+				<exclude name="**/classes/**"/>
+				<exclude name="target/**"/>
+			</zipfileset>
+		</zip>
+	</target>
+</project>
+

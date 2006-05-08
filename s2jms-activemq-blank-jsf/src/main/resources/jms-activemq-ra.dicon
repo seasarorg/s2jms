@@ -9,7 +9,7 @@
 	>
 		<!-- ActiveMQ ResourceAdapter へのパスを設定します -->
 		<property name="path">
-			application.getRealPath("WEB-INF/ra/activemq-ra-3.2.1.rar")
+			application.getRealPath("WEB-INF/ra/activemq-ra-3.2.2.rar")
 		</property>
 
 		<!-- ActiveMQ Broker へのURLを設定します -->
