@@ -18,7 +18,6 @@ package org.seasar.jms.container;
 import javax.jms.Message;
 import javax.transaction.TransactionManager;
 
-import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.unit.S2JMSTestCase;
@@ -38,7 +37,7 @@ public class JMSContainerTest extends S2JMSTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         include(this.getClass().getSimpleName() + ".dicon");
-        include("cf-test.dicon");
+        include("queue-cf-test.dicon");
     }
 
     public void test() throws Exception {
@@ -96,7 +95,7 @@ public class JMSContainerTest extends S2JMSTestCase {
     public static class MessageListener2 extends AbstractMessageListener {
         @JMSPayload
         private static String textPaylord;
-        
+
         protected static Message message;
 
         public static void setMessage(Message message) {
