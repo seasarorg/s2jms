@@ -28,7 +28,7 @@ import org.seasar.jms.container.impl.JMSRequestImpl;
  * @author y-komori
  * 
  */
-public class S2JMSTestCase extends S2FrameworkTestCase {
+public abstract class S2JMSTestCase extends S2FrameworkTestCase {
 
     @Override
     protected void setUpContainer() throws Throwable {
