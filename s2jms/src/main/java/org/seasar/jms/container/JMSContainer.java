@@ -18,11 +18,29 @@ package org.seasar.jms.container;
 import javax.jms.MessageListener;
 
 /**
- * @author y-komori
+ * S2JMSContainerが実装するインターフェースです。
  * 
+ * @author y-komori
  */
 public interface JMSContainer extends MessageListener {
+    /**
+     * S2JMSContainer が受信したメッセージを JMSRequest に格納するときの属性名です。
+     */
     public static final String MESSAGE_NAME = "message";
 
+    /**
+     * S2JMSContainerにメッセージリスナ・コンポーネントを登録します。<br>
+     * メッセージリスナ・コンポーネントはDiconファイルに登録し、通常以下のように使用します。<br>
+     * 
+     * <pre>
+     *   &lt;component class=&quot;org.seasar.jms.container.impl.JMSContainerImpl&quot;&gt;
+     *   &lt;initMethod name=&quot;addMessageListener&quot;&gt;
+     *       &lt;arg&gt;&quot;paymentActionJms&quot;&lt;/arg&gt;
+     *   &lt;/initMethod&gt;
+     * </pre>
+     * 
+     * @param messageListenerName
+     *            Diconに定義されたmessageListenerクラスのコンポーネント名。
+     */
     public void addMessageListener(String messageListenerName);
 }
