@@ -116,4 +116,15 @@
       <url>scp://www.seasar.org/home/groups/sandbox/s2jms/maven/maven2</url>
     </repository>
   </distributionManagement>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <charset>Shift_JIS</charset>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
