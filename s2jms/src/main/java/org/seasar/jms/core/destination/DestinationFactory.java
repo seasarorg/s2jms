@@ -19,8 +19,17 @@ import javax.jms.Destination;
 import javax.jms.Session;
 
 /**
+ * JMSデスティネーション(キューまたはトピック)を作成するコンポーネントのインタフェースです。
+ * 
  * @author koichik
  */
 public interface DestinationFactory {
+    /**
+     * JMSセッションからJMSデスティネーションを作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSデスティネーション
+     */
     Destination getDestination(Session session);
 }

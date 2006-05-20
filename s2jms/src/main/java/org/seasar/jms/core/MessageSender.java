@@ -23,18 +23,72 @@ import javax.jms.Message;
 import org.seasar.jms.core.message.MessageFactory;
 
 /**
+ * JMSメッセージを送信するコンポーネントのインタフェースです。
+ * <p>
+ * 送信するJMSメッセージを容易に作成するために次のメソッドを使用することができます。
+ * <ul>
+ * <li>{@link #send(byte[])}</li>
+ * <li>{@link #send(Map)}</li>
+ * <li>{@link #send(Serializable)}</li>
+ * <li>{@link #send(String)}</li>
+ * </ul>
+ * これらのメソッドは対応するJMS標準メッセージ型を作成し、引数をペイロードに設定して送信します。
+ * </p>
+ * <p>
+ * 送信するJMSメッセージを詳細に設定するには次のメソッドを使用することができます。
+ * <ul>
+ * <li>{@link #send(MessageFactory)}</li>
+ * <li>{@link #send()}</li>
+ * </ul>
+ * 引数またはコンポーネント実装クラスのプロパティに設定する{@link org.seasar.jms.core.message.MessageFactory}により自由にJMSメッセージを作成することができます。
+ * </p>
+ * 
  * @author koichik
  */
 public interface MessageSender {
-    void send();
-
+    /**
+     * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
+     * 
+     * @param bytes
+     *            送信するバイト配列
+     */
     void send(byte[] bytes);
 
+    /**
+     * 文字列を{@link javax.jms.TextMessage}のペイロードに設定して送信します。
+     * 
+     * @param text
+     *            送信する文字列
+     */
     void send(String text);
 
+    /**
+     * {@link java.io.Serializable}オブジェクトを{@link javax.jms.ObjectMessage}のペイロードに設定して送信します。
+     * 
+     * @param object
+     *            送信するオブジェクト
+     */
     void send(Serializable object);
 
+    /**
+     * {@link java.util.Map}を{@link javax.jms.MapMessage}のペイロードに設定して送信します。
+     * 
+     * @param map
+     *            送信するマップ
+     */
     void send(Map<String, Object> map);
 
+    /**
+     * 実装クラスのプロパティに設定された{@link MessageFactory}が作成したJMSメッセージを送信します。
+     * 
+     */
+    void send();
+
+    /**
+     * {@link MessageFactory}が作成したJMSメッセージを送信します。
+     * 
+     * @param messageFactory
+     *            メッセージファクトリ
+     */
     <MSGTYPE extends Message> void send(MessageFactory<MSGTYPE> messageFactory);
 }

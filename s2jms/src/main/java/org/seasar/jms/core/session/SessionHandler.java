@@ -19,8 +19,22 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 
 /**
+ * JMSセッションを処理するコンポーネントのインタフェースです。
+ * <p>
+ * このコンポーネントは{@link SessionFactory}によって作成されたJMSセッションを処理するためにコールバックされます。
+ * {@link #handleSession}メソッドの処理が終わってリターンするとJMSセッションはクローズされます。
+ * </p>
+ * 
  * @author koichik
  */
 public interface SessionHandler {
+    /**
+     * JMSセッションを処理します。このメソッドがリターンするとJMSセッションはクローズされます。
+     * 
+     * @param session
+     *            JMSセッション
+     * @throws JMSException
+     *             JMSセッションの処理中に障害が発生した場合にスローされます
+     */
     void handleSession(Session session) throws JMSException;
 }

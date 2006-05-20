@@ -19,10 +19,24 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.container.annotation.tiger.Component;
 
 /**
+ * JMSメッセージを送信するインターセプタです。
+ * <p>
+ * ターゲットメソッドが例外をスローすることなく終了した場合、{@link org.seasar.jms.core.MessageSender#send() send()}メソッドを呼び出してJMSメッセージを送信します。
+ * </p>
+ * 
  * @author koichik
  */
 @Component
 public class SendMessageInterceptor extends AbstractSendMessageInterceptor {
+    /**
+     * ターゲットメソッドが例外をスローすることなく終了した後にJMSメッセージを送信します。
+     * 
+     * @param invocation
+     *            ターゲットメソッドの呼び出しを表現するオブジェクト
+     * @return ターゲットメソッドの戻り値
+     * @throws Throwable
+     *             ターゲットメソッドの実行時あるいはJMSメッセージの送信時に例外が発生した場合にスローされます
+     */
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         final Object result = proceed(invocation);
         getMessageSender().send();

@@ -1,5 +1,5 @@
 <project name="S2JMS" default="dist" basedir=".">
-	<property name="ver" value="1.0.0-M1"/>
+	<property name="ver" value="1.0.0-M2-SNAPSHOT"/>
 
 	<target name="dist">
 		<zip zipfile="target/S2JMS-${ver}.zip">
@@ -9,6 +9,8 @@
 			</zipfileset>
 			<zipfileset prefix="s2jms/lib" dir="target">
 				<include name="s2jms-${ver}.jar"/>
+				<include name="s2jms-${ver}-sources.jar"/>
+				<include name="s2jms-${ver}-javadoc.jar"/>
 			</zipfileset>
 			<!--
 			<zipfileset prefix="s2jms/resources" dir="src/test/resources">

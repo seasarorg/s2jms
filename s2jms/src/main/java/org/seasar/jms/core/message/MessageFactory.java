@@ -19,8 +19,17 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 /**
+ * JMSメッセージを作成するコンポーネントのインタフェースです。
+ * 
  * @author koichik
  */
 public interface MessageFactory<MSGTYPE extends Message> {
+    /**
+     * JMSメッセージを作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSメッセージ
+     */
     MSGTYPE createMessage(Session session);
 }

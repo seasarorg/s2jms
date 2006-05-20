@@ -26,6 +26,11 @@ import org.seasar.framework.util.MethodUtil;
 import org.seasar.jms.core.MessageSender;
 
 /**
+ * JMSメッセージを送信するインターセプタの抽象基底クラスです。
+ * <p>
+ * このサブクラスを使用することにより、透過的にJMSメッセージを送信することができます。
+ * </p>
+ * 
  * @author koichik
  */
 public abstract class AbstractSendMessageInterceptor implements MethodInterceptor {
@@ -33,25 +38,60 @@ public abstract class AbstractSendMessageInterceptor implements MethodIntercepto
     protected String messageSenderName;
     protected ComponentDef componentDef;
 
+    /**
+     * インスタンスを構築します。
+     */
     public AbstractSendMessageInterceptor() {
     }
 
+    /**
+     * S2コンテナを設定します(必須)。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setContainer(final S2Container container) {
         this.container = container;
     }
 
+    /**
+     * JMSメッセージの送信で使用する{@link org.seasar.jms.core.MessageSender}のコンポーネント名を設定します。
+     * <p>
+     * このプロパティが設定されていない場合は{@link org.seasar.jms.core.MessageSender}インタフェースをキーとします。
+     * 
+     * @param messageSenderName
+     *            JMSメッセージの送信で使用する{@link org.seasar.jms.core.MessageSender}のコンポーネント名
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setMessageSenderName(final String messageSenderName) {
         this.messageSenderName = messageSenderName;
     }
 
+    /**
+     * コンポーネントを初期化します。
+     * <p>
+     * JMSメッセージの送信で使用する{@link org.seasar.jms.core.MessageSender}のコンポーネント定義をS2コンテナからルックアップします。
+     * </p>
+     * 
+     */
     @InitMethod
     public void initialize() {
         componentDef = container.getComponentDef(messageSenderName == null ? MessageSender.class
                 : messageSenderName);
     }
 
+    /**
+     * ターゲットのメソッドを呼び出します。
+     * <p>
+     * ターゲットのメソッドが抽象メソッドの場合は呼び出しを行わず、{@code null}を返します。
+     * 
+     * @param invocation
+     *            ターゲットメソッドの呼び出しを表現するオブジェクト
+     * @return ターゲットメソッドの戻り値
+     * @throws Throwable
+     *             ターゲットメソッドが例外をスローした場合にスローされます
+     */
     protected Object proceed(final MethodInvocation invocation) throws Throwable {
         if (MethodUtil.isAbstract(invocation.getMethod())) {
             return null;
@@ -59,6 +99,11 @@ public abstract class AbstractSendMessageInterceptor implements MethodIntercepto
         return invocation.proceed();
     }
 
+    /**
+     * {@link org.seasar.jms.core.MessageSender}を返します。
+     * 
+     * @return {@link org.seasar.jms.core.MessageSender}
+     */
     protected MessageSender getMessageSender() {
         return (MessageSender) componentDef.getComponent();
     }

@@ -18,10 +18,28 @@ package org.seasar.jms.core.message;
 import javax.jms.Message;
 
 /**
+ * 受信したJMSメッセージを処理するコンポーネントのインタフェースです。
+ * <p>
+ * {@link MessageHandler}は処理対象となるJMSメッセージ型とのそのペイロード型を型引数として持ちます。
+ * JMSメッセージ型とは{@link javax.jms.Message}を拡張したインタフェースまたは実装したクラスで、ペイロード型はJMSメッセージ型の持つペイロードの型です。<br>
+ * 受信したJMSメッセージが{@link MessageHandler}の処理対象となるJMSメッセージ型に代入可能でない場合、そのメッセージは{@link #handleMessage}に渡されません。
+ * </p>
+ * 
  * @author koichik
  */
 public interface MessageHandler<MSGTYPE extends Message, PAYLOADTYPE> {
+    /**
+     * 処理対象となるJMSメッセージの型を返します。
+     * 
+     * @return JMSメッセージの型
+     */
     Class<MSGTYPE> getMessageType();
 
+    /**
+     * JMSメッセージを処理してペイロードを返します。
+     * 
+     * @param message 受信したJMSメッセージ
+     * @return JMSメッセージのペイロード
+     */
     PAYLOADTYPE handleMessage(MSGTYPE message);
 }

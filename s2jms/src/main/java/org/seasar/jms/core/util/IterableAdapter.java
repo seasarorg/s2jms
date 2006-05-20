@@ -19,27 +19,51 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
+ * {@link java.util.Enumeration}を{@link java.lang.Iterable}に扱うためのユーティリティ。
+ * 
  * @author koichik
  */
 public class IterableAdapter implements Iterable<String>, Iterator<String> {
     Enumeration enumeration;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param enumeration
+     *            反復対象となる{@link java.util.Enumeration}
+     */
     public IterableAdapter(final Enumeration enumeration) {
         this.enumeration = enumeration;
     }
 
+    /**
+     * {@link java.util.Enumeration}の反復子を返します。
+     * 
+     * @return {@link java.util.Enumeration}の反復子
+     */
     public Iterator<String> iterator() {
         return this;
     }
 
+    /**
+     * @see java.util.Iterator#hasNext
+     */
     public boolean hasNext() {
         return enumeration.hasMoreElements();
     }
 
+    /**
+     * @see java.util.Iterator#hasNext
+     */
     public String next() {
         return String.class.cast(enumeration.nextElement());
     }
 
+    /**
+     * このメソッドはサポートされません。
+     * 
+     * @see java.util.Iterator#remove
+     */
     public void remove() {
         throw new UnsupportedOperationException("remove");
     }

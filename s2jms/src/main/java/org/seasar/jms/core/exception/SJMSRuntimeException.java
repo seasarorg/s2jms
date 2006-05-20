@@ -18,23 +18,57 @@ package org.seasar.jms.core.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * JMSで発生したエラーを通知するための実行時例外。
+ * 
  * @author koichik
  */
 public class SJMSRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param messageCode
+     *            メッセージコード
+     */
     public SJMSRuntimeException(final String messageCode) {
         this(messageCode, null, null);
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param messageCode
+     *            メッセージコード
+     * @param args
+     *            メッセージに埋め込まれる引数
+     */
     public SJMSRuntimeException(final String messageCode, final Object[] args) {
         this(messageCode, args, null);
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param messageCode
+     *            メッセージコード
+     * @param cause
+     *            この例外の原因となった例外
+     */
     public SJMSRuntimeException(final String messageCode, final Throwable cause) {
         this(messageCode, null, cause);
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param messageCode
+     *            メッセージコード
+     * @param args
+     *            メッセージに埋め込まれる引数
+     * @param cause
+     *            この例外の原因となった例外
+     */
     public SJMSRuntimeException(final String messageCode, final Object[] args, final Throwable cause) {
         super(messageCode, args, cause);
     }

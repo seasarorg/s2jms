@@ -38,6 +38,26 @@ import org.seasar.jms.core.session.SessionFactory;
 import org.seasar.jms.core.session.SessionHandler;
 
 /**
+ * JMSメッセージを送信するコンポーネントの実装クラスです。
+ * <p>
+ * 送信するJMSメッセージを容易に作成するために次のメソッドを使用することができます。
+ * <ul>
+ * <li>{@link #send(byte[])}</li>
+ * <li>{@link #send(Map)}</li>
+ * <li>{@link #send(Serializable)}</li>
+ * <li>{@link #send(String)}</li>
+ * </ul>
+ * これらのメソッドは対応するJMS標準メッセージ型を作成し、引数をペイロードに設定して送信します。
+ * </p>
+ * <p>
+ * 送信するJMSメッセージを詳細に設定するには次のメソッドを使用することができます。
+ * <ul>
+ * <li>{@link #send(MessageFactory)}</li>
+ * <li>{@link #send()}</li>
+ * </ul>
+ * 引数またはプロパティに設定する{@link org.seasar.jms.core.message.MessageFactory}により自由にJMSメッセージを作成することができます。
+ * </p>
+ * 
  * @author koichik
  */
 public class MessageSenderImpl implements MessageSender {
@@ -50,58 +70,98 @@ public class MessageSenderImpl implements MessageSender {
     protected boolean disableMessageID = false;
     protected boolean disableMessageTimestamp = false;
 
+    /**
+     * インスタンスを構築します。
+     */
     public MessageSenderImpl() {
     }
 
-    public int getDeliveryMode() {
-        return deliveryMode;
-    }
-
+    /**
+     * 受信に使用するJMSセッションのファクトリを設定します (必須)。
+     * 
+     * @param sessionFactory
+     *            JMSセッションファクトリ
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setSessionFactory(final SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * 送信に使用するJMSデスティネーションのファクトリを設定します (必須)。
+     * 
+     * @param sessionFactory
+     *            JMSデスティネーションファクトリ
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setDestinationFactory(final DestinationFactory destinationFactory) {
         this.destinationFactory = destinationFactory;
     }
 
+    /**
+     * 送信するJMSメッセージのファクトリを設定します。
+     * 
+     * @param messageFactory
+     *            JMSメッセージのファクトリ
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setMessageFactory(final MessageFactory messageFactory) {
         this.messageFactory = messageFactory;
     }
 
+    /**
+     * 送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}を設定します。デフォルトは{@link javax.jms.Message#DEFAULT_DELIVERY_MODE JMSメッセージのデフォルト配信モード}に従います。
+     * 
+     * @param deliveryMode
+     *            送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setDeliveryMode(final int deliveryMode) {
         this.deliveryMode = deliveryMode;
     }
 
+    /**
+     * 送信するJMSメッセージの優先度を指定します。デフォルトは{@link javax.jms.Message#DEFAULT_PRIORITY JMSメッセージのデフォルト優先度}に従います。
+     * 
+     * @param priority
+     *            送信するJMSメッセージの優先度
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setPriority(final int priority) {
         this.priority = priority;
     }
 
+    /**
+     * 送信するJMSメッセージの生存時間をミリ秒単位で指定します。デフォルトは{@link javax.jms.Message#DEFAULT_TIME_TO_LIVE JMSメッセージのデフォルト生存時間}に従います。
+     * 
+     * @param timeToLive
+     *            送信するJMSメッセージの生存時間 (ミリ秒単位)
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setTimeToLive(final long timeToLive) {
         this.timeToLive = timeToLive;
     }
 
+    /**
+     * 送信するJMSメッセージのメッセージIDを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
+     * 
+     * @param disableMessageID
+     *            送信するJMSメッセージのメッセージIDを無効化する場合は{@code true}、その他の場合は{@code false}
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setDisableMessageID(final boolean disableMessageID) {
         this.disableMessageID = disableMessageID;
     }
 
+    /**
+     * 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
+     * 
+     * @param disableMessageTimestamp
+     *            送信するJMSメッセージのタイムスタンプを無効化する場合は{@code true}、その他の場合は{@code false}
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setDisableMessageTimestamp(final boolean disableMessageTimestamp) {
         this.disableMessageTimestamp = disableMessageTimestamp;
-    }
-
-    public void send() {
-        if (messageFactory == null) {
-            throw new EmptyRuntimeException("messageFactory");
-        }
-        send(messageFactory);
     }
 
     public void send(final byte[] bytes) {
@@ -120,6 +180,16 @@ public class MessageSenderImpl implements MessageSender {
         send(new MapMessageFactory(map));
     }
 
+    /**
+     * プロパティに設定された{@link MessageFactory}が作成したJMSメッセージを送信します。
+     */
+    public void send() {
+        if (messageFactory == null) {
+            throw new EmptyRuntimeException("messageFactory");
+        }
+        send(messageFactory);
+    }
+
     public void send(final MessageFactory messageFactory) {
         sessionFactory.operateSession(false, new SessionHandler() {
             public void handleSession(Session session) throws JMSException {
@@ -130,6 +200,15 @@ public class MessageSenderImpl implements MessageSender {
         });
     }
 
+    /**
+     * プロパティの設定に基づいて{@link javax.jms.MessageProducer}を作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return プロパティの設定に基づいて作成した{@link javax.jms.MessageProducer}
+     * @throws JMSException
+     *             JMS実装で例外が発生した場合にスローされます
+     */
     protected MessageProducer createMessageProducer(final Session session) throws JMSException {
         final Destination destination = destinationFactory.getDestination(session);
         final MessageProducer producer = session.createProducer(destination);

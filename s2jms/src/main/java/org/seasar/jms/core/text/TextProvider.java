@@ -16,8 +16,15 @@
 package org.seasar.jms.core.text;
 
 /**
+ * {@link javax.jms.TextMessage}のペイロードに設定される文字列を提供するコンポーネントのインタフェースです。
+ * 
  * @author koichik
  */
 public interface TextProvider {
+    /**
+     * JMSテキストメッセージのペイロードに設定する文字列を返します。
+     * 
+     * @return JMSテキストメッセージのペイロードに設定する文字列
+     */
     String getText();
 }

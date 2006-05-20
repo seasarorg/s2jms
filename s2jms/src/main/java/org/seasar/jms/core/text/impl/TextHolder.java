@@ -22,23 +22,45 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.jms.core.text.TextProvider;
 
 /**
+ * インスタンスフィールドに保持した文字列を返す単純な{@link org.seasar.jms.core.text.TextProvider}の実装クラス。
+ * 
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TextHolder implements TextProvider {
     protected String text;
 
+    /**
+     * インスタンスを構築します。
+     */
     public TextHolder() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param text
+     *            文字列
+     */
     public TextHolder(final String text) {
         this.text = text;
     }
 
+    /**
+     * 文字列を返します。
+     * 
+     * @return 文字列
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * 文字列を設定します。
+     * 
+     * @param text
+     *            文字列
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setText(final String text) {
         this.text = text;
