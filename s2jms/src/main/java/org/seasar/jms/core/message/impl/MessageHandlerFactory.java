@@ -25,6 +25,9 @@ import javax.jms.Message;
 import org.seasar.jms.core.message.MessageHandler;
 
 /**
+ * JMSメッセージ型と、対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスの
+ * マッピングを保持するクラスです。
+ * 
  * @author y-komori
  * 
  */
@@ -38,9 +41,21 @@ public class MessageHandlerFactory {
         handlers.add(new ObjectMessageHandler());
     }
 
+    /**
+     * 利用者がインスタンスを構築しないようにするための{@code private}コンストラクタです。
+     * 
+     */
     private MessageHandlerFactory() {
     }
 
+    /**
+     * JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスを返します。
+     * 
+     * @param messageClass
+     *            JMSメッセージ型
+     * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラス。
+     *         対応するクラスがない場合は{@code null}
+     */
     public static MessageHandler<?, ?> getMessageHandler(final Class<? extends Message> messageClass) {
         for (final MessageHandler<?, ?> messageHandler : handlers) {
             if (messageHandler.getMessageType().isAssignableFrom(messageClass)) {

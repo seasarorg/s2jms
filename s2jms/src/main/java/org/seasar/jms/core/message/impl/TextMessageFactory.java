@@ -27,39 +27,117 @@ import org.seasar.jms.core.text.TextProvider;
 import org.seasar.jms.core.text.impl.TextHolder;
 
 /**
+ * {@link javax.jms.TextMessage}を作成するコンポーネントです。
+ * <p>
+ * このクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
     protected TextProvider textProvider;
 
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setText text}プロパティまたは
+     * {@link #setTextProvider textProvider}プロパティの設定は必須となります。
+     * </p>
+     * 
+     */
     public TextMessageFactory() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param text
+     *            JMSメッセージのペイロードに設定される文字列
+     */
     public TextMessageFactory(final String text) {
         this(new TextHolder(text));
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param textProvider
+     *            JMSメッセージのペイロードに設定される文字列を提供するプロバイダ
+     */
     public TextMessageFactory(final TextProvider textProvider) {
         this.textProvider = textProvider;
     }
 
+    /**
+     * JMSメッセージのペイロードに設定される文字列を返します。
+     * 
+     * @return JMSメッセージのペイロードに設定される文字列
+     */
+    public String getText() {
+        return textProvider.getText();
+    }
+
+    /**
+     * JMSメッセージのペイロードに設定される文字列を設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティまたは
+     * {@link #setTextProvider textProvider}プロパティの設定は必須です。
+     * </p>
+     * 
+     * @param text
+     *            JMSメッセージのペイロードに設定される文字列
+     */
+    @Binding(bindingType = BindingType.MAY)
+    public void setText(final String text) {
+        this.textProvider = new TextHolder(text);
+    }
+
+    /**
+     * JMSメッセージのペイロードに設定される文字列を提供するプロバイダを返します。
+     * 
+     * @return JMSメッセージのペイロードに設定される文字列を提供するプロバイダ
+     */
     public TextProvider getTextProvider() {
         return textProvider;
     }
 
-    @Binding(bindingType = BindingType.MUST)
+    /**
+     * JMSメッセージのペイロードに設定される文字列を提供するプロバイダを設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティまたは {@link #setText text}プロパティの設定は必須です。
+     * </p>
+     * 
+     * @param text
+     *            JMSメッセージのペイロードに設定される文字列を提供するプロバイダ
+     */
+    @Binding(bindingType = BindingType.MAY)
     public void setTextProvider(final TextProvider textProvider) {
         this.textProvider = textProvider;
     }
 
+    /**
+     * JMSセッションから{@link javax.jms.TextMessage}を作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSセッションから作成された{@link javax.jms.TextMessage}
+     */
     @Override
     protected TextMessage createMessageInstance(final Session session) throws JMSException {
         return session.createTextMessage();
     }
 
+    /**
+     * JMSペイロードに{@link #setText text}プロパティの値を設定します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにペイロードを設定できなかった場合にスローされます
+     */
     @Override
     protected void setupPayload(final TextMessage message) throws JMSException {
-        message.setText(textProvider.getText());
+        message.setText(getText());
     }
 }

@@ -22,10 +22,19 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
 /**
+ * 受信した{@link javax.jms.TextMessage}を処理するコンポーネントです。
+ * <p>
+ * このクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TextMessageHandler extends AbstractMessageHandler<TextMessage, String> {
+    /**
+     * インスタンスを構築します。
+     *
+     */
     public TextMessageHandler() {
     }
 

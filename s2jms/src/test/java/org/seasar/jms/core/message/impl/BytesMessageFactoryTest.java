@@ -51,7 +51,7 @@ public class BytesMessageFactoryTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                target.setCorrelationId("id");
+                target.setCorrelationID("id");
                 target.addProperty("foo", "FOO");
                 target.setBytes(new byte[] { 1, 2, 3 });
                 assertSame("1", message, target.createMessage(session));

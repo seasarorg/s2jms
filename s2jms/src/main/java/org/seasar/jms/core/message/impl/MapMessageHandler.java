@@ -26,10 +26,19 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.jms.core.util.IterableAdapter;
 
 /**
+ * 受信した{@link javax.jms.MapMessage}を処理するコンポーネントです。
+ * <p>
+ * このクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class MapMessageHandler extends AbstractMessageHandler<MapMessage, Map<String, Object>> {
+    /**
+     * インスタンスを構築します。
+     *
+     */
     public MapMessageHandler() {
     }
 

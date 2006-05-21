@@ -29,6 +29,8 @@ import org.seasar.framework.log.Logger;
 import org.seasar.jms.core.text.TextProvider;
 
 /**
+ * Velocityを使ってフォーマットした文字列を提供する{@link org.seasar.jms.core.text.TextProvider}の実装クラス。
+ * 
  * @author bowez
  */
 @Component
@@ -48,24 +50,51 @@ public class VelocityTextFormatter implements TextProvider {
         }
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     public VelocityTextFormatter() {
     }
 
+    /**
+     * テンプレート文字列を設定します(必須)。
+     * 
+     * @param templateText
+     *            テンプレート文字列
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setTemplateText(String templateText) {
         this.templateText = templateText;
     }
 
+    /**
+     * S2コンテナを設定します(必須)。
+     * 
+     * @param container
+     *            S2コンテナ
+     */
     @Binding(bindingType = BindingType.MUST)
     public void setContainer(final S2Container container) {
         this.container = container;
     }
 
+    /**
+     * レンダーツールを設定します。
+     * 
+     * @param renderTool
+     *            レンダーツール
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setRenderTool(final RenderTool renderTool) {
         this.renderTool = renderTool;
     }
 
+    /**
+     * S2コンテナをコンテキストとしてテンプレート文字列を評価し、その結果の文字列を返します。
+     * 
+     * @return S2コンテナをコンテキストとしてテンプレート文字列を処理した結果の文字列
+     */
     public String getText() {
         try {
             final String result = renderTool.eval(velocityContext, templateText);
@@ -78,11 +107,29 @@ public class VelocityTextFormatter implements TextProvider {
         throw new SRuntimeException("EJMS0000");
     }
 
+    /**
+     * S2コンテナをVelocityのコンテキストとして扱うためのクラスです。
+     * 
+     * @author koichik
+     */
     class S2VelocityContext implements Context {
+        /**
+         * サポートされません。
+         * 
+         * @throws UnsupportedOperationException
+         *             常にスローされます
+         */
         public Object put(final String key, final Object value) {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * {@code key}をコンポーネント名としてS2コンテナから取得したコンポーネントを返します。
+         * 
+         * @param key
+         *            コンポーネント名
+         * @return コンポーネント名に対応付けられたコンポーネント
+         */
         public Object get(final String key) {
             try {
                 return container.getComponent(key);
@@ -93,6 +140,13 @@ public class VelocityTextFormatter implements TextProvider {
             }
         }
 
+        /**
+         * S2コンテナに{@code key}をコンポーネント名として持つコンポーネントが登録されていれば{@code true}を返します。
+         * 
+         * @param key
+         *            コンポーネント名
+         * @return S2コンテナに{@code key}をコンポーネント名として持つコンポーネントが登録されていれば{@code true}を、それ以外は{@code false}
+         */
         public boolean containsKey(final Object key) {
             try {
                 return container.hasComponentDef(key);
@@ -101,10 +155,22 @@ public class VelocityTextFormatter implements TextProvider {
             }
         }
 
+        /**
+         * サポートされません。
+         * 
+         * @throws UnsupportedOperationException
+         *             常にスローされます
+         */
         public Object[] getKeys() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * サポートされません。
+         * 
+         * @throws UnsupportedOperationException
+         *             常にスローされます
+         */
         public Object remove(final Object key) {
             throw new UnsupportedOperationException();
         }

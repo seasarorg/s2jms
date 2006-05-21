@@ -50,7 +50,7 @@ public class TextMessageFactoryTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                target.setCorrelationId("id");
+                target.setCorrelationID("id");
                 target.addProperty("foo", "FOO");
                 target.setTextProvider(new TextHolder("Hoge"));
                 assertSame("1", message, target.createMessage(session));

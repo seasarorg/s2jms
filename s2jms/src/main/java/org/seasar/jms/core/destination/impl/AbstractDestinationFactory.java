@@ -23,25 +23,62 @@ import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 
 /**
+ * JMSデスティネーション(キューまたはトピック)を作成するコンポーネントの抽象クラスです。
+ * <p>
+ * この実装は一度作成したデスティネーションをインスタンスに保持します。
+ * このため、JMSデスティネーション一つにつき一つのインスタンスが作成されるように構成する必要があります。<br>
+ * JNDIからJMSデスティネーションをルックアップするようなサブクラスのインスタンスモードはSINGLETONにすることができますが、
+ * JMSセッション毎あるいはJMSメッセージ毎にインスタンスが作成されるように構成する必要があるサブクラスもあります。
+ * </p>
+ * 
  * @author koichik
  */
 public abstract class AbstractDestinationFactory implements DestinationFactory {
     protected Destination destination;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     public AbstractDestinationFactory() {
     }
 
+    /**
+     * JMSデスティネーションを返します。
+     * <p>
+     * このメソッドが最初に呼び出された場合はサブクラスによって実装される{@link #createDestination}を
+     * 呼び出してJMSデスティネーションを作成します。<br>
+     * 2回目以降の呼び出しでは最初の呼び出しで作成されたJMSデスティネーションを返します。
+     * </p>
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSデスティネーション
+     * @throws SJMSRuntimeException
+     *             {@link javax.jms.JMSException}が発生した場合にスローされます
+     */
     public Destination getDestination(final Session session) {
         if (destination == null) {
             try {
                 destination = createDestination(session);
-            }
-            catch (final JMSException e) {
+            } catch (final JMSException e) {
                 throw new SJMSRuntimeException("EJMS0000", e);
             }
         }
         return destination;
     }
 
+    /**
+     * JMSデスティネーションを作成して返します。
+     * <p>
+     * このメソッドは{@link #getDestination}が最初に呼び出された時に一度だけ呼び出されます。
+     * </p>
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSデスティネーション
+     * @throws JMSException
+     *             JMSの操作で例外が発生した場合にスローされます
+     */
     protected abstract Destination createDestination(final Session session) throws JMSException;
 }

@@ -28,28 +28,66 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
 /**
+ * {@link javax.jms.BytesMessage}を作成するコンポーネントです。
+ * <p>
+ * このクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author bowez
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     protected Map<String, Object> map;
 
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setMap map}プロパティの設定は必須となります。
+     * </p>
+     * 
+     */
     public MapMessageFactory() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param bytes
+     *            JMSメッセージのペイロードに設定される{@link java.util.Map}
+     */
     public MapMessageFactory(final Map<String, Object> map) {
         this.map = map;
     }
 
+    /**
+     * JMSメッセージのペイロードに設定される{@link java.util.Map}を返します。
+     * 
+     * @return JMSメッセージのペイロードに設定される{@link java.util.Map}
+     */
     public Map<String, Object> getMap() {
         return map;
     }
 
-    @Binding(bindingType = BindingType.MUST)
+    /**
+     * JMSメッセージのペイロードに設定される{@link java.util.Map}を設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティの設定は必須です。
+     * </p>
+     * 
+     * @param map
+     *            JMSメッセージのペイロードに設定される{@link java.util.Map}
+     */
+    @Binding(bindingType = BindingType.MAY)
     public void setMap(final Map<String, Object> map) {
         this.map = map;
     }
 
+    /**
+     * JMSメッセージのペイロードに設定される{@link java.util.Map}にキーと値のマッピングを追加します。
+     * 
+     * @param key JMSメッセージのペイロードに設定されるマッピングのキー
+     * @param value JMSメッセージのペイロードに設定されるマッピングの値
+     */
     public void addValue(final String key, final Object value) {
         if (this.map == null) {
             this.map = new HashMap<String, Object>();
@@ -57,11 +95,26 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
         this.map.put(key, value);
     }
 
+    /**
+     * JMSセッションから{@link javax.jms.MapMessage}を作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSセッションから作成された{@link javax.jms.MapMessage}
+     */
     @Override
     protected MapMessage createMessageInstance(final Session session) throws JMSException {
         return session.createMapMessage();
     }
 
+    /**
+     * JMSペイロードに{@link #setMap map}プロパティの値を設定します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにペイロードを設定できなかった場合にスローされます
+     */
     @Override
     protected void setupPayload(final MapMessage message) throws JMSException {
         for (Map.Entry<String, Object> entry : map.entrySet()) {

@@ -25,33 +25,80 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
 /**
+ * {@link javax.jms.BytesMessage}を作成するコンポーネントです。
+ * <p>
+ * このクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author bowez
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
     protected byte[] bytes;
 
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setBytes bytes}プロパティの設定は必須となります。
+     * </p>
+     * 
+     */
     public BytesMessageFactory() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param bytes
+     *            JMSメッセージのペイロードに設定されるバイト列
+     */
     public BytesMessageFactory(final byte[] bytes) {
         this.bytes = bytes;
     }
 
+    /**
+     * JMSメッセージのペイロードに設定されるバイト列を返します。
+     * 
+     * @return JMSメッセージのペイロードに設定されるバイト列
+     */
     public byte[] getBytes() {
         return bytes;
     }
 
-    @Binding(bindingType = BindingType.MUST)
+    /**
+     * JMSメッセージのペイロードに設定されるバイト列を設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティの設定は必須です。
+     * </p>
+     * 
+     * @param bytes
+     *            JMSメッセージのペイロードに設定されるバイト列
+     */
+    @Binding(bindingType = BindingType.MAY)
     public void setBytes(final byte[] bytes) {
         this.bytes = bytes;
     }
 
+    /**
+     * JMSセッションから{@link javax.jms.BytesMessage}を作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSセッションから作成された{@link javax.jms.BytesMessage}
+     */
     @Override
     protected BytesMessage createMessageInstance(final Session session) throws JMSException {
         return session.createBytesMessage();
     }
 
+    /**
+     * JMSペイロードに{@link #setBytes bytes}プロパティの値を設定します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにペイロードを設定できなかった場合にスローされます
+     */
     @Override
     protected void setupPayload(final BytesMessage message) throws JMSException {
         message.writeBytes(bytes);

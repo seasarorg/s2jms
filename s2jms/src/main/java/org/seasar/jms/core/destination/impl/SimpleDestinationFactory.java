@@ -25,24 +25,59 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.jms.core.destination.DestinationFactory;
 
 /**
+ * {@link #setDestination destination}プロパティにJMSデスティネーション(キューまたはトピック)を保持するコンポーネントです。
+ * <p>
+ * このコンポーネントはインスタンスモードをSINGLETONに設定して使用することができます。<br>
+ * {@link #setDestination destination}プロパティの設定にOGNL式を使う場合、そのOGNL式が
+ * インスタンスモードPROTOTYPEやREQUESTのコンポーネントを使用する場合はこのコンポーネントの
+ * インスタンスモードもPROTOTYPEやREQUESTに設定する必要があります。
+ * </p>
+ * 
  * @author koichik
  */
 @Component(instance = InstanceType.SINGLETON)
 public class SimpleDestinationFactory implements DestinationFactory {
     protected Destination destination;
 
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setDestination destination}プロパティの設定は必須となります。
+     * </p>
+     * 
+     */
     public SimpleDestinationFactory() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param destination
+     *            JMSデスティネーション
+     */
     public SimpleDestinationFactory(final Destination destination) {
         this.destination = destination;
     }
 
+    /**
+     * JMSデスティネーションを返します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティの設定は必須です。
+     * </p>
+     * 
+     * @return JMSデスティネーション
+     */
     public Destination getDestination(final Session session) {
         return destination;
     }
 
-    @Binding(bindingType = BindingType.MUST)
+    /**
+     * JMSデスティネーションを設定します。
+     * 
+     * @param destination
+     *            JMSデスティネーション
+     */
+    @Binding(bindingType = BindingType.MAY)
     public void setDestination(final Destination destination) {
         this.destination = destination;
     }

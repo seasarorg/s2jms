@@ -87,7 +87,7 @@ public class MessageReceiverImpl implements MessageReceiver {
     }
 
     /**
-     * 受信に使用するJMSセッションのファクトリを設定します (必須)。
+     * 受信に使用するJMSセッションのファクトリを設定します(必須)。
      * 
      * @param sessionFactory
      *            JMSセッションファクトリ
@@ -98,7 +98,7 @@ public class MessageReceiverImpl implements MessageReceiver {
     }
 
     /**
-     * 受信に使用するJMSデスティネーションのファクトリを設定します (必須)。
+     * 受信に使用するJMSデスティネーションのファクトリを設定します(必須)。
      * 
      * @param sessionFactory
      *            JMSデスティネーションファクトリ

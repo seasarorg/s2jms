@@ -28,45 +28,116 @@ import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageFactory;
 
 /**
+ * JMSメッセージを作成するコンポーネントの抽象クラスです。
+ * <p>
+ * このコンポーネントはJMSセッションからJMSメッセージを作成します。作成されるJMSメッセージの型は型引数として示されます。
+ * 作成されたJMSメッセージのヘッダやプロパティはこのコンポーネントのプロパティに設定されているものがコピーされます。
+ * JMSメッセージを生成する方法とそのペイロードを設定する方法はサブクラスに依存します。
+ * </p>
+ * <p>
+ * このクラスおよびサブクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author koichik
  */
 public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
         MessageFactory<MSGTYPE> {
-    protected String correlationId;
-    protected byte[] correlationIdAsBytes;
+    protected String correlationID;
+    protected byte[] correlationIDAsBytes;
     protected Map<String, Object> properties = new HashMap<String, Object>();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     */
     public AbstractMessageFactory() {
     }
 
-    public String getCorrelationId() {
-        return correlationId;
+    /**
+     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID correlationID}を文字列で返します。
+     * 
+     * @return JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID correlationID}
+     */
+    public String getCorrelationID() {
+        return correlationID;
     }
 
+    /**
+     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID correlationID}を文字列で設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationID}でヘッダに設定されます。
+     * </p>
+     * 
+     * @param JMSメッセージのヘッダに設定される
+     *            {@link javax.jms.Message#setJMSCorrelationID correlationID}
+     */
     @Binding(bindingType = BindingType.MAY)
-    public void setCorrelationId(final String correlationId) {
-        this.correlationId = correlationId;
-        this.correlationIdAsBytes = null;
+    public void setCorrelationID(final String correlationID) {
+        this.correlationID = correlationID;
+        this.correlationIDAsBytes = null;
     }
 
-    public byte[] getCorrelationIdAsBytes() {
-        return correlationIdAsBytes;
+    /**
+     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}をバイト列で返します。
+     * 
+     * @return JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}
+     */
+    public byte[] getCorrelationIDAsBytes() {
+        return correlationIDAsBytes;
     }
 
+    /**
+     * {@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}をバイト列で設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationIDAsBytes}でヘッダに設定されます。
+     * </p>
+     * 
+     * @param correlationIdAsBytes
+     *            JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}
+     */
     @Binding(bindingType = BindingType.MAY)
-    public void setCorrelationIdAsBytes(final byte[] correlationIdAsBytes) {
-        this.correlationIdAsBytes = correlationIdAsBytes;
-        this.correlationId = null;
+    public void setCorrelationIDAsBytes(final byte[] correlationIDAsBytes) {
+        this.correlationIDAsBytes = correlationIDAsBytes;
+        this.correlationID = null;
     }
 
+    /**
+     * 指定された名前を持つプロパティ値を返します。
+     * 
+     * @param name
+     *            プロパティ名
+     * @return プロパティ名に対応するプロパティ値
+     */
     public Object getProperty(final String name) {
         return properties.get(name);
     }
 
+    /**
+     * 指定された名前を持つプロパティ値を設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setObjectProperty}でプロパティに設定されます。
+     * </p>
+     * 
+     * @param name
+     *            プロパティ名
+     * @param value
+     *            プロパティ値
+     */
     public void addProperty(final String name, final Object value) {
         properties.put(name, value);
     }
 
+    /**
+     * JMSセッションからJMSメッセージを作成して返します。
+     * <p>
+     * 作成されたJMSメッセージのヘッダおよびプロパティはこのコンポーネントからコピーされます。
+     * JMSメッセージのペイロードはサブクラスによって実装される{@link #setupPayload}で設定されます。
+     * </p>
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSメッセージ
+     */
     public MSGTYPE createMessage(final Session session) {
         try {
             final MSGTYPE message = createMessageInstance(session);
@@ -79,21 +150,66 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
         }
     }
 
+    /**
+     * JMSメッセージのインスタンスを作成して返します。
+     * <p>
+     * サブクラス固有の方法でJMSメッセージを作成します。 作成されたJMSメッセージの型は型引数{@code MSGTYPE}に
+     * 適合しなくてはなりません。
+     * </p>
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージを作成できなかった場合にスローされます。
+     */
     protected abstract MSGTYPE createMessageInstance(final Session session) throws JMSException;
 
+    /**
+     * JMSメッセージのメッセージヘッダを設定します。
+     * <p>
+     * このインスタンスのプロパティの値をJMSメッセージのヘッダに設定します。<br>
+     * 現在対応しているヘッダは{@link javax.jms.Message#setJMSCorrelationID}および
+     * {@link javax.jms.Message#setJMSCorrelationIDAsBytes}だけです。
+     * </p>
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにヘッダを設定できなかった場合にスローされます
+     */
     protected void setupHeader(final Message message) throws JMSException {
-        if (correlationId != null) {
-            message.setJMSCorrelationID(correlationId);
-        } else if (correlationIdAsBytes != null) {
-            message.setJMSCorrelationIDAsBytes(correlationIdAsBytes);
+        if (correlationID != null) {
+            message.setJMSCorrelationID(correlationID);
+        } else if (correlationIDAsBytes != null) {
+            message.setJMSCorrelationIDAsBytes(correlationIDAsBytes);
         }
     }
 
+    /**
+     * JMSメッセージのメッセージプロパティを設定します。
+     * <p>
+     * このインスタンスに{@link #addProperty}で設定された値をJMSメッセージのプロパティに設定します。
+     * </p>
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにプロパティを設定できなかった場合にスローされます
+     */
     protected void setupProperties(final Message message) throws JMSException {
         for (final Map.Entry<String, Object> entry : properties.entrySet()) {
             message.setObjectProperty(entry.getKey(), entry.getValue());
         }
     }
 
+    /**
+     * JMSメッセージのペイロードを設定します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにペイロードを設定できなかった場合にスローされます
+     */
     protected abstract void setupPayload(MSGTYPE message) throws JMSException;
 }

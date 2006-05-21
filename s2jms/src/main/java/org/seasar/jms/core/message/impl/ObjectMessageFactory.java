@@ -27,33 +27,80 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 
 /**
+ * {@link javax.jms.ObjectMessage}を作成するコンポーネントです。
+ * <p>
+ * このクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
+ * 
  * @author bowez
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> {
     protected Serializable object;
 
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setObject object}プロパティの設定は必須となります。
+     * </p>
+     * 
+     */
     public ObjectMessageFactory() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param object
+     *            JMSメッセージのペイロードに設定されるオブジェクト
+     */
     public ObjectMessageFactory(final Serializable object) {
         this.object = object;
     }
 
+    /**
+     * JMSメッセージのペイロードに設定されるオブジェクトを返します。
+     * 
+     * @return JMSメッセージのペイロードに設定されるオブジェクト
+     */
     public Serializable getObject() {
         return this.object;
     }
 
-    @Binding(bindingType = BindingType.MUST)
+    /**
+     * JMSメッセージのペイロードに設定されるオブジェクトを設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティの設定は必須です。
+     * </p>
+     * 
+     * @param object
+     *            JMSメッセージのペイロードに設定されるオブジェクト
+     */
+    @Binding(bindingType = BindingType.MAY)
     public void setObject(final Serializable object) {
         this.object = object;
     }
 
+    /**
+     * JMSセッションから{@link javax.jms.ObjectMessage}を作成して返します。
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSセッションから作成された{@link javax.jms.ObjectMessage}
+     */
     @Override
     protected ObjectMessage createMessageInstance(final Session session) throws JMSException {
         return session.createObjectMessage();
     }
 
+    /**
+     * JMSペイロードに{@link #setObject object}プロパティの値を設定します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             JMSメッセージにペイロードを設定できなかった場合にスローされます
+     */
     @Override
     protected void setupPayload(final ObjectMessage message) throws JMSException {
         message.setObject(object);

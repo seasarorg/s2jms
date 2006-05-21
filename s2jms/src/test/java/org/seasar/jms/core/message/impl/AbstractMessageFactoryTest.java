@@ -48,17 +48,17 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
         count = 0;
     }
 
-    public void testCorrelationId() throws Exception {
-        assertNull("1", target.getCorrelationId());
-        assertNull("2", target.getCorrelationIdAsBytes());
+    public void testCorrelationID() throws Exception {
+        assertNull("1", target.getCorrelationID());
+        assertNull("2", target.getCorrelationIDAsBytes());
 
-        target.setCorrelationId("hoge");
-        assertEquals("3", "hoge", target.getCorrelationId());
-        assertNull("4", target.getCorrelationIdAsBytes());
+        target.setCorrelationID("hoge");
+        assertEquals("3", "hoge", target.getCorrelationID());
+        assertNull("4", target.getCorrelationIDAsBytes());
 
-        target.setCorrelationIdAsBytes(new byte[] { 1, 2, 3 });
-        assertNull("3", target.getCorrelationId());
-        assertTrue("4", Arrays.equals(new byte[] { 1, 2, 3 }, target.correlationIdAsBytes));
+        target.setCorrelationIDAsBytes(new byte[] { 1, 2, 3 });
+        assertNull("3", target.getCorrelationID());
+        assertTrue("4", Arrays.equals(new byte[] { 1, 2, 3 }, target.correlationIDAsBytes));
     }
 
     public void testProperty() throws Exception {
@@ -81,7 +81,7 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                target.setCorrelationId("id");
+                target.setCorrelationID("id");
                 target.addProperty("foo", "FOO");
                 assertSame("1", message, target.createMessage(session));
                 assertEquals("2", 1, count);

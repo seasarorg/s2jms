@@ -77,7 +77,7 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     /**
-     * 受信に使用するJMSセッションのファクトリを設定します (必須)。
+     * 受信に使用するJMSセッションのファクトリを設定します(必須)。
      * 
      * @param sessionFactory
      *            JMSセッションファクトリ
@@ -88,7 +88,7 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     /**
-     * 送信に使用するJMSデスティネーションのファクトリを設定します (必須)。
+     * 送信に使用するJMSデスティネーションのファクトリを設定します(必須)。
      * 
      * @param sessionFactory
      *            JMSデスティネーションファクトリ
@@ -135,7 +135,7 @@ public class MessageSenderImpl implements MessageSender {
      * 送信するJMSメッセージの生存時間をミリ秒単位で指定します。デフォルトは{@link javax.jms.Message#DEFAULT_TIME_TO_LIVE JMSメッセージのデフォルト生存時間}に従います。
      * 
      * @param timeToLive
-     *            送信するJMSメッセージの生存時間 (ミリ秒単位)
+     *            送信するJMSメッセージの生存時間(ミリ秒単位)
      */
     @Binding(bindingType = BindingType.MAY)
     public void setTimeToLive(final long timeToLive) {

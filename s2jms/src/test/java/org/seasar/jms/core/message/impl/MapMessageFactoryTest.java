@@ -52,7 +52,7 @@ public class MapMessageFactoryTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                target.setCorrelationId("id");
+                target.setCorrelationID("id");
                 target.addProperty("foo", "FOO");
                 Map<String, Object> map = new LinkedHashMap<String, Object>();
                 map.put("hoge", new Integer(1));

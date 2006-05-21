@@ -49,7 +49,7 @@ public class ObjectMessageFactoryTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             public void replay() throws Exception {
-                target.setCorrelationId("id");
+                target.setCorrelationID("id");
                 target.addProperty("foo", "FOO");
                 target.setObject(new Integer(100));
                 assertSame("1", message, target.createMessage(session));

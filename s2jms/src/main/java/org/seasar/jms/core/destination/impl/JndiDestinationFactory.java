@@ -30,41 +30,104 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 
 /**
+ * JNDIからJMSデスティネーション(キューまたはトピック)を取得するコンポーネントです。
+ * <p>
+ * このコンポーネントはインスタンスモードをSINGLETONに設定して使用することができます。
+ * </p>
+ * 
  * @author koichik
  */
-@Component(instance = InstanceType.PROTOTYPE)
+@Component(instance = InstanceType.SINGLETON)
 public class JndiDestinationFactory extends AbstractDestinationFactory {
     protected Hashtable<String, Object> env;
     protected String name;
 
+    /**
+     * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setEnv env}プロパティおよび
+     * {@link #setName name}プロパティの設定は必須となります。
+     * </p>
+     * 
+     */
     public JndiDestinationFactory() {
         env = new Hashtable<String, Object>();
         env.put(InitialContext.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class.getName());
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param env
+     *            初期コンテキストの作成に使用される環境。{@code null}は空の環境を示す
+     * @param name
+     *            ルックアップするJMSデスティネーションの名前
+     */
     public JndiDestinationFactory(final Hashtable<String, Object> env, final String name) {
         this.env = env;
         this.name = name;
     }
 
+    /**
+     * 初期コンテキストの作成に使用される環境を返します。
+     * 
+     * @return 初期コンテキストの作成に使用される環境
+     */
     public Hashtable getEnv() {
         return this.env;
     }
 
+    /**
+     * 初期コンテキストの作成に使用される環境を設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティの設定は必須です。
+     * </p>
+     * 
+     * @param env
+     *            初期コンテキストの作成に使用される環境
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setEnv(final Hashtable<String, Object> env) {
         this.env = env;
     }
 
+    /**
+     * ルックアップするJMSデスティネーションの名前を返します。
+     * 
+     * @return ルックアップするJMSデスティネーションの名前
+     */
     public String getName() {
         return this.name;
     }
 
-    @Binding(bindingType = BindingType.MUST)
+    /**
+     * ルックアップするJMSデスティネーションの名前を設定します。
+     * <p>
+     * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティの設定は必須です。
+     * </p>
+     * 
+     * @param name
+     *            ルックアップするJMSデスティネーションの名前
+     */
+    @Binding(bindingType = BindingType.MAY)
     public void setName(final String name) {
         this.name = name;
     }
 
+    /**
+     * JNDIからJMSデスティネーションをルックアップして返します。
+     * <p>
+     * このメソッドは{@link org.seasar.jms.core.destination.impl.AbstractDestinationFactory#getDestination}が
+     * 最初に呼び出された時に一度だけ呼び出されます。
+     * </p>
+     * 
+     * @param session
+     *            JMSセッション
+     * @return JMSデスティネーション {@code null}が返されることはありません
+     * @throws SJMSRuntimeException
+     *             JNDIの操作で例外が発生した場合や{@link setName name}プロパティに設定された名前が
+     *             見つからなかった場合にスローされます
+     */
     @Override
     protected Destination createDestination(final Session session) {
         try {
