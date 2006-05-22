@@ -38,9 +38,12 @@ public class VelocityTextFormatterTest extends TestCase {
         container.register("BAR", "bar");
         container.register(new Model("Yuri", 26), "model");
         container.init();
+        
+        S2Context context = new S2Context();
+        context.setContainer(container);
 
         VelocityTextFormatter formatter = new VelocityTextFormatter();
-        formatter.setContainer(container);
+        formatter.setContext(context);
 
         formatter.setTemplateText("hello, world");
         assertEquals("1", "hello, world", formatter.getText());
