@@ -15,14 +15,26 @@
  */
 package org.seasar.jms.container;
 
+import java.util.Map;
+
 /**
  * @author y-komori
- *
+ * 
  */
 public interface JMSRequest {
 
     public Object getAttribute(String name);
 
     public void setAttribute(String name, Object component);
+
+    public Map getRequestMap();
+
+    public Map getHeaderMap();
+
+    public Map getHeaderValuesMap();
+
+    public Map getParameterMap();
+
+    public Map getParameterValuesMap();
 
 }

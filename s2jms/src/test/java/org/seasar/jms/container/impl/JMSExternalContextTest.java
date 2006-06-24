@@ -15,6 +15,8 @@
  */
 package org.seasar.jms.container.impl;
 
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ExternalContext;
@@ -57,48 +59,69 @@ public class JMSExternalContextTest extends TestCase {
 
     public void testSetResponce() {
         Object responce = new Object();
-        try {
-            externalContext.setResponse(responce);
-            fail();
-        } catch (UnsupportedOperationException ex) {
-        }
-
+        externalContext.setResponse(responce);
     }
 
     public void testGetResponce() {
-        try {
-            externalContext.getResponse();
-            fail();
-        } catch (UnsupportedOperationException ex) {
-        }
-
+        assertNull(externalContext.getResponse());
     }
 
     public void testGetSession() {
-        try {
-            externalContext.getSession();
-            fail();
-        } catch (UnsupportedOperationException ex) {
-        }
-
+        assertNull(externalContext.getSession());
     }
 
     public void testSetApplication() {
         Object application = new Object();
-        try {
-            externalContext.setApplication(application);
-            fail();
-        } catch (UnsupportedOperationException ex) {
-        }
-
+        externalContext.setApplication(application);
     }
 
     public void testGetApplication() {
-        try {
-            externalContext.getApplication();
-            fail();
-        } catch (UnsupportedOperationException ex) {
-        }
-
+        assertNull(externalContext.getApplication());
     }
+
+    public void testGetApplicationMap() {
+        Map map = externalContext.getApplicationMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetInitParameterMap() {
+        Map map = externalContext.getInitParameterMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetRequestCookieParameterMap() {
+        Map map = externalContext.getRequestCookieMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetRequestHeaderMap() {
+        Map map = externalContext.getRequestHeaderMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetRequestHeaderValuesMap() {
+        Map map = externalContext.getRequestHeaderValuesMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetRequestMap() {
+        Map map = externalContext.getRequestMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetRequestParameterMap() {
+        Map map = externalContext.getRequestParameterMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetRequestParameterValuesMap() {
+        Map map = externalContext.getRequestParameterValuesMap();
+        assertTrue(map.isEmpty());
+    }
+
+    public void testGetSessionMap() {
+        Map map = externalContext.getSessionMap();
+        assertTrue(map.isEmpty());
+    }
+
 }

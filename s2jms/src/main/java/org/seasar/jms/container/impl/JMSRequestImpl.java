@@ -15,7 +15,9 @@
  */
 package org.seasar.jms.container.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.seasar.jms.container.JMSRequest;
 
@@ -24,19 +26,44 @@ import org.seasar.jms.container.JMSRequest;
  * 
  */
 public class JMSRequestImpl implements JMSRequest {
-    protected HashMap<String, Object> attributeMap = new HashMap<String, Object>();
-    
+    @SuppressWarnings("unchecked")
+    protected static final Map EMPTY_MAP = Collections.unmodifiableMap(new HashMap());
+
+    protected final Map<String, Object> attributeMap = new HashMap<String, Object>();
+
     /**
      * @see org.seasar.jms.container.JMSRequest#getAttribute(java.lang.String)
      */
     public Object getAttribute(final String name) {
         return attributeMap.get(name);
     }
-    
+
     /**
-     * @see org.seasar.jms.container.JMSRequest#setAttribute(java.lang.String, java.lang.Object)
+     * @see org.seasar.jms.container.JMSRequest#setAttribute(java.lang.String,
+     *      java.lang.Object)
      */
     public void setAttribute(final String name, final Object component) {
         attributeMap.put(name, component);
     }
+
+    public Map getRequestMap() {
+        return attributeMap;
+    }
+
+    public Map getHeaderMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getHeaderValuesMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getParameterMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getParameterValuesMap() {
+        return EMPTY_MAP;
+    }
+
 }

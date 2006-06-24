@@ -15,8 +15,6 @@
  */
 package org.seasar.jms.container.deployer;
 
-import java.util.Date;
-
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ComponentDef;
@@ -26,7 +24,6 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.jms.container.JMSRequest;
 import org.seasar.jms.container.impl.JMSExternalContext;
 import org.seasar.jms.container.impl.JMSRequestImpl;
@@ -51,36 +48,13 @@ public class JMSRequestComponentDeployerTest extends TestCase {
 
         assertSame("1", foo, request.getAttribute("foo"));
         assertSame("2", foo, deployer.deploy());
-        
+
         container.getExternalContext().setRequest(null);
-        try{
+        try {
             deployer.deploy();
             fail("3");
+        } catch (EmptyRuntimeException ex) {
         }
-        catch (EmptyRuntimeException ex)
-        {
-        }
-    }
-
-    public void testDeployForHotswap() throws Exception {
-        ExternalContext externalContext = new JMSExternalContext();
-        JMSRequest request = new JMSRequestImpl();
-        externalContext.setRequest(request);
-        S2Container container = new S2ContainerImpl();
-        container.setHotswapMode(true);
-        container.setExternalContext(externalContext);
-
-        ComponentDef cd = new ComponentDefImpl(Foo.class, "foo");
-        container.register(cd);
-        container.init();
-
-        ComponentDeployer deployer = new JMSRequestComponentDeployer(cd);
-        Foo foo = (Foo) deployer.deploy();
-
-        Hotswap hotswap = cd.getHotswap();
-        Thread.sleep(500);
-        hotswap.getFile().setLastModified(new Date().getTime());
-        assertNotSame("1", foo.getClass(), deployer.deploy().getClass());
     }
 
     public static class Foo {

@@ -15,14 +15,21 @@
  */
 package org.seasar.jms.container.impl;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.jms.container.JMSRequest;
 
 /**
  * @author y-komori
- *
+ * 
  */
 public class JMSExternalContext implements ExternalContext {
+    @SuppressWarnings("unchecked")
+    private static final Map EMPTY_MAP = Collections.unmodifiableMap(new HashMap());
+
     private ThreadLocal<JMSRequest> requests = new ThreadLocal<JMSRequest>();
 
     public Object getRequest() {
@@ -34,22 +41,57 @@ public class JMSExternalContext implements ExternalContext {
     }
 
     public Object getResponse() {
-        throw new UnsupportedOperationException("getResponce");
+        return null;
     }
 
     public void setResponse(Object response) {
-        throw new UnsupportedOperationException("setResponce");
     }
 
     public Object getSession() {
-        throw new UnsupportedOperationException("getSession");
+        return null;
     }
-    
+
     public Object getApplication() {
-        throw new UnsupportedOperationException("getApplication");
+        return null;
     }
 
     public void setApplication(Object application) {
-        throw new UnsupportedOperationException("setApplication");
     }
+
+    public Map getApplicationMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getInitParameterMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getRequestCookieMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getRequestHeaderMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getRequestHeaderValuesMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getRequestMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getRequestParameterMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getRequestParameterValuesMap() {
+        return EMPTY_MAP;
+    }
+
+    public Map getSessionMap() {
+        return EMPTY_MAP;
+    }
+
 }

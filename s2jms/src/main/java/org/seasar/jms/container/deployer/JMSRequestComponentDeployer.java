@@ -19,7 +19,6 @@ import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.deployer.AbstractComponentDeployer;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.hotswap.Hotswap;
 import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.JMSRequest;
 
@@ -50,13 +49,9 @@ public class JMSRequestComponentDeployer extends AbstractComponentDeployer {
             throw re;
         }
         String componentName = getComponentName();
-        Object component = null;
-        Hotswap hotswap = cd.getHotswap();
-        if (hotswap == null || !hotswap.isModified()) {
-            component = request.getAttribute(componentName);
-            if (component != null) {
-                return component;
-            }
+        Object component = request.getAttribute(componentName);
+        if (component != null) {
+            return component;
         }
         component = getConstructorAssembler().assemble();
         request.setAttribute(componentName, component);
