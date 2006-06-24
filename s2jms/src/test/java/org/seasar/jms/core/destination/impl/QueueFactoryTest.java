@@ -19,7 +19,7 @@ import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -56,7 +56,7 @@ public class QueueFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(session.createQueue("hoge")).andReturn(queue);
             }
         }.doTest();

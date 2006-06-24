@@ -18,7 +18,7 @@ package org.seasar.jms.core.message.impl;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.text.impl.TextHolder;
 
 import static org.easymock.EasyMock.expect;
@@ -57,7 +57,7 @@ public class TextMessageFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(session.createTextMessage()).andReturn(message);
                 message.setJMSCorrelationID("id");
                 message.setObjectProperty("foo", "FOO");

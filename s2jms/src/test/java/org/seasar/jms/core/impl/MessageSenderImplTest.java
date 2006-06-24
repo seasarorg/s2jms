@@ -29,7 +29,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.easymock.IArgumentMatcher;
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.session.SessionFactory;
@@ -87,7 +87,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sf.operateSession(eq(false), handler(session));
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createProducer(destination)).andReturn(producer);
@@ -114,7 +114,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sf.operateSession(eq(false), handler(session));
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createProducer(destination)).andReturn(producer);
@@ -139,7 +139,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sf.operateSession(eq(false), handler(session));
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createProducer(destination)).andReturn(producer);
@@ -163,7 +163,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sf.operateSession(eq(false), handler(session));
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createProducer(destination)).andReturn(producer);

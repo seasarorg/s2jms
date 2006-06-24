@@ -37,7 +37,6 @@ public class VelocityTextFormatter extends AbstractVelocityFormatter {
      * 
      */
     public VelocityTextFormatter() {
-        super();
     }
 
     /**

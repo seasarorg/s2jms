@@ -16,7 +16,7 @@
 package org.seasar.jms.core.interceptor;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.jca.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2EasyMockTestCase;
 import org.seasar.jms.core.MessageSender;
 
 /**
@@ -53,7 +53,7 @@ public class SendMessageInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sender.send();
             }
         }.doTest();
@@ -71,7 +71,7 @@ public class SendMessageInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
             }
         }.doTest();
     }

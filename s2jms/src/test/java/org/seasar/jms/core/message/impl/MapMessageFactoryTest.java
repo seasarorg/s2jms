@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.jms.MapMessage;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -62,7 +62,7 @@ public class MapMessageFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(session.createMapMessage()).andReturn(message);
                 message.setJMSCorrelationID("id");
                 message.setObjectProperty("foo", "FOO");

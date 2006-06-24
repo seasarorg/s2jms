@@ -26,7 +26,7 @@ import org.seasar.jms.core.text.TextProvider;
 
 /**
  * Velocityを使ってフォーマットした文字列を提供する{@link org.seasar.jms.core.text.TextProvider}の
- * 実装クラスのための抽象クラスです。
+ * 抽象クラスです。
  * 
  * @author bowez
  */

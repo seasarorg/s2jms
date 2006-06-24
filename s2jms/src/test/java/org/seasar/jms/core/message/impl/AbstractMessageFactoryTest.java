@@ -21,7 +21,7 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 /**
  * @author koichik
@@ -88,7 +88,7 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 message.setJMSCorrelationID("id");
                 message.setObjectProperty("foo", "FOO");
             }

@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.jms.Message;
 
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.container.annotation.JMSHeader;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.JMSProperty;
@@ -77,7 +77,7 @@ public class MessageListenerSupportTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getJMSCorrelationID()).andReturn("abcd");
                 expect(message.getJMSDeliveryMode()).andReturn(100);
                 expect(message.getJMSMessageID()).andReturn("hogehoge");
@@ -107,7 +107,7 @@ public class MessageListenerSupportTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getJMSMessageID()).andReturn(null);
             }
         }.doTest();

@@ -18,7 +18,8 @@ package org.seasar.jms.core.destination.impl;
 import javax.jms.Destination;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
+
 
 /**
  * @author koichik
@@ -52,7 +53,7 @@ public class SimpleDestinationFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
             }
         }.doTest();
     }

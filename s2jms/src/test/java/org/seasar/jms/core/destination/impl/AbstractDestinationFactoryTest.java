@@ -19,7 +19,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.destination.DestinationFactory;
 
 /**
@@ -65,7 +65,7 @@ public class AbstractDestinationFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
             }
         }.doTest();
     }

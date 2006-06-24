@@ -19,7 +19,7 @@ import javax.jms.Destination;
 import javax.jms.Message;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -58,7 +58,7 @@ public class ReplyToDestinationFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getJMSReplyTo()).andReturn(destination);
             }
         }.doTest();

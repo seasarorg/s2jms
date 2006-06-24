@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.jms.MapMessage;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -60,7 +60,7 @@ public class MapMessageHandlerTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getMapNames()).andReturn(enumeration);
                 expect(enumeration.hasMoreElements()).andReturn(true);
                 expect(enumeration.nextElement()).andReturn("foo");

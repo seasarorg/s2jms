@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.jca.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2EasyMockTestCase;
 import org.seasar.jms.core.MessageSender;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
 import org.seasar.jms.core.message.impl.MapMessageFactory;
@@ -88,7 +88,7 @@ public class SendReturnValueInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sender.send(isA(BytesMessageFactory.class));
             }
         }.doTest();
@@ -105,7 +105,7 @@ public class SendReturnValueInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sender.send(isA(MapMessageFactory.class));
             }
         }.doTest();
@@ -119,7 +119,7 @@ public class SendReturnValueInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sender.send(isA(ObjectMessageFactory.class));
             }
         }.doTest();
@@ -133,7 +133,7 @@ public class SendReturnValueInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 sender.send(isA(TextMessageFactory.class));
             }
         }.doTest();
@@ -147,7 +147,7 @@ public class SendReturnValueInterceptorTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
             }
         }.doTest();
     }

@@ -18,7 +18,7 @@ package org.seasar.jms.container.impl;
 import javax.jms.Message;
 
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -53,7 +53,7 @@ public class JMSHeaderBinderTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getJMSMessageID()).andReturn("abcdefg");
             }
         }.doTest();
@@ -70,7 +70,7 @@ public class JMSHeaderBinderTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getJMSRedelivered()).andReturn(true);
             }
         }.doTest();

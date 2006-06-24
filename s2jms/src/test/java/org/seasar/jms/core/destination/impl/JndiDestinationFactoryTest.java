@@ -19,7 +19,7 @@ import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2EasyMockTestCase;
 
 /**
  * @author koichik
@@ -54,7 +54,7 @@ public class JndiDestinationFactoryTest extends S2EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
             }
         }.doTest();
     }

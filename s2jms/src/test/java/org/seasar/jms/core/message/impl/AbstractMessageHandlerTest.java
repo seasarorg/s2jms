@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -61,7 +61,7 @@ public class AbstractMessageHandlerTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(message.getPropertyNames()).andReturn(enumeration);
                 expect(enumeration.hasMoreElements()).andReturn(true);
                 expect(enumeration.nextElement()).andReturn("foo");

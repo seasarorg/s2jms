@@ -18,7 +18,7 @@ package org.seasar.jms.core.message.impl;
 import javax.jms.BytesMessage;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.aryEq;
 import static org.easymock.EasyMock.expect;
@@ -58,7 +58,7 @@ public class BytesMessageFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(session.createBytesMessage()).andReturn(message);
                 message.setJMSCorrelationID("id");
                 message.setObjectProperty("foo", "FOO");

@@ -32,7 +32,7 @@ import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
 import org.easymock.IArgumentMatcher;
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.session.SessionFactory;
@@ -96,7 +96,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive()).andReturn(bytesMessage);
@@ -119,7 +119,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive()).andReturn(mapMessage);
@@ -145,7 +145,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive()).andReturn(objectMessage);
@@ -164,7 +164,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive()).andReturn(textMessage);
@@ -185,7 +185,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(topic);
                 expect(session.createDurableSubscriber(topic, "Geho", null, false)).andReturn(
                         subscriber);
@@ -211,7 +211,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
             }
         }.doTest();
@@ -232,7 +232,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(topic);
             }
         }.doTest();
@@ -249,7 +249,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receiveNoWait()).andReturn(null);
@@ -268,7 +268,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive(100)).andReturn(null);

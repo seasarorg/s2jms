@@ -19,7 +19,7 @@ import javax.jms.Destination;
 import javax.jms.Session;
 import javax.jms.Topic;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 
 import static org.easymock.EasyMock.expect;
 
@@ -56,7 +56,7 @@ public class TopicFactoryTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(session.createTopic("hoge")).andReturn(topic);
             }
         }.doTest();

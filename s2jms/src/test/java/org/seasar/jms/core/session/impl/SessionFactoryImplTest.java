@@ -19,7 +19,7 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Session;
 
-import org.seasar.jca.unit.EasyMockTestCase;
+import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.session.SessionHandler;
 
 import static org.easymock.EasyMock.expect;
@@ -60,7 +60,7 @@ public class SessionFactoryImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(cf.createConnection()).andReturn(con);
                 con.start();
                 expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
@@ -81,7 +81,7 @@ public class SessionFactoryImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(cf.createConnection()).andReturn(con);
                 expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
                 handler.handleSession(session);
@@ -101,7 +101,7 @@ public class SessionFactoryImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(cf.createConnection()).andReturn(con);
                 con.start();
                 expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
@@ -123,7 +123,7 @@ public class SessionFactoryImplTest extends EasyMockTestCase {
             }
 
             @Override
-            public void verify() throws Exception {
+            public void record() throws Exception {
                 expect(cf.createConnection()).andReturn(con);
                 expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
                 handler.handleSession(session);
