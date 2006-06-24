@@ -9,7 +9,7 @@
 	>
 		<!-- ActiveMQ ResourceAdapter へのパスを設定します -->
 		<property name="path">
-			"ra/activemq-ra-3.2.2.rar"
+			"ra/activemq-ra-4.0.1.rar"
 		</property>
 
 		<!-- ActiveMQ Broker へのURLを設定します -->
