@@ -18,7 +18,6 @@ package org.seasar.jms.container;
 import javax.jms.Message;
 import javax.transaction.TransactionManager;
 
-import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.unit.S2JMSTestCase;
 import org.seasar.jms.core.MessageSender;
@@ -30,13 +29,11 @@ import org.seasar.jms.core.MessageSender;
 public class JMSContainerTest extends S2JMSTestCase {
     protected TransactionManager tm;
     protected MessageSender sender;
-    protected MessageListener1 listener1;
-    protected MessageListener2 listener2;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include(this.getClass().getSimpleName() + ".dicon");
+        include("jms-activemq-inbound.dicon");
         include("queue-cf-test.dicon");
     }
 
@@ -50,15 +47,15 @@ public class JMSContainerTest extends S2JMSTestCase {
 
         Thread.sleep(500);
         assertEquals(1, MessageListener1.getCallCount());
-        assertEquals("TextPayloadMessage", MessageListener1.getTextPaylord());
+        assertEquals("TextPayloadMessage", MessageListener1.getPayload());
         assertEquals(1, MessageListener2.getCallCount());
-        assertEquals("TextPayloadMessage", MessageListener2.getTextPaylord());
-        assertNotNull("TextMessage", MessageListener2.getMessage());
+        assertEquals("TextPayloadMessage", MessageListener2.textPayload);
+        assertNotNull(MessageListener2.message);
     }
 
     public static class MessageListener1 {
         protected static int callCount;
-        protected static String textPaylord;
+        protected static String payload;
 
         @OnMessage
         public void caller() {
@@ -69,13 +66,12 @@ public class JMSContainerTest extends S2JMSTestCase {
             return callCount;
         }
 
-        @JMSPayload
-        public static void setTextPaylord(String paylord) {
-            MessageListener1.textPaylord = paylord;
+        public static void setPayload(String payload) {
+            MessageListener1.payload = payload;
         }
 
-        public static String getTextPaylord() {
-            return textPaylord;
+        public static String getPayload() {
+            return payload;
         }
     }
 
@@ -93,21 +89,24 @@ public class JMSContainerTest extends S2JMSTestCase {
     }
 
     public static class MessageListener2 extends AbstractMessageListener {
-        @JMSPayload
-        private static String textPaylord;
+        private static String textPayload;
 
         protected static Message message;
 
-        public static void setMessage(Message message) {
+        public void setMessage(Message message) {
             MessageListener2.message = message;
         }
 
-        public static Message getMessage() {
+        public Message getMessage() {
             return message;
         }
 
-        public static String getTextPaylord() {
-            return textPaylord;
+        public String getPayload() {
+            return textPayload;
+        }
+
+        public void setPayload(String textPayload) {
+            MessageListener2.textPayload = textPayload;
         }
     }
 }

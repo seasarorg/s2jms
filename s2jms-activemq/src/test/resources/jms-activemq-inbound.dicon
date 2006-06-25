@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.3//EN"
-	"http://www.seasar.org/dtd/components23.dtd">
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jms-activemq-cf">
 	<include path="j2ee.dicon"/>
 	<include path="jms-activemq-ra.dicon"/>
@@ -33,6 +33,8 @@
 		</initMethod>
 	</component>
 	
-	<component name="listener1" class="org.seasar.jms.container.JMSContainerTest$MessageListener1" instance="prototype" />
-	<component name="listener2" class="org.seasar.jms.container.JMSContainerTest$MessageListener2" instance="prototype" />
+	<component name="listener1" instance="prototype" externalBinding="true"
+		class="org.seasar.jms.container.JMSContainerTest$MessageListener1"/>
+	<component name="listener2" instance="prototype" externalBinding="true"
+		class="org.seasar.jms.container.JMSContainerTest$MessageListener2"/>
 </components>
