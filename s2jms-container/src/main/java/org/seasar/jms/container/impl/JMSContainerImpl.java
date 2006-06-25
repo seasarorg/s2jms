@@ -25,14 +25,11 @@ import javax.transaction.TransactionManager;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
-import org.seasar.framework.container.InstanceDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
-import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.log.Logger;
@@ -52,8 +49,11 @@ public class JMSContainerImpl implements JMSContainer {
     protected static Logger logger = Logger.getLogger(JMSContainerImpl.class);
 
     protected TransactionManager transactionManager;
+
     protected List<String> messageListenerNames = new ArrayList<String>();
+
     protected Map<Class<?>, MessageListenerSupport> listenerSupportMap = new HashMap<Class<?>, MessageListenerSupport>();
+
     protected S2Container container;
 
     public void onMessage(final Message message) {
@@ -64,11 +64,8 @@ public class JMSContainerImpl implements JMSContainer {
 
             setRequest(message);
 
-            final MessageHandler<?, ?> messageHandler = getMessageHandler(message);
-
             for (final String targetName : messageListenerNames) {
-                Object target = container.getComponent(targetName);
-                bindMessage(target, messageHandler, message);
+                final Object target = container.getComponent(targetName);
                 invokeMessageHandler(target);
             }
         } catch (final Exception ex) {
@@ -83,27 +80,21 @@ public class JMSContainerImpl implements JMSContainer {
         if (messageListenerName == null) {
             throw new SIllegalArgumentException("EJMS2005", null);
         }
-        messageListenerNames.add(messageListenerName);
-        Object messageListener = container.getComponent(messageListenerName);
-        if (messageListener == null) {
-            throw new EmptyRuntimeException(messageListenerName);
-        }
-        final Class<?> clazz = messageListener.getClass();
+
+        ComponentDef cd = container.getComponentDef(messageListenerName);
+        final Class<?> clazz = cd.getComponentClass();
         listenerSupportMap.put(clazz, new MessageListenerSupport(clazz));
+        messageListenerNames.add(messageListenerName);
     }
 
     protected void setRequest(final Message message) {
-        JMSRequest request = new JMSRequestImpl();
-        request.setAttribute(MESSAGE_NAME, message);
+        JMSRequest request = new JMSRequestImpl(message);
         container.getRoot().getExternalContext().setRequest(request);
-
-        ComponentDef cd = new ComponentDefImpl(Message.class, MESSAGE_NAME);
-        cd.setInstanceDef(InstanceDefFactory.getInstanceDef(InstanceDef.REQUEST_NAME));
-        container.register(cd);
     }
 
     protected ExternalContext getExternalContext() {
-        ExternalContext externalContext = container.getRoot().getExternalContext();
+        ExternalContext externalContext = container.getRoot()
+                .getExternalContext();
         if (externalContext == null) {
             throw new EmptyRuntimeException("externalContext");
         }
@@ -111,41 +102,38 @@ public class JMSContainerImpl implements JMSContainer {
     }
 
     protected MessageHandler<?, ?> getMessageHandler(final Message message) {
-        final MessageHandler<?, ?> messageHandler = MessageHandlerFactory.getMessageHandler(message
-                .getClass());
+        final MessageHandler<?, ?> messageHandler = MessageHandlerFactory
+                .getMessageHandler(message.getClass());
         if (messageHandler == null) {
             throw new NotSupportedMessageException(message);
         }
         return messageHandler;
     }
 
-    protected <MSGTYPE extends Message, PAYLOADTYPE> void bindMessage(final Object bindTarget,
-            final MessageHandler<MSGTYPE, PAYLOADTYPE> handler, final Message message) {
-        final Object payload = handler.handleMessage(handler.getMessageType().cast(message));
-        final MessageListenerSupport support = listenerSupportMap.get(bindTarget.getClass());
-        support.bind(bindTarget, message, payload);
-    }
-
     protected void invokeMessageHandler(final Object invokeTarget) {
-        final MessageListenerSupport support = listenerSupportMap.get(invokeTarget.getClass());
+        final MessageListenerSupport support = listenerSupportMap
+                .get(invokeTarget.getClass());
         String signature = null;
 
         if (logger.isDebugEnabled()) {
-            signature = invokeTarget.getClass().getName() + "#" + support.getListenerMethodName()
-                    + "@" + Integer.toHexString(invokeTarget.hashCode());
+            signature = invokeTarget.getClass().getName() + "#"
+                    + support.getListenerMethodName() + "@"
+                    + Integer.toHexString(invokeTarget.hashCode());
             logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - " + signature);
         }
 
         support.invoke(invokeTarget);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - " + signature);
+            logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - "
+                    + signature);
         }
     }
 
     protected void rollBack() {
         try {
-            if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {
+            if ((transactionManager != null)
+                    && (transactionManager.getTransaction() != null)) {
                 logger.info("[S2JMS-Container] トランザクションをロールバックします.");
                 transactionManager.setRollbackOnly();
             }
@@ -155,7 +143,8 @@ public class JMSContainerImpl implements JMSContainer {
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public void setTransactionManager(final TransactionManager transactionManager) {
+    public void setTransactionManager(
+            final TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 

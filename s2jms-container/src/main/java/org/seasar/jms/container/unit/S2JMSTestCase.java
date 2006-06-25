@@ -18,8 +18,8 @@ package org.seasar.jms.container.unit;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
+import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
 import org.seasar.framework.unit.S2FrameworkTestCase;
-import org.seasar.jms.container.deployer.JMSComponentDeployerProvider;
 import org.seasar.jms.container.impl.JMSExternalContext;
 import org.seasar.jms.container.impl.JMSExternalContextComponentDefRegister;
 import org.seasar.jms.container.impl.JMSRequestImpl;
@@ -34,18 +34,14 @@ public abstract class S2JMSTestCase extends S2FrameworkTestCase {
     protected void setUpContainer() throws Throwable {
         super.setUpContainer();
 
-        ExternalContext externalContext = new JMSExternalContext();
-        externalContext.setRequest(new JMSRequestImpl());
-
         setUpExternalContext(getContainer());
-
-        ComponentDeployerFactory.setProvider(new JMSComponentDeployerProvider());
+        ComponentDeployerFactory.setProvider(new ExternalComponentDeployerProvider());
 
     }
 
     protected void setUpExternalContext(final S2Container container) {
         ExternalContext externalContext = new JMSExternalContext();
-        externalContext.setRequest(new JMSRequestImpl());
+        externalContext.setRequest(new JMSRequestImpl(new MapMessageMock()));
 
         container.setExternalContext(externalContext);
         container

@@ -15,17 +15,23 @@
  */
 package org.seasar.jms.container.impl;
 
-import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.jms.container.BindingSupport;
+import javax.jms.Message;
 
-public class PropertyBindingSupport implements BindingSupport {
-    protected PropertyDesc property;
+/**
+ * @author koichik
+ */
+public class JMSRequestParameterValuesMap extends JMSRequestParameterMap {
 
-    public PropertyBindingSupport(final PropertyDesc property) {
-        this.property = property;
+    protected static final Object[] EMPTY_ARRAY = new Object[0];
+
+    public JMSRequestParameterValuesMap(final Message message) {
+        super(message);
     }
 
-    public void bind(final Object target, final Object value) {
-        property.setValue(target, value);
+    @Override
+    protected Object getAttribute(String key) {
+        final Object value = super.getAttribute(key);
+        return value == null ? EMPTY_ARRAY : new Object[] { value };
     }
+
 }

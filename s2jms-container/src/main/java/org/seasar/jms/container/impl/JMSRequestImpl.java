@@ -15,55 +15,51 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import javax.jms.Message;
+
+import org.seasar.framework.container.impl.AbstractExternalContextMap;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.container.JMSRequest;
 
 /**
- * @author y-komori
- * 
+ * @author koichik
  */
-public class JMSRequestImpl implements JMSRequest {
-    @SuppressWarnings("unchecked")
-    protected static final Map EMPTY_MAP = Collections.unmodifiableMap(new HashMap());
+public class JMSRequestImpl extends AbstractExternalContextMap implements
+        JMSRequest {
 
-    protected final Map<String, Object> attributeMap = new HashMap<String, Object>();
+    protected Message message;
 
-    /**
-     * @see org.seasar.jms.container.JMSRequest#getAttribute(java.lang.String)
-     */
-    public Object getAttribute(final String name) {
-        return attributeMap.get(name);
+    protected Map<String, Object> attributes = CollectionsUtil.newHashMap();
+
+    public JMSRequestImpl(final Message message) {
+        this.message = message;
     }
 
-    /**
-     * @see org.seasar.jms.container.JMSRequest#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
-    public void setAttribute(final String name, final Object component) {
-        attributeMap.put(name, component);
+    public Message getMessage() {
+        return message;
     }
 
-    public Map getRequestMap() {
-        return attributeMap;
+    @Override
+    public Object getAttribute(final String key) {
+        return attributes.get(key);
     }
 
-    public Map getHeaderMap() {
-        return EMPTY_MAP;
+    @Override
+    public void setAttribute(final String key, final Object value) {
+        attributes.put(key, value);
     }
 
-    public Map getHeaderValuesMap() {
-        return EMPTY_MAP;
+    @Override
+    protected Iterator getAttributeNames() {
+        return attributes.keySet().iterator();
     }
 
-    public Map getParameterMap() {
-        return EMPTY_MAP;
-    }
-
-    public Map getParameterValuesMap() {
-        return EMPTY_MAP;
+    @Override
+    protected void removeAttribute(final String key) {
+        attributes.remove(key);
     }
 
 }

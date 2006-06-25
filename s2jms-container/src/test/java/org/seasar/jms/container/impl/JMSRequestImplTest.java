@@ -15,9 +15,12 @@
  */
 package org.seasar.jms.container.impl;
 
+import javax.jms.Message;
+
 import junit.framework.TestCase;
 
 import org.seasar.jms.container.JMSRequest;
+import org.seasar.jms.container.unit.MessageMock;
 
 /**
  * @author y-komori
@@ -25,12 +28,14 @@ import org.seasar.jms.container.JMSRequest;
  */
 public class JMSRequestImplTest extends TestCase {
     JMSRequest request;
-    
-    
+
+    Message message;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        request = new JMSRequestImpl();
+        message = new MessageMock();
+        request = new JMSRequestImpl(message);
     }
 
     public void testSetAttribute() {

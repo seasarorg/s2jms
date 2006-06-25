@@ -17,10 +17,11 @@ package org.seasar.jms.container.impl;
 
 import java.util.concurrent.Callable;
 
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
+import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.jms.container.deployer.JMSComponentDeployerProvider;
 
 public class JMSContainerInitializer implements Callable {
     protected String configPath;
@@ -30,6 +31,10 @@ public class JMSContainerInitializer implements Callable {
     }
 
     public Object call() {
+        return initialize();
+    }
+
+    public S2Container initialize() {
         if (isAlreadyInitialized()) {
             return SingletonS2ContainerFactory.getContainer();
         }
@@ -37,9 +42,11 @@ public class JMSContainerInitializer implements Callable {
             SingletonS2ContainerFactory.setConfigPath(configPath);
         }
         if (ComponentDeployerFactory.getProvider() instanceof ComponentDeployerFactory.DefaultProvider) {
-            ComponentDeployerFactory.setProvider(new JMSComponentDeployerProvider());
+            ComponentDeployerFactory
+                    .setProvider(new ExternalComponentDeployerProvider());
         }
-        SingletonS2ContainerFactory.setExternalContext(new JMSExternalContext());
+        SingletonS2ContainerFactory
+                .setExternalContext(new JMSExternalContext());
         SingletonS2ContainerFactory
                 .setExternalContextComponentDefRegister(new JMSExternalContextComponentDefRegister());
         SingletonS2ContainerFactory.init();

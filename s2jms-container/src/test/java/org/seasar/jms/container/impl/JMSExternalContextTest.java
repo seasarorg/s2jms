@@ -17,42 +17,45 @@ package org.seasar.jms.container.impl;
 
 import java.util.Map;
 
+import javax.jms.MapMessage;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.jms.container.JMSRequest;
+import org.seasar.jms.container.unit.MapMessageMock;
 
 /**
  * @author y-komori
  * 
  */
 public class JMSExternalContextTest extends TestCase {
+
     ExternalContext externalContext;
+
+    MapMessage message;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         externalContext = new JMSExternalContext();
+        message = new MapMessageMock();
     }
 
     public void testSetRequest() {
-        JMSRequest request = new JMSRequestImpl();
-        try {
-            externalContext.setRequest(request);
-        } catch (Exception ex) {
-            fail("1");
-        }
+        JMSRequest request = new JMSRequestImpl(message);
+        externalContext.setRequest(request);
 
         Object dummy = new Object();
         try {
             externalContext.setRequest(dummy);
-            fail("2");
+            fail();
         } catch (ClassCastException ex) {
         }
     }
 
     public void testGetRequest() {
-        JMSRequest request = new JMSRequestImpl();
+        JMSRequest request = new JMSRequestImpl(message);
         externalContext.setRequest(request);
         assertEquals(request, externalContext.getRequest());
     }
@@ -94,29 +97,66 @@ public class JMSExternalContextTest extends TestCase {
         assertTrue(map.isEmpty());
     }
 
-    public void testGetRequestHeaderMap() {
+    public void testGetRequestHeaderMap() throws Exception {
+        message.setStringProperty("foo", "FOO");
+        message.setStringProperty("bar", "BAR");
+        JMSRequest request = new JMSRequestImpl(message);
+        externalContext.setRequest(request);
+
         Map map = externalContext.getRequestHeaderMap();
-        assertTrue(map.isEmpty());
+        assertEquals(13, map.size());
+        assertEquals("FOO", map.get("foo"));
+        assertEquals("BAR", map.get("bar"));
     }
 
-    public void testGetRequestHeaderValuesMap() {
+    public void testGetRequestHeaderValuesMap() throws Exception {
+        message.setStringProperty("foo", "FOO");
+        JMSRequest request = new JMSRequestImpl(message);
+        externalContext.setRequest(request);
+
         Map map = externalContext.getRequestHeaderValuesMap();
-        assertTrue(map.isEmpty());
+        assertEquals(12, map.size());
+        Object[] values = (Object[]) map.get("foo");
+        assertEquals(1, values.length);
+        assertEquals("FOO", values[0]);
     }
 
+    @SuppressWarnings("unchecked")
     public void testGetRequestMap() {
+        JMSRequest request = new JMSRequestImpl(message);
+        request.setAttribute("foo", "FOO");
+        request.setAttribute("bar", "BAR");
+        externalContext.setRequest(request);
+
         Map map = externalContext.getRequestMap();
-        assertTrue(map.isEmpty());
+        assertEquals(2, map.size());
+
+        map.put("baz", "BAZ");
+        assertEquals("BAZ", request.getAttribute("baz"));
     }
 
-    public void testGetRequestParameterMap() {
+    public void testGetRequestParameterMap() throws Exception {
+        message.setString("foo", "FOO");
+        message.setString("bar", "BAR");
+        JMSRequest request = new JMSRequestImpl(message);
+        externalContext.setRequest(request);
+
         Map map = externalContext.getRequestParameterMap();
-        assertTrue(map.isEmpty());
+        assertEquals(3, map.size());
+        assertEquals("FOO", map.get("foo"));
+        assertEquals("BAR", map.get("bar"));
     }
 
-    public void testGetRequestParameterValuesMap() {
+    public void testGetRequestParameterValuesMap() throws Exception {
+        message.setString("foo", "FOO");
+        JMSRequest request = new JMSRequestImpl(message);
+        externalContext.setRequest(request);
+
         Map map = externalContext.getRequestParameterValuesMap();
-        assertTrue(map.isEmpty());
+        assertEquals(2, map.size());
+        Object[] values = (Object[]) map.get("foo");
+        assertEquals(1, values.length);
+        assertEquals("FOO", values[0]);
     }
 
     public void testGetSessionMap() {

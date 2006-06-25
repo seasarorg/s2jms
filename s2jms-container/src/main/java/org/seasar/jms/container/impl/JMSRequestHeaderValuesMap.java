@@ -15,20 +15,23 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.lang.reflect.Field;
+import javax.jms.Message;
 
-import org.seasar.framework.util.FieldUtil;
-import org.seasar.jms.container.BindingSupport;
+/**
+ * @author koichik
+ */
+public class JMSRequestHeaderValuesMap extends JMSRequestHeaderMap {
 
-public class FieldBindingSupport implements BindingSupport {
-    protected final Field field;
+    protected static final Object[] EMPTY_ARRAY = new Object[0];
 
-    public FieldBindingSupport(final Field field) {
-        this.field = field;
-        this.field.setAccessible(true);
+    public JMSRequestHeaderValuesMap(final Message message) {
+        super(message);
     }
 
-    public void bind(final Object target, final Object value) {
-        FieldUtil.set(field, target, value);
+    @Override
+    protected Object getAttribute(String key) {
+        final Object value = super.getAttribute(key);
+        return value == null ? EMPTY_ARRAY : new Object[] { value };
     }
+
 }

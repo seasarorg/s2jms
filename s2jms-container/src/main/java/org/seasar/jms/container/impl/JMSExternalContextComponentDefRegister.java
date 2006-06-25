@@ -18,16 +18,27 @@ package org.seasar.jms.container.impl;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerImpl;
+import org.seasar.framework.container.impl.servlet.ServletRequestHeaderMapComponentDef;
+import org.seasar.framework.container.impl.servlet.ServletRequestHeaderValuesMapComponentDef;
+import org.seasar.framework.container.impl.servlet.ServletRequestMapComponentDef;
+import org.seasar.framework.container.impl.servlet.ServletRequestParameterMapComponentDef;
+import org.seasar.framework.container.impl.servlet.ServletRequestParameterValuesMapComponentDef;
 
 /**
  * @author y-komori
- *
+ * 
  */
 public class JMSExternalContextComponentDefRegister implements
         ExternalContextComponentDefRegister {
 
-    public void registerComponentDefs(S2Container container) {
-        S2ContainerImpl impl = (S2ContainerImpl) container;
-        impl.register(new JMSRequestComponentDef());
+    public void registerComponentDefs(final S2Container container) {
+        final S2ContainerImpl impl = (S2ContainerImpl) container;
+        impl.register0(new JMSRequestComponentDef());
+        impl.register0(new JMSMessageComponentDef());
+        impl.register0(new ServletRequestMapComponentDef());
+        impl.register0(new ServletRequestHeaderMapComponentDef());
+        impl.register0(new ServletRequestHeaderValuesMapComponentDef());
+        impl.register0(new ServletRequestParameterMapComponentDef());
+        impl.register0(new ServletRequestParameterValuesMapComponentDef());
     }
 }

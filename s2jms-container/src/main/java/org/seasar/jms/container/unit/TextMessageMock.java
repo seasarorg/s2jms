@@ -13,19 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.deployer;
+package org.seasar.jms.container.unit;
 
-import org.seasar.framework.container.ComponentDef;
-import org.seasar.framework.container.ComponentDeployer;
-import org.seasar.framework.container.deployer.ComponentDeployerFactory;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
 
 /**
- * @author y-komori
- *
+ * @author koichik
+ * 
  */
-public class JMSComponentDeployerProvider extends ComponentDeployerFactory.DefaultProvider {
-    @Override
-    public ComponentDeployer createRequestComponentDeployer(final ComponentDef cd) {
-        return new JMSRequestComponentDeployer(cd);
+public class TextMessageMock extends MessageMock implements TextMessage {
+
+    protected String text;
+
+    public TextMessageMock() {
     }
+
+    public void setText(String text) throws JMSException {
+        this.text = text;
+    }
+
+    public String getText() throws JMSException {
+        return text;
+    }
+
 }

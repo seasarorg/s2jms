@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.jms.Message;
+
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.jms.container.JMSRequest;
 
@@ -27,16 +29,18 @@ import org.seasar.jms.container.JMSRequest;
  * 
  */
 public class JMSExternalContext implements ExternalContext {
+
     @SuppressWarnings("unchecked")
-    private static final Map EMPTY_MAP = Collections.unmodifiableMap(new HashMap());
+    private static final Map EMPTY_MAP = Collections
+            .unmodifiableMap(new HashMap());
 
-    private ThreadLocal<JMSRequest> requests = new ThreadLocal<JMSRequest>();
+    private final ThreadLocal<JMSRequest> requests = new ThreadLocal<JMSRequest>();
 
-    public Object getRequest() {
+    public JMSRequest getRequest() {
         return requests.get();
     }
 
-    public void setRequest(Object request) {
+    public void setRequest(final Object request) {
         requests.set(JMSRequest.class.cast(request));
     }
 
@@ -44,7 +48,7 @@ public class JMSExternalContext implements ExternalContext {
         return null;
     }
 
-    public void setResponse(Object response) {
+    public void setResponse(final Object response) {
     }
 
     public Object getSession() {
@@ -71,27 +75,31 @@ public class JMSExternalContext implements ExternalContext {
     }
 
     public Map getRequestHeaderMap() {
-        return EMPTY_MAP;
+        return new JMSRequestHeaderMap(getMessage());
     }
 
     public Map getRequestHeaderValuesMap() {
-        return EMPTY_MAP;
+        return new JMSRequestHeaderValuesMap(getMessage());
     }
 
     public Map getRequestMap() {
-        return EMPTY_MAP;
+        return JMSRequestImpl.class.cast(getRequest());
     }
 
     public Map getRequestParameterMap() {
-        return EMPTY_MAP;
+        return new JMSRequestParameterMap(getMessage());
     }
 
     public Map getRequestParameterValuesMap() {
-        return EMPTY_MAP;
+        return new JMSRequestParameterValuesMap(getMessage());
     }
 
     public Map getSessionMap() {
         return EMPTY_MAP;
+    }
+
+    protected Message getMessage() {
+        return getRequest().getMessage();
     }
 
 }

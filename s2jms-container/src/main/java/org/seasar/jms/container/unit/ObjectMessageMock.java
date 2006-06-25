@@ -13,23 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.annotation;
+package org.seasar.jms.container.unit;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.Serializable;
 
-import org.seasar.framework.container.annotation.tiger.BindingType;
+import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
 
 /**
- * @author y-komori
+ * @author koichik
  * 
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface JMSPayload {
-    String name() default "";
+public class ObjectMessageMock extends MessageMock implements ObjectMessage {
 
-    BindingType bindingType() default BindingType.SHOULD;
+    protected Serializable payload;
+
+    public ObjectMessageMock() {
+    }
+
+    public void setObject(Serializable payload) throws JMSException {
+        this.payload = payload;
+    }
+
+    public Serializable getObject() throws JMSException {
+        return payload;
+    }
+
 }

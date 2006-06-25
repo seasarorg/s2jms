@@ -13,19 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.annotation;
+package org.seasar.jms.container.creator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
+import org.seasar.framework.container.hotdeploy.creator.SimpleSinglePackageCreator;
 
-import org.seasar.framework.container.annotation.tiger.BindingType;
+public class ListenerCreator extends SimpleSinglePackageCreator {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface JMSProperty {
-    String name() default "";
+    public ListenerCreator() {
+        setMiddlePackageName("jms");
+        setNameSuffix("Listener");
+        setInstanceDef(InstanceDefFactory.REQUEST);
+    }
 
-    BindingType bindingType() default BindingType.SHOULD;
 }

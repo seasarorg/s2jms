@@ -24,11 +24,6 @@ import javax.jms.MessageListener;
  */
 public interface JMSContainer extends MessageListener {
     /**
-     * S2JMSContainer が受信したメッセージを JMSRequest に格納するときの属性名です。
-     */
-    public static final String MESSAGE_NAME = "message";
-
-    /**
      * S2JMSContainerにメッセージリスナ・コンポーネントを登録します。<br>
      * メッセージリスナ・コンポーネントはDiconファイルに登録し、通常以下のように使用します。<br>
      * 
