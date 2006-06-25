@@ -3,9 +3,6 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/s2jms"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/s2jca"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
-	<classpathentry kind="output" path="target/test-classes"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/s2jms-container"/>
+	<classpathentry kind="output" path="build/classes"/>
 </classpath>
