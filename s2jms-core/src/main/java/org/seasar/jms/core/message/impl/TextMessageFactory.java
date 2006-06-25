@@ -15,6 +15,8 @@
  */
 package org.seasar.jms.core.message.impl;
 
+import java.util.Map;
+
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -51,6 +53,20 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
 
     /**
      * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setText text}プロパティまたは
+     * {@link #setTextProvider textProvider}プロパティの設定は必須となります。
+     * </p>
+     * 
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public TextMessageFactory(final Map<String, Object> properties) {
+        super(properties);
+    }
+
+    /**
+     * インスタンスを構築します。
      * 
      * @param text
      *            JMSメッセージのペイロードに設定される文字列
@@ -62,10 +78,37 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
     /**
      * インスタンスを構築します。
      * 
+     * @param text
+     *            JMSメッセージのペイロードに設定される文字列
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public TextMessageFactory(final String text,
+            final Map<String, Object> properties) {
+        this(new TextHolder(text), properties);
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
      * @param textProvider
      *            JMSメッセージのペイロードに設定される文字列を提供するプロバイダ
      */
     public TextMessageFactory(final TextProvider textProvider) {
+        this.textProvider = textProvider;
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param textProvider
+     *            JMSメッセージのペイロードに設定される文字列を提供するプロバイダ
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public TextMessageFactory(final TextProvider textProvider,
+            final Map<String, Object> properties) {
+        super(properties);
         this.textProvider = textProvider;
     }
 
@@ -124,7 +167,8 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
      * @return JMSセッションから作成された{@link javax.jms.TextMessage}
      */
     @Override
-    protected TextMessage createMessageInstance(final Session session) throws JMSException {
+    protected TextMessage createMessageInstance(final Session session)
+            throws JMSException {
         return session.createTextMessage();
     }
 

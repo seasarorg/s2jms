@@ -62,12 +62,19 @@ import org.seasar.jms.core.session.SessionHandler;
  */
 public class MessageSenderImpl implements MessageSender {
     protected SessionFactory sessionFactory;
+
     protected DestinationFactory destinationFactory;
+
     protected MessageFactory messageFactory;
+
     protected int deliveryMode = Message.DEFAULT_DELIVERY_MODE;
+
     protected int priority = Message.DEFAULT_PRIORITY;
+
     protected long timeToLive = Message.DEFAULT_TIME_TO_LIVE;
+
     protected boolean disableMessageID = false;
+
     protected boolean disableMessageTimestamp = false;
 
     /**
@@ -77,7 +84,7 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     /**
-     * 受信に使用するJMSセッションのファクトリを設定します(必須)。
+     * 送信に使用するJMSセッションのファクトリを設定します(必須)。
      * 
      * @param sessionFactory
      *            JMSセッションファクトリ
@@ -94,7 +101,8 @@ public class MessageSenderImpl implements MessageSender {
      *            JMSデスティネーションファクトリ
      */
     @Binding(bindingType = BindingType.MUST)
-    public void setDestinationFactory(final DestinationFactory destinationFactory) {
+    public void setDestinationFactory(
+            final DestinationFactory destinationFactory) {
         this.destinationFactory = destinationFactory;
     }
 
@@ -168,16 +176,34 @@ public class MessageSenderImpl implements MessageSender {
         send(new BytesMessageFactory(bytes));
     }
 
+    public void send(final byte[] bytes, final Map<String, Object> properties) {
+        send(new BytesMessageFactory(bytes, properties));
+    }
+
     public void send(final String text) {
         send(new TextMessageFactory(text));
+    }
+
+    public void send(final String text, final Map<String, Object> properties) {
+        send(new TextMessageFactory(text, properties));
     }
 
     public void send(final Serializable object) {
         send(new ObjectMessageFactory(object));
     }
 
+    public void send(final Serializable object,
+            final Map<String, Object> properties) {
+        send(new ObjectMessageFactory(object, properties));
+    }
+
     public void send(final Map<String, Object> map) {
         send(new MapMessageFactory(map));
+    }
+
+    public void send(final Map<String, Object> map,
+            final Map<String, Object> properties) {
+        send(new MapMessageFactory(map, properties));
     }
 
     /**
@@ -209,8 +235,10 @@ public class MessageSenderImpl implements MessageSender {
      * @throws JMSException
      *             JMS実装で例外が発生した場合にスローされます
      */
-    protected MessageProducer createMessageProducer(final Session session) throws JMSException {
-        final Destination destination = destinationFactory.getDestination(session);
+    protected MessageProducer createMessageProducer(final Session session)
+            throws JMSException {
+        final Destination destination = destinationFactory
+                .getDestination(session);
         final MessageProducer producer = session.createProducer(destination);
         producer.setDisableMessageID(disableMessageID);
         producer.setDisableMessageTimestamp(disableMessageTimestamp);

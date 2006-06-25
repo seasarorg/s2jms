@@ -15,6 +15,8 @@
  */
 package org.seasar.jms.core.message.impl;
 
+import java.util.Map;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Session;
@@ -48,11 +50,38 @@ public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
 
     /**
      * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setBytes bytes}プロパティの設定は必須となります。
+     * </p>
+     * 
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public BytesMessageFactory(final Map<String, Object> properties) {
+        super(properties);
+    }
+
+    /**
+     * インスタンスを構築します。
      * 
      * @param bytes
      *            JMSメッセージのペイロードに設定されるバイト列
      */
     public BytesMessageFactory(final byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param bytes
+     *            JMSメッセージのペイロードに設定されるバイト列
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public BytesMessageFactory(final byte[] bytes,
+            final Map<String, Object> properties) {
+        super(properties);
         this.bytes = bytes;
     }
 
@@ -87,7 +116,8 @@ public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
      * @return JMSセッションから作成された{@link javax.jms.BytesMessage}
      */
     @Override
-    protected BytesMessage createMessageInstance(final Session session) throws JMSException {
+    protected BytesMessage createMessageInstance(final Session session)
+            throws JMSException {
         return session.createBytesMessage();
     }
 

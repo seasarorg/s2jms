@@ -15,7 +15,6 @@
  */
 package org.seasar.jms.core.message.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.jms.JMSException;
@@ -24,6 +23,7 @@ import javax.jms.Session;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageFactory;
 
@@ -40,17 +40,30 @@ import org.seasar.jms.core.message.MessageFactory;
  * 
  * @author koichik
  */
-public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
-        MessageFactory<MSGTYPE> {
+public abstract class AbstractMessageFactory<MSGTYPE extends Message>
+        implements MessageFactory<MSGTYPE> {
     protected String correlationID;
+
     protected byte[] correlationIDAsBytes;
-    protected Map<String, Object> properties = new HashMap<String, Object>();
+
+    protected final Map<String, Object> properties = CollectionsUtil
+            .newHashMap();
 
     /**
      * インスタンスを構築します。
      * 
      */
     public AbstractMessageFactory() {
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public AbstractMessageFactory(final Map<String, Object> properties) {
+        this.properties.putAll(properties);
     }
 
     /**
@@ -163,7 +176,8 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
      * @throws JMSException
      *             JMSメッセージを作成できなかった場合にスローされます。
      */
-    protected abstract MSGTYPE createMessageInstance(final Session session) throws JMSException;
+    protected abstract MSGTYPE createMessageInstance(final Session session)
+            throws JMSException;
 
     /**
      * JMSメッセージのメッセージヘッダを設定します。

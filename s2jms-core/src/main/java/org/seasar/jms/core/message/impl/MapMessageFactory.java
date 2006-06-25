@@ -60,6 +60,20 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     }
 
     /**
+     * インスタンスを構築します。
+     * 
+     * @param bytes
+     *            JMSメッセージのペイロードに設定される{@link java.util.Map}
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public MapMessageFactory(final Map<String, Object> map,
+            final Map<String, Object> properties) {
+        super(properties);
+        this.map = map;
+    }
+
+    /**
      * JMSメッセージのペイロードに設定される{@link java.util.Map}を返します。
      * 
      * @return JMSメッセージのペイロードに設定される{@link java.util.Map}
@@ -85,8 +99,10 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     /**
      * JMSメッセージのペイロードに設定される{@link java.util.Map}にキーと値のマッピングを追加します。
      * 
-     * @param key JMSメッセージのペイロードに設定されるマッピングのキー
-     * @param value JMSメッセージのペイロードに設定されるマッピングの値
+     * @param key
+     *            JMSメッセージのペイロードに設定されるマッピングのキー
+     * @param value
+     *            JMSメッセージのペイロードに設定されるマッピングの値
      */
     public void addValue(final String key, final Object value) {
         if (this.map == null) {
@@ -103,7 +119,8 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
      * @return JMSセッションから作成された{@link javax.jms.MapMessage}
      */
     @Override
-    protected MapMessage createMessageInstance(final Session session) throws JMSException {
+    protected MapMessage createMessageInstance(final Session session)
+            throws JMSException {
         return session.createMapMessage();
     }
 

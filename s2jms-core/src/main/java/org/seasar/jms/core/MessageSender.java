@@ -55,12 +55,28 @@ public interface MessageSender {
     void send(byte[] bytes);
 
     /**
+     * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
+     * 
+     * @param bytes
+     *            送信するバイト配列
+     */
+    void send(byte[] bytes, Map<String, Object> properties);
+
+    /**
      * 文字列を{@link javax.jms.TextMessage}のペイロードに設定して送信します。
      * 
      * @param text
      *            送信する文字列
      */
     void send(String text);
+
+    /**
+     * 文字列を{@link javax.jms.TextMessage}のペイロードに設定して送信します。
+     * 
+     * @param text
+     *            送信する文字列
+     */
+    void send(String text, Map<String, Object> properties);
 
     /**
      * {@link java.io.Serializable}オブジェクトを{@link javax.jms.ObjectMessage}のペイロードに設定して送信します。
@@ -71,12 +87,28 @@ public interface MessageSender {
     void send(Serializable object);
 
     /**
+     * {@link java.io.Serializable}オブジェクトを{@link javax.jms.ObjectMessage}のペイロードに設定して送信します。
+     * 
+     * @param object
+     *            送信するオブジェクト
+     */
+    void send(Serializable object, Map<String, Object> properties);
+
+    /**
      * {@link java.util.Map}を{@link javax.jms.MapMessage}のペイロードに設定して送信します。
      * 
      * @param map
      *            送信するマップ
      */
     void send(Map<String, Object> map);
+
+    /**
+     * {@link java.util.Map}を{@link javax.jms.MapMessage}のペイロードに設定して送信します。
+     * 
+     * @param map
+     *            送信するマップ
+     */
+    void send(Map<String, Object> map, Map<String, Object> properties);
 
     /**
      * 実装クラスのプロパティに設定された{@link MessageFactory}が作成したJMSメッセージを送信します。

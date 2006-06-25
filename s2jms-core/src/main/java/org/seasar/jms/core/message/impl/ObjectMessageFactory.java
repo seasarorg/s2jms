@@ -16,6 +16,7 @@
 package org.seasar.jms.core.message.impl;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
@@ -50,11 +51,38 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
 
     /**
      * インスタンスを構築します。
+     * <p>
+     * このコンストラクタでインスタンスを構築した場合、{@link #setObject object}プロパティの設定は必須となります。
+     * </p>
+     * 
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public ObjectMessageFactory(final Map<String, Object> properties) {
+        super(properties);
+    }
+
+    /**
+     * インスタンスを構築します。
      * 
      * @param object
      *            JMSメッセージのペイロードに設定されるオブジェクト
      */
     public ObjectMessageFactory(final Serializable object) {
+        this.object = object;
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param object
+     *            JMSメッセージのペイロードに設定されるオブジェクト
+     * @param properties
+     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
+     */
+    public ObjectMessageFactory(final Serializable object,
+            final Map<String, Object> properties) {
+        super(properties);
         this.object = object;
     }
 
@@ -89,7 +117,8 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
      * @return JMSセッションから作成された{@link javax.jms.ObjectMessage}
      */
     @Override
-    protected ObjectMessage createMessageInstance(final Session session) throws JMSException {
+    protected ObjectMessage createMessageInstance(final Session session)
+            throws JMSException {
         return session.createObjectMessage();
     }
 
@@ -102,7 +131,8 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
      *             JMSメッセージにペイロードを設定できなかった場合にスローされます
      */
     @Override
-    protected void setupPayload(final ObjectMessage message) throws JMSException {
+    protected void setupPayload(final ObjectMessage message)
+            throws JMSException {
         message.setObject(object);
     }
 }
