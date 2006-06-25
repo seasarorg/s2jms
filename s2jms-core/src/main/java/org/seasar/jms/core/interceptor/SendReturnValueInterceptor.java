@@ -23,7 +23,7 @@ import java.util.Map;
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.exception.SIllegalStateException;
-import org.seasar.jca.util.ReflectionUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 import org.seasar.jms.core.message.MessageFactory;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
 import org.seasar.jms.core.message.impl.MapMessageFactory;
