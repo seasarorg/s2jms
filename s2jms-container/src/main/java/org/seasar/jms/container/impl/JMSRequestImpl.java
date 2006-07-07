@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.jms.Message;
 
-import org.seasar.framework.container.impl.AbstractExternalContextMap;
+import org.seasar.framework.container.external.AbstractExternalContextMap;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.container.JMSRequest;
 

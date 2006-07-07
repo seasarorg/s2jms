@@ -17,11 +17,14 @@ package org.seasar.jms.container.creator;
 
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.hotdeploy.creator.SimpleSinglePackageCreator;
+import org.seasar.framework.container.hotdeploy.creator.SinglePackageCreator;
+import org.seasar.framework.convention.NamingConvention;
 
-public class MessageCreator extends SimpleSinglePackageCreator {
+public class MessageCreator extends SinglePackageCreator {
 
-    public MessageCreator() {
+    public MessageCreator(final NamingConvention namingConvention) {
+        super(namingConvention);
+
         setMiddlePackageName("jms");
         setNameSuffix("Message");
         setInstanceDef(InstanceDefFactory.REQUEST);

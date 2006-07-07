@@ -16,11 +16,14 @@
 package org.seasar.jms.container.creator;
 
 import org.seasar.framework.container.deployer.InstanceDefFactory;
-import org.seasar.framework.container.hotdeploy.creator.SimpleSinglePackageCreator;
+import org.seasar.framework.container.hotdeploy.creator.SinglePackageCreator;
+import org.seasar.framework.convention.NamingConvention;
 
-public class ListenerCreator extends SimpleSinglePackageCreator {
+public class ListenerCreator extends SinglePackageCreator {
 
-    public ListenerCreator() {
+    public ListenerCreator(final NamingConvention namingConvention) {
+        super(namingConvention);
+
         setMiddlePackageName("jms");
         setNameSuffix("Listener");
         setInstanceDef(InstanceDefFactory.REQUEST);

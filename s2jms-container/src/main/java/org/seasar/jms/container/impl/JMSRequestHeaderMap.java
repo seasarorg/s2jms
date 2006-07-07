@@ -21,7 +21,7 @@ import java.util.Set;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-import org.seasar.framework.container.impl.AbstractUnmodifiableExternalContextMap;
+import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.util.IterableAdapter;
