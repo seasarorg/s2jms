@@ -33,6 +33,7 @@ public class JMSContainerTest extends S2JMSTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
         include("jms-activemq-inbound.dicon");
         include("queue-cf-test.dicon");
     }
@@ -47,7 +48,7 @@ public class JMSContainerTest extends S2JMSTestCase {
 
         Thread.sleep(500);
         assertEquals(1, MessageListener1.getCallCount());
-        assertEquals("TextPayloadMessage", MessageListener1.getPayload());
+        assertEquals("TextPayloadMessage", MessageListener1.payload);
         assertEquals(1, MessageListener2.getCallCount());
         assertEquals("TextPayloadMessage", MessageListener2.textPayload);
         assertNotNull(MessageListener2.message);
@@ -57,21 +58,13 @@ public class JMSContainerTest extends S2JMSTestCase {
         protected static int callCount;
         protected static String payload;
 
-        @OnMessage
-        public void caller() {
+        public void onMessage(String payload) {
             callCount++;
+            MessageListener1.payload = payload;
         }
 
         public static int getCallCount() {
             return callCount;
-        }
-
-        public static void setPayload(String payload) {
-            MessageListener1.payload = payload;
-        }
-
-        public static String getPayload() {
-            return payload;
         }
     }
 
