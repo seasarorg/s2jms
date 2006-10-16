@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -27,8 +27,7 @@ import org.seasar.jms.container.JMSRequest;
 /**
  * @author koichik
  */
-public class JMSRequestImpl extends AbstractExternalContextMap implements
-        JMSRequest {
+public class JMSRequestImpl extends AbstractExternalContextMap implements JMSRequest {
 
     protected Message message;
 

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -35,8 +35,7 @@ import org.seasar.jms.core.util.IterableAdapter;
  * @author shot
  * @author higa
  */
-public class JMSRequestParameterMap extends
-        AbstractUnmodifiableExternalContextMap {
+public class JMSRequestParameterMap extends AbstractUnmodifiableExternalContextMap {
 
     protected static final String PAYLOAD_NAME = "payload";
 
@@ -48,7 +47,7 @@ public class JMSRequestParameterMap extends
 
     public JMSRequestParameterMap(final Message message) {
         this.message = message;
-        this.messageHandler = MessageHandlerFactory.getMessageHandler(message
+        this.messageHandler = MessageHandlerFactory.getMessageHandlerFromMessageType(message
                 .getClass());
         if (messageHandler == null) {
             throw new NotSupportedMessageException(message);
@@ -59,8 +58,7 @@ public class JMSRequestParameterMap extends
         if (MapMessage.class.isInstance(message)) {
             try {
                 final MapMessage mapMessage = MapMessage.class.cast(message);
-                for (final String name : new IterableAdapter(mapMessage
-                        .getMapNames())) {
+                for (final String name : new IterableAdapter(mapMessage.getMapNames())) {
                     tempNames.add(name);
                 }
             } catch (final JMSException e) {
@@ -72,7 +70,7 @@ public class JMSRequestParameterMap extends
 
     @Override
     @SuppressWarnings("unchecked")
-    protected Object getAttribute(String key) {
+    protected Object getAttribute(final String key) {
         if (PAYLOAD_NAME.equals(key)) {
             return messageHandler.handleMessage(message);
         }

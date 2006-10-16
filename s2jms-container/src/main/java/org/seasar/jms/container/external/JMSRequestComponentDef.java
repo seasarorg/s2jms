@@ -13,23 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.exception;
+package org.seasar.jms.container.external;
 
-import org.seasar.framework.exception.SRuntimeException;
+import org.seasar.framework.container.ContainerConstants;
+import org.seasar.framework.container.impl.SimpleComponentDef;
+import org.seasar.jms.container.JMSRequest;
 
-public class IllegalMessageHandlerException extends SRuntimeException {
-    private static final long serialVersionUID = 1L;
-
-    public IllegalMessageHandlerException(final String messageCode) {
-        super(messageCode);
+/**
+ * @author y-komori
+ * 
+ */
+public class JMSRequestComponentDef extends SimpleComponentDef {
+    public JMSRequestComponentDef() {
+        super(JMSRequest.class, ContainerConstants.REQUEST_NAME);
     }
 
-    public IllegalMessageHandlerException(final String messageCode, final Object[] args) {
-        super(messageCode, args);
-    }
-
-    public IllegalMessageHandlerException(final String messageCode, final Object[] args,
-            final Throwable cause) {
-        super(messageCode, args, cause);
+    /**
+     * @see org.seasar.framework.container.ComponentDef#getComponent()
+     */
+    @Override
+    public Object getComponent() {
+        return getContainer().getRoot().getExternalContext().getRequest();
     }
 }

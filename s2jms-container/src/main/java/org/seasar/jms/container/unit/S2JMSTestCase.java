@@ -15,36 +15,37 @@
  */
 package org.seasar.jms.container.unit;
 
+import javax.jms.Message;
+
+import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.container.ExternalContext;
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.deployer.ComponentDeployerFactory;
-import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
-import org.seasar.framework.unit.S2FrameworkTestCase;
-import org.seasar.jms.container.impl.JMSExternalContext;
-import org.seasar.jms.container.impl.JMSExternalContextComponentDefRegister;
-import org.seasar.jms.container.impl.JMSRequestImpl;
+import org.seasar.jms.container.external.JMSExternalContext;
+import org.seasar.jms.container.external.JMSExternalContextComponentDefRegister;
+import org.seasar.jms.container.external.JMSRequestImpl;
 
 /**
+ * S2JMS-Containerから呼び出されるメッセージリスナーコンポーネントをテストするための抽象テストクラスです。
+ * <p>
+ * このテストクラスを継承したテストクラスでは、 <code>setUp()</code>メソッドや<code>setUpXxx()</code>メソッドの中から{@link #registerMessage(javax.jms.Message)}メソッドを呼び出すことにより、
+ * 外部コンテキストのリクエストにJMSメッセージを設定することができます。
+ * </p>
+ * 
  * @author y-komori
  * 
  */
-public abstract class S2JMSTestCase extends S2FrameworkTestCase {
+public abstract class S2JMSTestCase extends S2TestCase {
 
     @Override
     protected void setUpContainer() throws Throwable {
         super.setUpContainer();
-
-        setUpExternalContext(getContainer());
-        ComponentDeployerFactory.setProvider(new ExternalComponentDeployerProvider());
-
+        final ExternalContext externalContext = new JMSExternalContext();
+        getContainer().setExternalContext(externalContext);
+        getContainer().setExternalContextComponentDefRegister(
+                new JMSExternalContextComponentDefRegister());
     }
 
-    protected void setUpExternalContext(final S2Container container) {
-        ExternalContext externalContext = new JMSExternalContext();
-        externalContext.setRequest(new JMSRequestImpl(new MapMessageMock()));
-
-        container.setExternalContext(externalContext);
-        container
-                .setExternalContextComponentDefRegister(new JMSExternalContextComponentDefRegister());
+    protected void registerMessage(final Message message) {
+        getContainer().getExternalContext().setRequest(new JMSRequestImpl(message));
     }
+
 }

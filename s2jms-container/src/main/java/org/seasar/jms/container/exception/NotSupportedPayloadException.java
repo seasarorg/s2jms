@@ -13,8 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container;
+package org.seasar.jms.container.exception;
 
-public interface BindingSupport {
-    void bind(Object target, Object payload);
+import javax.jms.Message;
+
+import org.seasar.framework.exception.SRuntimeException;
+
+public class NotSupportedPayloadException extends SRuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    public NotSupportedPayloadException(final Message message) {
+        super("EJMS-CONTAINER2003", new Object[] { message.getClass() });
+    }
 }

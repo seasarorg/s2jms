@@ -13,26 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
-import org.seasar.framework.container.ContainerConstants;
-import org.seasar.framework.container.impl.SimpleComponentDef;
-import org.seasar.jms.container.JMSRequest;
+import javax.jms.Message;
 
 /**
- * @author y-komori
- * 
+ * @author koichik
  */
-public class JMSRequestComponentDef extends SimpleComponentDef {
-    public JMSRequestComponentDef() {
-        super(JMSRequest.class, ContainerConstants.REQUEST_NAME);
+public class JMSRequestHeaderValuesMap extends JMSRequestHeaderMap {
+
+    protected static final Object[] EMPTY_ARRAY = new Object[0];
+
+    public JMSRequestHeaderValuesMap(final Message message) {
+        super(message);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
     @Override
-    public Object getComponent() {
-        return getContainer().getRoot().getExternalContext().getRequest();
+    protected Object getAttribute(final String key) {
+        final Object value = super.getAttribute(key);
+        return value == null ? EMPTY_ARRAY : new Object[] { value };
     }
+
 }

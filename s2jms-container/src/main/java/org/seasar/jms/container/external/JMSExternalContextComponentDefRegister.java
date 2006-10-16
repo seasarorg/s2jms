@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
@@ -28,8 +28,7 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  * @author y-komori
  * 
  */
-public class JMSExternalContextComponentDefRegister implements
-        ExternalContextComponentDefRegister {
+public class JMSExternalContextComponentDefRegister implements ExternalContextComponentDefRegister {
 
     public void registerComponentDefs(final S2Container container) {
         final S2ContainerImpl impl = (S2ContainerImpl) container;

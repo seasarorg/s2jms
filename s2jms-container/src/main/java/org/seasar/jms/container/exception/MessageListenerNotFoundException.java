@@ -18,13 +18,31 @@ package org.seasar.jms.container.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * メッセージリスナーコンポーネントにリスナーメソッドが見つからなかった場合にスローされます。
+ * 
  * @author y-komori
- *
+ * 
  */
-public class MessageHandlerNotFoundException extends SRuntimeException {
+public class MessageListenerNotFoundException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public MessageHandlerNotFoundException(String className) {
-        super("EJMS2001", new String[]{className});
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param listenerClass
+     *            メッセージリスナーのクラス
+     */
+    public MessageListenerNotFoundException(final Class<?> listenerClass) {
+        this(listenerClass.getName());
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param listenerClassName
+     *            メッセージリスナーのクラス名
+     */
+    public MessageListenerNotFoundException(final String listenerClassName) {
+        super("EJMS-CONTAINER2000", new String[] { listenerClassName });
     }
 }

@@ -13,25 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.exception;
 
-import javax.jms.Message;
+import java.lang.reflect.Method;
+
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
+ * メッセージリスナーコンポーネントのリスナーメソッドが不正な場合にスローされます。
+ * 
  * @author koichik
  */
-public class JMSRequestHeaderValuesMap extends JMSRequestHeaderMap {
+public class IllegalMessageListenerException extends SRuntimeException {
+    private static final long serialVersionUID = 1L;
 
-    protected static final Object[] EMPTY_ARRAY = new Object[0];
-
-    public JMSRequestHeaderValuesMap(final Message message) {
-        super(message);
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param method
+     *            不正なリスナーメソッド
+     */
+    public IllegalMessageListenerException(final Method method) {
+        super("EJMS-CONTAINER2001", new Object[] { method });
     }
-
-    @Override
-    protected Object getAttribute(String key) {
-        final Object value = super.getAttribute(key);
-        return value == null ? EMPTY_ARRAY : new Object[] { value };
-    }
-
 }

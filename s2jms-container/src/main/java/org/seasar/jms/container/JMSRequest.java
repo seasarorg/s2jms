@@ -18,15 +18,40 @@ package org.seasar.jms.container;
 import javax.jms.Message;
 
 /**
- * @author y-komori
+ * S2JMS-ContainerがSeasar2における外部コンテキストのリクエストとして提供するオブジェクトのインタフェースです。
+ * <p>
+ * S2JMS-ContainerはJMSの{@link javax.jms.Message}をリクエストオブジェクトとしてアクセス可能にします。
+ * </p>
  * 
+ * @author y-komori
+ * @see org.seasar.framework.container.ExternalContext
  */
 public interface JMSRequest {
 
+    /**
+     * 受信したJMSメッセージを返します。
+     * 
+     * @return 受信したJMSメッセージ
+     */
     public Message getMessage();
 
+    /**
+     * 指定された名前に一致する属性の値を返します。
+     * 
+     * @param name
+     *            属性の名前
+     * @return 属性の値
+     */
     public Object getAttribute(String name);
 
-    public void setAttribute(String name, Object component);
+    /**
+     * 属性の値を指定された名前で設定します。
+     * 
+     * @param name
+     *            属性の名前
+     * @param value
+     *            属性の値
+     */
+    public void setAttribute(String name, Object value);
 
 }

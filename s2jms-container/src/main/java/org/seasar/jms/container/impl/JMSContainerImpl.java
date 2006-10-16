@@ -15,141 +15,207 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import javax.jms.Message;
 import javax.transaction.TransactionManager;
 
-import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
-import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.framework.container.annotation.tiger.InitMethod;
+import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.Disposable;
+import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.container.JMSContainer;
 import org.seasar.jms.container.JMSRequest;
-import org.seasar.jms.container.exception.NotSupportedMessageException;
-import org.seasar.jms.core.message.MessageHandler;
-import org.seasar.jms.core.message.impl.MessageHandlerFactory;
+import org.seasar.jms.container.external.JMSRequestImpl;
 
 /**
+ * S2JMS-Containerの実装クラスです。
+ * <p>
+ * S2JMS-ContainerはJCAのメッセージエンドポイントとして受信したJMSメッセージを受け取り、
+ * 登録されているメッセージリスナーコンポーネントのリスナーメソッドを呼び出します。 メッセージリスナーコンポーネントはそのコンポーネント名を{@link addMessageListener}メソッドで登録します。
+ * S2JMS-Containerはメッセージを受信するたびにS2コンテナからメッセージリスナーコンポーネントを名前でルックアップします。
+ * その際に、S2JMS-Containerは受信したメッセージをS2コンテナの外部コンテキストのリクエストオブジェクトとして登録するため、
+ * メッセージリスナーコンポーネントのインスタンス属性を <code>request</code> または <code>prototype</code>
+ * にすることにより、 JMSメッセージやそのヘッダ・プロパティ・ペイロードをメッセージリスナーコンポーネントにインジェクションすることが可能です。
+ * </p>
+ * 
  * @author y-komori
  * 
  */
-@Component(instance = InstanceType.SINGLETON)
-public class JMSContainerImpl implements JMSContainer {
+@Component
+public class JMSContainerImpl implements JMSContainer, Disposable {
 
-    protected static Logger logger = Logger.getLogger(JMSContainerImpl.class);
+    private static Logger logger = Logger.getLogger(JMSContainerImpl.class);
 
-    protected TransactionManager transactionManager;
-
-    protected List<String> messageListenerNames = new ArrayList<String>();
-
-    protected Map<Class<?>, MessageListenerSupport> listenerSupportMap = new HashMap<Class<?>, MessageListenerSupport>();
-
+    @Binding(bindingType = BindingType.MUST)
     protected S2Container container;
 
+    @Binding(bindingType = BindingType.MAY)
+    protected TransactionManager transactionManager;
+
+    protected boolean initialized;
+
+    protected List<String> messageListeners = CollectionsUtil.newArrayList();
+
+    protected ConcurrentMap<Class<?>, MessageListenerSupport> listenerSupportMap = CollectionsUtil
+            .newConcurrentHashMap();
+
+    /**
+     * インスタンスを初期化します。
+     */
+    @InitMethod
+    public void initialize() {
+        if (!initialized) {
+            DisposableUtil.add(this);
+            initialized = true;
+        }
+    }
+
+    /**
+     * インスタンスをクリアします。
+     */
+    public void dispose() {
+        listenerSupportMap.clear();
+        initialized = false;
+    }
+
+    /**
+     * JMSメッセージを受信した際に呼び出されます。
+     * 
+     * @param message
+     *            受信したJMSメッセージ
+     */
     public void onMessage(final Message message) {
+        initialize();
+        if (logger.isDebugEnabled()) {
+            logger.log("DJMS-CONTAINER2100", new Object[0]);
+        }
+        setRequest(message);
         try {
+            HotdeployUtil.start();
+            try {
+                for (final String listenerName : messageListeners) {
+                    final Object listener = container.getComponent(listenerName);
+                    final MessageListenerSupport support = getMessageListenerSupport(listener
+                            .getClass());
+                    support.invoke(listener, message);
+                }
+            } finally {
+                HotdeployUtil.stop();
+            }
+        } catch (final Exception e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("[S2JMS-Container] onMessage が呼び出されました.");
+                logger.log("DJMS-CONTAINER2102", new Object[0], e);
             }
-
-            setRequest(message);
-
-            for (final String targetName : messageListenerNames) {
-                final Object target = container.getComponent(targetName);
-                invokeMessageHandler(target);
-            }
-        } catch (final Exception ex) {
-            logger.error("[S2JMS-Container] onMessage 処理中に例外が発生しました.", ex);
             rollBack();
         } finally {
             getExternalContext().setRequest(null);
+            if (logger.isDebugEnabled()) {
+                logger.log("DJMS-CONTAINER2101", new Object[0]);
+            }
         }
     }
 
+    /**
+     * メッセージリスナーコンポーネントを登録します。
+     * 
+     * @param messageListenerName
+     *            メッセージリスナーコンポーネント名
+     */
     public void addMessageListener(final String messageListenerName) {
-        if (messageListenerName == null) {
-            throw new SIllegalArgumentException("EJMS2005", null);
+        if (StringUtil.isEmpty(messageListenerName)) {
+            throw new EmptyRuntimeException("messageListenerName");
         }
-
-        ComponentDef cd = container.getComponentDef(messageListenerName);
-        final Class<?> clazz = cd.getComponentClass();
-        listenerSupportMap.put(clazz, new MessageListenerSupport(clazz));
-        messageListenerNames.add(messageListenerName);
+        messageListeners.add(messageListenerName);
     }
 
+    /**
+     * JMSメッセージを外部コンテキストのリクエストオブジェクトとして設定します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     */
     protected void setRequest(final Message message) {
-        JMSRequest request = new JMSRequestImpl(message);
+        final JMSRequest request = new JMSRequestImpl(message);
         container.getRoot().getExternalContext().setRequest(request);
     }
 
+    /**
+     * 外部コンテキストを返します。
+     * 
+     * @return 外部コンテキスト
+     */
     protected ExternalContext getExternalContext() {
-        ExternalContext externalContext = container.getRoot()
-                .getExternalContext();
+        final ExternalContext externalContext = container.getRoot().getExternalContext();
         if (externalContext == null) {
             throw new EmptyRuntimeException("externalContext");
         }
         return externalContext;
     }
 
-    protected MessageHandler<?, ?> getMessageHandler(final Message message) {
-        final MessageHandler<?, ?> messageHandler = MessageHandlerFactory
-                .getMessageHandler(message.getClass());
-        if (messageHandler == null) {
-            throw new NotSupportedMessageException(message);
-        }
-        return messageHandler;
+    /**
+     * メッセージリスナーコンポーネントのリスナーメソッドを呼び出します。
+     * 
+     * @param messageListener
+     *            メッセージリスナーコンポーネント
+     * @param message
+     *            JMSメッセージ
+     * @throws Exception
+     *             リスナーメソッドの処理中に例外が発生した場合にスローされます
+     */
+    protected void invokeMessageListener(final Object messageListener, final Message message)
+            throws Exception {
+        initialize();
+        final MessageListenerSupport support = getMessageListenerSupport(messageListener.getClass());
+        support.invoke(messageListener, message);
     }
 
-    protected void invokeMessageHandler(final Object invokeTarget) {
-        final MessageListenerSupport support = listenerSupportMap
-                .get(invokeTarget.getClass());
-        String signature = null;
-
-        if (logger.isDebugEnabled()) {
-            signature = invokeTarget.getClass().getName() + "#"
-                    + support.getListenerMethodName() + "@"
-                    + Integer.toHexString(invokeTarget.hashCode());
-            logger.debug("[S2JMS-Container] メッセージハンドラを呼び出します. - " + signature);
+    /**
+     * メッセージリスナーのサポートオブジェクトを返します。
+     * 
+     * @param clazz
+     *            メッセージリスナークラス
+     * @return メッセージリスナーのサポートオブジェクト
+     */
+    protected MessageListenerSupport getMessageListenerSupport(final Class<?> clazz) {
+        final MessageListenerSupport support = listenerSupportMap.get(clazz);
+        if (support != null) {
+            return support;
         }
+        return createMessageListenerSupport(clazz);
+    }
 
-        support.invoke(invokeTarget);
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("[S2JMS-Container] メッセージハンドラの呼び出しが終了しました. - "
-                    + signature);
-        }
+    /**
+     * メッセージリスナーのサポートオブジェクトを作成して返します。
+     * 
+     * @param clazz
+     *            メッセージリスナークラス
+     * @return メッセージリスナーのサポートオブジェクト
+     */
+    protected MessageListenerSupport createMessageListenerSupport(final Class<?> clazz) {
+        final MessageListenerSupport support = new MessageListenerSupport(clazz);
+        return CollectionsUtil.putIfAbsent(listenerSupportMap, clazz, support);
     }
 
     protected void rollBack() {
         try {
-            if ((transactionManager != null)
-                    && (transactionManager.getTransaction() != null)) {
-                logger.info("[S2JMS-Container] トランザクションをロールバックします.");
+            if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {
+                logger.log("IJMS-CONTAINER2105", new Object[0]);
                 transactionManager.setRollbackOnly();
             }
-        } catch (final Exception ex) {
-            logger.error("[S2JMS-Container] トランザクションのロールバック中に例外が発生しました.", ex);
+        } catch (final Exception e) {
+            logger.log("EJMS-CONTAINER2106", new Object[0], e);
         }
     }
 
-    @Binding(bindingType = BindingType.MAY)
-    public void setTransactionManager(
-            final TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
-
-    @Binding(bindingType = BindingType.MUST)
-    public void setContainer(S2Container container) {
-        this.container = container;
-    }
 }

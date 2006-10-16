@@ -63,8 +63,8 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         }
     }
 
-    protected JMSException newJMSException(Throwable cause) throws JMSException {
-        JMSException e = new JMSException("exception occurd");
+    protected JMSException newJMSException(final Throwable cause) throws JMSException {
+        final JMSException e = new JMSException("exception occurd");
         e.initCause(cause);
         throw e;
     }
@@ -78,7 +78,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readBoolean();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -87,7 +87,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readByte();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -96,7 +96,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readByte();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -105,7 +105,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readShort();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -114,7 +114,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readShort();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -123,7 +123,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readChar();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -132,7 +132,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readInt();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -141,7 +141,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readLong();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -150,7 +150,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readFloat();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -159,7 +159,7 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readDouble();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
@@ -168,129 +168,130 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         assertReadable();
         try {
             return is.readUTF();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public int readBytes(byte[] bytes) throws JMSException {
+    public int readBytes(final byte[] bytes) throws JMSException {
         assertReadable();
         try {
             return is.read(bytes);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public int readBytes(byte[] bytes, int length) throws JMSException {
+    public int readBytes(final byte[] bytes, final int length) throws JMSException {
         assertReadable();
         try {
             return is.read(bytes, 0, length);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeBoolean(boolean value) throws JMSException {
+    public void writeBoolean(final boolean value) throws JMSException {
         assertWritable();
         try {
             os.writeBoolean(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeByte(byte value) throws JMSException {
+    public void writeByte(final byte value) throws JMSException {
         assertWritable();
         try {
             os.writeByte(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeShort(short value) throws JMSException {
+    public void writeShort(final short value) throws JMSException {
         assertWritable();
         try {
             os.writeShort(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeChar(char value) throws JMSException {
+    public void writeChar(final char value) throws JMSException {
         assertWritable();
         try {
             os.writeChar(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeInt(int value) throws JMSException {
+    public void writeInt(final int value) throws JMSException {
         assertWritable();
         try {
             os.writeInt(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeLong(long value) throws JMSException {
+    public void writeLong(final long value) throws JMSException {
         assertWritable();
         try {
             os.writeLong(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeFloat(float value) throws JMSException {
+    public void writeFloat(final float value) throws JMSException {
         assertWritable();
         try {
             os.writeFloat(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeDouble(double value) throws JMSException {
+    public void writeDouble(final double value) throws JMSException {
         assertWritable();
         try {
             os.writeDouble(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeUTF(String value) throws JMSException {
+    public void writeUTF(final String value) throws JMSException {
         assertWritable();
         try {
             os.writeUTF(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeBytes(byte[] value) throws JMSException {
+    public void writeBytes(final byte[] value) throws JMSException {
         assertWritable();
         try {
             os.write(value);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeBytes(byte[] value, int offset, int length) throws JMSException {
+    public void writeBytes(final byte[] value, final int offset, final int length)
+            throws JMSException {
         assertWritable();
         try {
             os.write(value, offset, length);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw newJMSException(e);
         }
     }
 
-    public void writeObject(Object value) throws JMSException {
+    public void writeObject(final Object value) throws JMSException {
         assertWritable();
         if (Byte.class.isInstance(value)) {
             writeByte(Byte.class.cast(value));

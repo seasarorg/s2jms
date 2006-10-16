@@ -13,14 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.exception;
+package org.seasar.jms.container.external;
 
-import org.seasar.framework.exception.SRuntimeException;
+import javax.jms.Message;
 
-public class NotBoundException extends SRuntimeException {
-    private static final long serialVersionUID = 1L;
+/**
+ * @author koichik
+ */
+public class JMSRequestParameterValuesMap extends JMSRequestParameterMap {
 
-    public NotBoundException(final String className, final String propertyName) {
-        super("EJMS2002", new Object[] { className, propertyName });
+    protected static final Object[] EMPTY_ARRAY = new Object[0];
+
+    public JMSRequestParameterValuesMap(final Message message) {
+        super(message);
     }
+
+    @Override
+    protected Object getAttribute(final String key) {
+        final Object value = super.getAttribute(key);
+        return value == null ? EMPTY_ARRAY : new Object[] { value };
+    }
+
 }

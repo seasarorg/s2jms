@@ -31,35 +31,35 @@ public class MapMessageMock extends MessageMock implements MapMessage {
     public MapMessageMock() {
     }
 
-    public boolean getBoolean(String name) throws JMSException {
+    public boolean getBoolean(final String name) throws JMSException {
         return Boolean.class.cast(map.get(name));
     }
 
-    public byte getByte(String name) throws JMSException {
+    public byte getByte(final String name) throws JMSException {
         return Byte.class.cast(map.get(name));
     }
 
-    public byte[] getBytes(String name) throws JMSException {
+    public byte[] getBytes(final String name) throws JMSException {
         return byte[].class.cast(map.get(name));
     }
 
-    public char getChar(String name) throws JMSException {
+    public char getChar(final String name) throws JMSException {
         return Character.class.cast(map.get(name));
     }
 
-    public double getDouble(String name) throws JMSException {
+    public double getDouble(final String name) throws JMSException {
         return Double.class.cast(map.get(name));
     }
 
-    public float getFloat(String name) throws JMSException {
+    public float getFloat(final String name) throws JMSException {
         return Float.class.cast(map.get(name));
     }
 
-    public int getInt(String name) throws JMSException {
+    public int getInt(final String name) throws JMSException {
         return Integer.class.cast(map.get(name));
     }
 
-    public long getLong(String name) throws JMSException {
+    public long getLong(final String name) throws JMSException {
         return Long.class.cast(map.get(name));
     }
 
@@ -67,69 +67,69 @@ public class MapMessageMock extends MessageMock implements MapMessage {
         return new EnumerationAdapter(map.keySet().iterator());
     }
 
-    public Object getObject(String name) throws JMSException {
+    public Object getObject(final String name) throws JMSException {
         return map.get(name);
     }
 
-    public short getShort(String name) throws JMSException {
+    public short getShort(final String name) throws JMSException {
         return Short.class.cast(map.get(name));
     }
 
-    public String getString(String name) throws JMSException {
+    public String getString(final String name) throws JMSException {
         return String.class.cast(map.get(name));
     }
 
-    public boolean itemExists(String name) throws JMSException {
+    public boolean itemExists(final String name) throws JMSException {
         return map.containsKey(name);
     }
 
-    public void setBoolean(String name, boolean value) throws JMSException {
+    public void setBoolean(final String name, final boolean value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setByte(String name, byte value) throws JMSException {
+    public void setByte(final String name, final byte value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setBytes(String name, byte[] value) throws JMSException {
+    public void setBytes(final String name, final byte[] value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setBytes(String name, byte[] value, int offset, int length) {
-        byte[] bytes = new byte[length];
+    public void setBytes(final String name, final byte[] value, final int offset, final int length) {
+        final byte[] bytes = new byte[length];
         System.arraycopy(value, offset, bytes, 0, length);
         map.put(name, bytes);
     }
 
-    public void setChar(String name, char value) throws JMSException {
+    public void setChar(final String name, final char value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setDouble(String name, double value) throws JMSException {
+    public void setDouble(final String name, final double value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setFloat(String name, float value) throws JMSException {
+    public void setFloat(final String name, final float value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setInt(String name, int value) throws JMSException {
+    public void setInt(final String name, final int value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setLong(String name, long value) throws JMSException {
+    public void setLong(final String name, final long value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setObject(String name, Object value) throws JMSException {
+    public void setObject(final String name, final Object value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setShort(String name, short value) throws JMSException {
+    public void setShort(final String name, final short value) throws JMSException {
         map.put(name, value);
     }
 
-    public void setString(String name, String value) throws JMSException {
+    public void setString(final String name, final String value) throws JMSException {
         map.put(name, value);
     }
 

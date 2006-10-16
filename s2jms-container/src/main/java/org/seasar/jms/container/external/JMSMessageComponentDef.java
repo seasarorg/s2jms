@@ -13,10 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container;
+package org.seasar.jms.container.external;
 
 import javax.jms.Message;
 
-public interface Binder {
-    void bind(Object target, Message message, Object payload);
+import org.seasar.framework.container.impl.SimpleComponentDef;
+
+/**
+ * @author y-komori
+ * 
+ */
+public class JMSMessageComponentDef extends SimpleComponentDef {
+
+    public static final String MESSAGE_NAME = "message";
+
+    public JMSMessageComponentDef() {
+        super(Message.class, MESSAGE_NAME);
+    }
+
+    /**
+     * @see org.seasar.framework.container.ComponentDef#getComponent()
+     */
+    @Override
+    public Object getComponent() {
+        return JMSRequestImpl.class
+                .cast(getContainer().getRoot().getExternalContext().getRequest()).getMessage();
+    }
+
 }

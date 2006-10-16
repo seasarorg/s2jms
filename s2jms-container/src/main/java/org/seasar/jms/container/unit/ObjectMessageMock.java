@@ -31,7 +31,7 @@ public class ObjectMessageMock extends MessageMock implements ObjectMessage {
     public ObjectMessageMock() {
     }
 
-    public void setObject(Serializable payload) throws JMSException {
+    public void setObject(final Serializable payload) throws JMSException {
         this.payload = payload;
     }
 

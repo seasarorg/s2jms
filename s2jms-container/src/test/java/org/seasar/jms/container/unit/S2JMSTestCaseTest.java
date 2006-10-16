@@ -18,13 +18,20 @@ package org.seasar.jms.container.unit;
 import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.jms.container.JMSRequest;
-import org.seasar.jms.container.impl.JMSExternalContext;
+import org.seasar.jms.container.external.JMSExternalContext;
 
 /**
  * @author y-komori
  * 
  */
 public class S2JMSTestCaseTest extends S2JMSTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        registerMessage(new MapMessageMock());
+    }
+
     public void testSetUpContainer() {
         ExternalContext externalContext = getContainer().getExternalContext();
         assertEquals(JMSExternalContext.class, externalContext.getClass());
@@ -38,4 +45,5 @@ public class S2JMSTestCaseTest extends S2JMSTestCase {
         assertTrue("container.getComponent(\"request\") isn't JMSRequest.",
                 request instanceof JMSRequest);
     }
+
 }

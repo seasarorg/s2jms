@@ -21,8 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * JMSメッセージを受信した際に、JMSコンテナから呼び出されるリスナーメソッドを指定するためのアノテーションです。
+ * <p>
+ * このアノテーションを付加されるメソッドは、引数の数が0または1でなくてはなりません。 引数が1つで、その型が{@link javax.jms.Message}の場合は、受信したJMSメッセージを引数として呼び出されます。
+ * 引数が1つで、その型が{@link javax.jms.Message}以外の場合は、受信したJMSメッセージのペイロードを引数として呼び出されます。
+ * </p>
+ * 
  * @author y-komori
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

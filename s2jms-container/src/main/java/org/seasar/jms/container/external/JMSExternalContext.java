@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,8 +31,7 @@ import org.seasar.jms.container.JMSRequest;
 public class JMSExternalContext implements ExternalContext {
 
     @SuppressWarnings("unchecked")
-    private static final Map EMPTY_MAP = Collections
-            .unmodifiableMap(new HashMap());
+    private static final Map EMPTY_MAP = Collections.unmodifiableMap(new HashMap());
 
     private final ThreadLocal<JMSRequest> requests = new ThreadLocal<JMSRequest>();
 
@@ -59,7 +58,7 @@ public class JMSExternalContext implements ExternalContext {
         return null;
     }
 
-    public void setApplication(Object application) {
+    public void setApplication(final Object application) {
     }
 
     public Map getApplicationMap() {

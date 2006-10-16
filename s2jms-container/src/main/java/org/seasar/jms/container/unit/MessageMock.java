@@ -63,23 +63,23 @@ public class MessageMock implements Message {
         properties.clear();
     }
 
-    public boolean getBooleanProperty(String name) throws JMSException {
+    public boolean getBooleanProperty(final String name) throws JMSException {
         return Boolean.class.cast(properties.get(name));
     }
 
-    public byte getByteProperty(String name) throws JMSException {
+    public byte getByteProperty(final String name) throws JMSException {
         return Byte.class.cast(properties.get(name));
     }
 
-    public double getDoubleProperty(String name) throws JMSException {
+    public double getDoubleProperty(final String name) throws JMSException {
         return Double.class.cast(properties.get(name));
     }
 
-    public float getFloatProperty(String name) throws JMSException {
+    public float getFloatProperty(final String name) throws JMSException {
         return Float.class.cast(properties.get(name));
     }
 
-    public int getIntProperty(String name) throws JMSException {
+    public int getIntProperty(final String name) throws JMSException {
         return Integer.class.cast(properties.get(name));
     }
 
@@ -127,11 +127,11 @@ public class MessageMock implements Message {
         return JMSType;
     }
 
-    public long getLongProperty(String name) throws JMSException {
+    public long getLongProperty(final String name) throws JMSException {
         return Long.class.cast(properties.get(name));
     }
 
-    public Object getObjectProperty(String name) throws JMSException {
+    public Object getObjectProperty(final String name) throws JMSException {
         return properties.get(name);
     }
 
@@ -139,102 +139,96 @@ public class MessageMock implements Message {
         return new EnumerationAdapter(properties.keySet().iterator());
     }
 
-    public short getShortProperty(String name) throws JMSException {
+    public short getShortProperty(final String name) throws JMSException {
         return Short.class.cast(properties.get(name));
     }
 
-    public String getStringProperty(String name) throws JMSException {
+    public String getStringProperty(final String name) throws JMSException {
         return String.class.cast(properties.get(name));
     }
 
-    public boolean propertyExists(String name) throws JMSException {
+    public boolean propertyExists(final String name) throws JMSException {
         return properties.containsKey(name);
     }
 
-    public void setBooleanProperty(String name, boolean value)
-            throws JMSException {
+    public void setBooleanProperty(final String name, final boolean value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setByteProperty(String name, byte value) throws JMSException {
+    public void setByteProperty(final String name, final byte value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setDoubleProperty(String name, double value)
-            throws JMSException {
+    public void setDoubleProperty(final String name, final double value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setFloatProperty(String name, float value) throws JMSException {
+    public void setFloatProperty(final String name, final float value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setIntProperty(String name, int value) throws JMSException {
+    public void setIntProperty(final String name, final int value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setJMSCorrelationID(String JMSCorrelationID)
-            throws JMSException {
+    public void setJMSCorrelationID(final String JMSCorrelationID) throws JMSException {
         this.JMSCorrelationID = JMSCorrelationID;
     }
 
-    public void setJMSCorrelationIDAsBytes(byte[] JMSCorrelationIDAsBytes)
+    public void setJMSCorrelationIDAsBytes(final byte[] JMSCorrelationIDAsBytes)
             throws JMSException {
         this.JMSCorrelationIDAsBytes = JMSCorrelationIDAsBytes;
     }
 
-    public void setJMSDeliveryMode(int JMSDeliveryMode) throws JMSException {
+    public void setJMSDeliveryMode(final int JMSDeliveryMode) throws JMSException {
         this.JMSDeliveryMode = JMSDeliveryMode;
     }
 
-    public void setJMSDestination(Destination JMSDestination)
-            throws JMSException {
+    public void setJMSDestination(final Destination JMSDestination) throws JMSException {
         this.JMSDestination = JMSDestination;
     }
 
-    public void setJMSExpiration(long JMSExpiration) throws JMSException {
+    public void setJMSExpiration(final long JMSExpiration) throws JMSException {
         this.JMSExpiration = JMSExpiration;
     }
 
-    public void setJMSMessageID(String JMSMessageID) throws JMSException {
+    public void setJMSMessageID(final String JMSMessageID) throws JMSException {
         this.JMSMessageID = JMSMessageID;
     }
 
-    public void setJMSPriority(int JMSPriority) throws JMSException {
+    public void setJMSPriority(final int JMSPriority) throws JMSException {
         this.JMSPriority = JMSPriority;
     }
 
-    public void setJMSRedelivered(boolean JMSRedelivered) throws JMSException {
+    public void setJMSRedelivered(final boolean JMSRedelivered) throws JMSException {
         this.JMSRedelivered = JMSRedelivered;
     }
 
-    public void setJMSReplyTo(Destination JMSReplyTo) throws JMSException {
+    public void setJMSReplyTo(final Destination JMSReplyTo) throws JMSException {
         this.JMSReplyTo = JMSReplyTo;
     }
 
-    public void setJMSTimestamp(long JMSTimestamp) throws JMSException {
+    public void setJMSTimestamp(final long JMSTimestamp) throws JMSException {
         this.JMSTimestamp = JMSTimestamp;
     }
 
-    public void setJMSType(String JMSType) throws JMSException {
+    public void setJMSType(final String JMSType) throws JMSException {
         this.JMSType = JMSType;
     }
 
-    public void setLongProperty(String name, long value) throws JMSException {
+    public void setLongProperty(final String name, final long value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setObjectProperty(String name, Object value)
-            throws JMSException {
+    public void setObjectProperty(final String name, final Object value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setShortProperty(String name, short value) throws JMSException {
+    public void setShortProperty(final String name, final short value) throws JMSException {
         properties.put(name, value);
     }
 
-    public void setStringProperty(String name, String value)
-            throws JMSException {
+    public void setStringProperty(final String name, final String value) throws JMSException {
         properties.put(name, value);
     }
 

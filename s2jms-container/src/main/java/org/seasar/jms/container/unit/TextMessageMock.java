@@ -29,7 +29,11 @@ public class TextMessageMock extends MessageMock implements TextMessage {
     public TextMessageMock() {
     }
 
-    public void setText(String text) throws JMSException {
+    public TextMessageMock(final String text) {
+        this.text = text;
+    }
+
+    public void setText(final String text) throws JMSException {
         this.text = text;
     }
 

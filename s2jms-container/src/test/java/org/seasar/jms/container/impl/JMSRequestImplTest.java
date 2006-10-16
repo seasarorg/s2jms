@@ -20,6 +20,7 @@ import javax.jms.Message;
 import junit.framework.TestCase;
 
 import org.seasar.jms.container.JMSRequest;
+import org.seasar.jms.container.external.JMSRequestImpl;
 import org.seasar.jms.container.unit.MessageMock;
 
 /**

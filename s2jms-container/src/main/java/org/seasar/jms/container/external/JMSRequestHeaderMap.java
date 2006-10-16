@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -40,8 +40,7 @@ public class JMSRequestHeaderMap extends AbstractUnmodifiableExternalContextMap 
         this.message = message;
         try {
             names.addAll(JMSHeaderSupport.getNames());
-            for (final String name : new IterableAdapter(message
-                    .getPropertyNames())) {
+            for (final String name : new IterableAdapter(message.getPropertyNames())) {
                 names.add(name);
             }
         } catch (final JMSException e) {
