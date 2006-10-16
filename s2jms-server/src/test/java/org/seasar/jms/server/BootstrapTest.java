@@ -17,49 +17,37 @@ package org.seasar.jms.server;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 /**
  * @author bowez
  * 
  */
-public class BootstrapTest {
-    public static junit.framework.Test suite() { 
-        return new JUnit4TestAdapter(BootstrapTest.class);
+public class BootstrapTest extends TestCase {
+    public void testGetDicon() {
+        assertEquals("test.dicon", new Bootstrap()
+                .getDicon(new String[] { "--dicon", "test.dicon" }));
     }
-    
-    @Test 
-    public void getDicon() {
-        assertEquals("test.dicon", new Bootstrap().getDicon(new String[] {"--dicon", "test.dicon" }));
+
+    public void testGetDicon2() {
+        assertEquals("test.dicon", new Bootstrap().getDicon(new String[] { "--classpath",
+                "/usr/local/foo/bar", "--dicon", "test.dicon" }));
     }
-    
-    @Test 
-    public void getDicon2() {
-        assertEquals("test.dicon", 
-                new Bootstrap().getDicon(new String[] {"--classpath", "/usr/local/foo/bar", "--dicon", "test.dicon"}));
+
+    public void testGetDiconDefault() {
+        assertEquals("app.dicon", new Bootstrap().getDicon(new String[] { "--classpath",
+                "/usr/local/foo/bar" }));
     }
-    
-    @Test
-    public void getDiconDefault() {
-        assertEquals("app.dicon", new Bootstrap().getDicon(new String[] {"--classpath", "/usr/local/foo/bar" }));
-    }
-    
-    @Test
-    public void getDiconError() {
+
+    public void testGetDiconError() {
         try {
-            new Bootstrap().getDicon(new String[] {"--dicon"});
+            new Bootstrap().getDicon(new String[] { "--dicon" });
             fail();
-        } 
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException expected) {
         }
     }
-    
-    @Test
-    public void isJar() {
+
+    public void testIsJar() {
         assertTrue(new Bootstrap().isJar(new File("/foo/var/baz.jar")));
         assertTrue(new Bootstrap().isJar(new File("/foo/var/baz.JAR")));
         assertTrue(new Bootstrap().isJar(new File("/foo/var/baz.Jar")));
