@@ -30,6 +30,7 @@ import org.seasar.framework.log.Logger;
 @Component
 public class VelocityTextFormatter extends AbstractVelocityFormatter {
     private static final Logger logger = Logger.getLogger(VelocityTextFormatter.class);
+
     protected String templateText;
 
     /**

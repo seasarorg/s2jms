@@ -79,8 +79,7 @@ public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
      * @param properties
      *            JMSメッセージのプロパティに設定される{@link java.util.Map}
      */
-    public BytesMessageFactory(final byte[] bytes,
-            final Map<String, Object> properties) {
+    public BytesMessageFactory(final byte[] bytes, final Map<String, Object> properties) {
         super(properties);
         this.bytes = bytes;
     }
@@ -116,8 +115,7 @@ public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
      * @return JMSセッションから作成された{@link javax.jms.BytesMessage}
      */
     @Override
-    protected BytesMessage createMessageInstance(final Session session)
-            throws JMSException {
+    protected BytesMessage createMessageInstance(final Session session) throws JMSException {
         return session.createBytesMessage();
     }
 

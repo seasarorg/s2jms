@@ -29,7 +29,7 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
  */
 public class S2Context implements Context {
     protected S2Container container;
-    
+
     /**
      * S2コンテナを設定します(必須)。
      * 
@@ -40,7 +40,7 @@ public class S2Context implements Context {
     public void setContainer(final S2Container container) {
         this.container = container;
     }
-    
+
     /**
      * サポートされません。常に例外がスローされます。
      * 
@@ -60,11 +60,9 @@ public class S2Context implements Context {
     public Object get(final String key) {
         try {
             return container.getComponent(key);
-        } 
-        catch (final ComponentNotFoundRuntimeException e) {
+        } catch (final ComponentNotFoundRuntimeException e) {
             return null;
-        } 
-        catch (final TooManyRegistrationRuntimeException e) {
+        } catch (final TooManyRegistrationRuntimeException e) {
             return null;
         }
     }
@@ -79,8 +77,7 @@ public class S2Context implements Context {
     public boolean containsKey(final Object key) {
         try {
             return container.hasComponentDef(key);
-        } 
-        catch (final ComponentNotFoundRuntimeException e) {
+        } catch (final ComponentNotFoundRuntimeException e) {
             return false;
         }
     }

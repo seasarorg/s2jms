@@ -83,5 +83,9 @@ public class AbstractMessageHandlerTest extends EasyMockTestCase {
         public Class<TextMessage> getMessageType() {
             return TextMessage.class;
         }
+
+        public Class<String> getPayloadType() {
+            return String.class;
+        }
     }
 }

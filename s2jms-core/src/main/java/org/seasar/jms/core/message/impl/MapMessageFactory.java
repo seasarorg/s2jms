@@ -67,8 +67,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
      * @param properties
      *            JMSメッセージのプロパティに設定される{@link java.util.Map}
      */
-    public MapMessageFactory(final Map<String, Object> map,
-            final Map<String, Object> properties) {
+    public MapMessageFactory(final Map<String, Object> map, final Map<String, Object> properties) {
         super(properties);
         this.map = map;
     }
@@ -119,8 +118,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
      * @return JMSセッションから作成された{@link javax.jms.MapMessage}
      */
     @Override
-    protected MapMessage createMessageInstance(final Session session)
-            throws JMSException {
+    protected MapMessage createMessageInstance(final Session session) throws JMSException {
         return session.createMapMessage();
     }
 
@@ -134,7 +132,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
      */
     @Override
     protected void setupPayload(final MapMessage message) throws JMSException {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
+        for (final Map.Entry<String, Object> entry : map.entrySet()) {
             message.setObject(entry.getKey(), entry.getValue());
         }
     }

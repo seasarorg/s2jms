@@ -68,42 +68,31 @@ public class JMSHeaderSupportTest extends EasyMockTestCase {
         new Subsequence() {
             @Override
             protected void replay() throws Exception {
-                assertEquals("hoge", JMSHeaderSupport.getValue(message,
-                        "JMSCorrelationID"));
-                assertEquals(BYTES, JMSHeaderSupport.getValue(message,
-                        "JMSCorrelationIDAsBytes"));
-                assertEquals(Message.DEFAULT_DELIVERY_MODE, JMSHeaderSupport
-                        .getValue(message, "JMSDeliveryMode"));
-                assertEquals(destination, JMSHeaderSupport.getValue(message,
-                        "JMSDestination"));
-                assertEquals(Message.DEFAULT_TIME_TO_LIVE, JMSHeaderSupport
-                        .getValue(message, "JMSExpiration"));
-                assertEquals("100", JMSHeaderSupport.getValue(message,
-                        "JMSMessageID"));
-                assertEquals(Message.DEFAULT_PRIORITY, JMSHeaderSupport
-                        .getValue(message, "JMSPriority"));
-                assertEquals(true, JMSHeaderSupport.getValue(message,
-                        "JMSRedelivered"));
-                assertEquals(replyTo, JMSHeaderSupport.getValue(message,
-                        "JMSReplyTo"));
-                assertEquals(10000L, JMSHeaderSupport.getValue(message,
-                        "JMSTimestamp"));
-                assertEquals("javax.jms.MapMessage", JMSHeaderSupport.getValue(
-                        message, "JMSType"));
+                assertEquals("hoge", JMSHeaderSupport.getValue(message, "JMSCorrelationID"));
+                assertEquals(BYTES, JMSHeaderSupport.getValue(message, "JMSCorrelationIDAsBytes"));
+                assertEquals(Message.DEFAULT_DELIVERY_MODE, JMSHeaderSupport.getValue(message,
+                        "JMSDeliveryMode"));
+                assertEquals(destination, JMSHeaderSupport.getValue(message, "JMSDestination"));
+                assertEquals(Message.DEFAULT_TIME_TO_LIVE, JMSHeaderSupport.getValue(message,
+                        "JMSExpiration"));
+                assertEquals("100", JMSHeaderSupport.getValue(message, "JMSMessageID"));
+                assertEquals(Message.DEFAULT_PRIORITY, JMSHeaderSupport.getValue(message,
+                        "JMSPriority"));
+                assertEquals(true, JMSHeaderSupport.getValue(message, "JMSRedelivered"));
+                assertEquals(replyTo, JMSHeaderSupport.getValue(message, "JMSReplyTo"));
+                assertEquals(10000L, JMSHeaderSupport.getValue(message, "JMSTimestamp"));
+                assertEquals("javax.jms.MapMessage", JMSHeaderSupport.getValue(message, "JMSType"));
             }
 
             @Override
             protected void record() throws Exception {
                 expect(message.getJMSCorrelationID()).andReturn("hoge");
                 expect(message.getJMSCorrelationIDAsBytes()).andReturn(BYTES);
-                expect(message.getJMSDeliveryMode()).andReturn(
-                        Message.DEFAULT_DELIVERY_MODE);
+                expect(message.getJMSDeliveryMode()).andReturn(Message.DEFAULT_DELIVERY_MODE);
                 expect(message.getJMSDestination()).andReturn(destination);
-                expect(message.getJMSExpiration()).andReturn(
-                        Message.DEFAULT_TIME_TO_LIVE);
+                expect(message.getJMSExpiration()).andReturn(Message.DEFAULT_TIME_TO_LIVE);
                 expect(message.getJMSMessageID()).andReturn("100");
-                expect(message.getJMSPriority()).andReturn(
-                        Message.DEFAULT_PRIORITY);
+                expect(message.getJMSPriority()).andReturn(Message.DEFAULT_PRIORITY);
                 expect(message.getJMSRedelivered()).andReturn(true);
                 expect(message.getJMSReplyTo()).andReturn(replyTo);
                 expect(message.getJMSTimestamp()).andReturn(10000L);
@@ -117,22 +106,17 @@ public class JMSHeaderSupportTest extends EasyMockTestCase {
             @Override
             protected void replay() throws Exception {
                 JMSHeaderSupport.setValue(message, "JMSCorrelationID", "hoge");
-                JMSHeaderSupport.setValue(message, "JMSCorrelationIDAsBytes",
-                        BYTES);
-                JMSHeaderSupport.setValue(message, "JMSDeliveryMode",
-                        Message.DEFAULT_DELIVERY_MODE);
-                JMSHeaderSupport.setValue(message, "JMSDestination",
-                        destination);
-                JMSHeaderSupport.setValue(message, "JMSExpiration",
-                        Message.DEFAULT_TIME_TO_LIVE);
+                JMSHeaderSupport.setValue(message, "JMSCorrelationIDAsBytes", BYTES);
+                JMSHeaderSupport
+                        .setValue(message, "JMSDeliveryMode", Message.DEFAULT_DELIVERY_MODE);
+                JMSHeaderSupport.setValue(message, "JMSDestination", destination);
+                JMSHeaderSupport.setValue(message, "JMSExpiration", Message.DEFAULT_TIME_TO_LIVE);
                 JMSHeaderSupport.setValue(message, "JMSMessageID", "100");
-                JMSHeaderSupport.setValue(message, "JMSPriority",
-                        Message.DEFAULT_PRIORITY);
+                JMSHeaderSupport.setValue(message, "JMSPriority", Message.DEFAULT_PRIORITY);
                 JMSHeaderSupport.setValue(message, "JMSRedelivered", true);
                 JMSHeaderSupport.setValue(message, "JMSReplyTo", replyTo);
                 JMSHeaderSupport.setValue(message, "JMSTimestamp", 10000L);
-                JMSHeaderSupport.setValue(message, "JMSType",
-                        "javax.jms.MapMessage");
+                JMSHeaderSupport.setValue(message, "JMSType", "javax.jms.MapMessage");
             }
 
             @Override

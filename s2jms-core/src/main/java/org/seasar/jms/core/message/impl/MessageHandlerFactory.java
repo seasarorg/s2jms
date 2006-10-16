@@ -15,30 +15,41 @@
  */
 package org.seasar.jms.core.message.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.LinkedList;
 
 import javax.jms.Message;
 
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.core.message.MessageHandler;
 
 /**
- * JMSメッセージ型と、対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスの
- * マッピングを保持するクラスです。
+ * JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスの
+ * インスタンスを提供するクラスです。
  * 
  * @author y-komori
  * 
  */
 public class MessageHandlerFactory {
-    protected static Map<Class<? extends Message>, MessageHandler<?, ?>> handlerMap = new HashMap<Class<? extends Message>, MessageHandler<?, ?>>();
-    protected static List<MessageHandler<?, ?>> handlers = new ArrayList<MessageHandler<?, ?>>();
+
+    protected static LinkedList<MessageHandler<?, ?>> handlers = CollectionsUtil.newLinkedList();
     static {
         handlers.add(new TextMessageHandler());
         handlers.add(new MapMessageHandler());
         handlers.add(new BytesMessageHandler());
         handlers.add(new ObjectMessageHandler());
+    }
+
+    /**
+     * {@link org.seasar.jms.core.message.MessageHandler}を追加します。
+     * <p>
+     * 追加される{@link org.seasar.jms.core.message.MessageHandler}はリストの先頭に加えられます。
+     * </p>
+     * 
+     * @param handler
+     *            追加されるメッセージハンドラ
+     */
+    public static void addMessageHandler(final MessageHandler<?, ?> handler) {
+        handlers.addFirst(handler);
     }
 
     /**
@@ -56,7 +67,8 @@ public class MessageHandlerFactory {
      * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラス。
      *         対応するクラスがない場合は{@code null}
      */
-    public static MessageHandler<?, ?> getMessageHandler(final Class<? extends Message> messageClass) {
+    public static MessageHandler<?, ?> getMessageHandlerFromMessageType(
+            final Class<? extends Message> messageClass) {
         for (final MessageHandler<?, ?> messageHandler : handlers) {
             if (messageHandler.getMessageType().isAssignableFrom(messageClass)) {
                 return messageHandler;
@@ -64,4 +76,14 @@ public class MessageHandlerFactory {
         }
         return null;
     }
+
+    public static MessageHandler<?, ?> getMessageHandlerFromPayloadType(final Class<?> payloadType) {
+        for (final MessageHandler<?, ?> messageHandler : handlers) {
+            if (messageHandler.getPayloadType().isAssignableFrom(payloadType)) {
+                return messageHandler;
+            }
+        }
+        return null;
+    }
+
 }

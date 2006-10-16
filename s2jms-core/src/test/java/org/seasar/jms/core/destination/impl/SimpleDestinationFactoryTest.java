@@ -20,7 +20,6 @@ import javax.jms.Session;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-
 /**
  * @author koichik
  */

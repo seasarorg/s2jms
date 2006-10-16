@@ -183,12 +183,13 @@ public class MessageReceiverImpl implements MessageReceiver {
         return receive(new ObjectMessageHandler());
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Object> receiveMap() {
         return receive(new MapMessageHandler());
     }
 
     public <MSGTYPE extends Message, T> T receive(final MessageHandler<MSGTYPE, T> messageHandler) {
-        Class<MSGTYPE> clazz = messageHandler.getMessageType();
+        final Class<? extends MSGTYPE> clazz = messageHandler.getMessageType();
         final Message message = receive();
         if (message == null) {
             return null;
@@ -220,10 +221,10 @@ public class MessageReceiverImpl implements MessageReceiver {
         }
 
         if (!(destination instanceof Topic)) {
-            throw new SIllegalStateException("EJMS1000");
+            throw new SIllegalStateException("EJMS-CORE1000");
         }
         if (subscriptionName == null) {
-            throw new SIllegalStateException("EJMS1001");
+            throw new SIllegalStateException("EJMS-CORE1001");
         }
         return session.createDurableSubscriber((Topic) destination, subscriptionName,
                 messageSelector, noLocal);
@@ -255,7 +256,7 @@ public class MessageReceiverImpl implements MessageReceiver {
          * @throws javax.jms.JMSException
          *             JMS実装からスローされた例外をそのままスローします
          */
-        public void handleSession(Session session) throws JMSException {
+        public void handleSession(final Session session) throws JMSException {
             final MessageConsumer consumer = createMessageConsumer(session);
             if (timeout > 0) {
                 message = consumer.receive(timeout);

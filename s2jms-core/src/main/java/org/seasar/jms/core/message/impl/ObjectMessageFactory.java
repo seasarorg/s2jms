@@ -80,8 +80,7 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
      * @param properties
      *            JMSメッセージのプロパティに設定される{@link java.util.Map}
      */
-    public ObjectMessageFactory(final Serializable object,
-            final Map<String, Object> properties) {
+    public ObjectMessageFactory(final Serializable object, final Map<String, Object> properties) {
         super(properties);
         this.object = object;
     }
@@ -117,8 +116,7 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
      * @return JMSセッションから作成された{@link javax.jms.ObjectMessage}
      */
     @Override
-    protected ObjectMessage createMessageInstance(final Session session)
-            throws JMSException {
+    protected ObjectMessage createMessageInstance(final Session session) throws JMSException {
         return session.createObjectMessage();
     }
 
@@ -131,8 +129,7 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
      *             JMSメッセージにペイロードを設定できなかった場合にスローされます
      */
     @Override
-    protected void setupPayload(final ObjectMessage message)
-            throws JMSException {
+    protected void setupPayload(final ObjectMessage message) throws JMSException {
         message.setObject(object);
     }
 }

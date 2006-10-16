@@ -37,12 +37,11 @@ public abstract class AbstractVelocityFormatter implements TextProvider {
     public AbstractVelocityFormatter() {
         try {
             velocityEngine.init();
-        } 
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SRuntimeException("EJMS0000", null, e);
         }
     }
-    
+
     @Binding(bindingType = BindingType.MAY)
     public void setContext(final Context context) {
         this.context = context;
@@ -57,12 +56,11 @@ public abstract class AbstractVelocityFormatter implements TextProvider {
         final StringWriter out = new StringWriter();
         try {
             eval(out);
-        } 
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SRuntimeException("EJMS0000", null, e);
         }
         return out.toString();
     }
-    
+
     protected abstract void eval(StringWriter out) throws Exception;
 }

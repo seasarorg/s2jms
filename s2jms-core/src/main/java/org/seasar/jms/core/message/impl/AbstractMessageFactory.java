@@ -40,14 +40,13 @@ import org.seasar.jms.core.message.MessageFactory;
  * 
  * @author koichik
  */
-public abstract class AbstractMessageFactory<MSGTYPE extends Message>
-        implements MessageFactory<MSGTYPE> {
+public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
+        MessageFactory<MSGTYPE> {
     protected String correlationID;
 
     protected byte[] correlationIDAsBytes;
 
-    protected final Map<String, Object> properties = CollectionsUtil
-            .newHashMap();
+    protected final Map<String, Object> properties = CollectionsUtil.newHashMap();
 
     /**
      * インスタンスを構築します。
@@ -176,8 +175,7 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message>
      * @throws JMSException
      *             JMSメッセージを作成できなかった場合にスローされます。
      */
-    protected abstract MSGTYPE createMessageInstance(final Session session)
-            throws JMSException;
+    protected abstract MSGTYPE createMessageInstance(final Session session) throws JMSException;
 
     /**
      * JMSメッセージのメッセージヘッダを設定します。

@@ -83,8 +83,7 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
      * @param properties
      *            JMSメッセージのプロパティに設定される{@link java.util.Map}
      */
-    public TextMessageFactory(final String text,
-            final Map<String, Object> properties) {
+    public TextMessageFactory(final String text, final Map<String, Object> properties) {
         this(new TextHolder(text), properties);
     }
 
@@ -106,8 +105,7 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
      * @param properties
      *            JMSメッセージのプロパティに設定される{@link java.util.Map}
      */
-    public TextMessageFactory(final TextProvider textProvider,
-            final Map<String, Object> properties) {
+    public TextMessageFactory(final TextProvider textProvider, final Map<String, Object> properties) {
         super(properties);
         this.textProvider = textProvider;
     }
@@ -167,8 +165,7 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
      * @return JMSセッションから作成された{@link javax.jms.TextMessage}
      */
     @Override
-    protected TextMessage createMessageInstance(final Session session)
-            throws JMSException {
+    protected TextMessage createMessageInstance(final Session session) throws JMSException {
         return session.createTextMessage();
     }
 

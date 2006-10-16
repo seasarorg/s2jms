@@ -117,7 +117,8 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
      * @param invocation
      *            ターゲットメソッドの呼び出しを表現するオブジェクト
      * @return ターゲットメソッドの戻り値
-     * @throws Throwable ターゲットメソッドの実行時あるいはJMSメッセージの送信時に例外が発生した場合にスローされます
+     * @throws Throwable
+     *             ターゲットメソッドの実行時あるいはJMSメッセージの送信時に例外が発生した場合にスローされます
      */
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         final Object result = proceed(invocation);
@@ -142,7 +143,7 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
      */
     protected MessageFactory<?> createMessageFactory(final Object returnValue) {
         final Class<?> returnType = returnValue.getClass();
-        for (Class<?> payloadType : factories.keySet()) {
+        for (final Class<?> payloadType : factories.keySet()) {
             if (payloadType.isAssignableFrom(returnType)) {
                 final Class<? extends MessageFactory> factoryClass = factories.get(payloadType);
                 final Constructor<? extends MessageFactory> ctor = ReflectionUtil.getConstructor(
@@ -150,6 +151,6 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
                 return ReflectionUtil.newInstance(ctor, returnValue);
             }
         }
-        throw new SIllegalStateException("EJMS1003", new Object[] { returnType });
+        throw new SIllegalStateException("EJMS-CORE1003", new Object[] { returnType });
     }
 }

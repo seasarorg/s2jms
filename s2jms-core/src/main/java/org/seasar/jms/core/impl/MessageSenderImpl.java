@@ -101,8 +101,7 @@ public class MessageSenderImpl implements MessageSender {
      *            JMSデスティネーションファクトリ
      */
     @Binding(bindingType = BindingType.MUST)
-    public void setDestinationFactory(
-            final DestinationFactory destinationFactory) {
+    public void setDestinationFactory(final DestinationFactory destinationFactory) {
         this.destinationFactory = destinationFactory;
     }
 
@@ -192,8 +191,7 @@ public class MessageSenderImpl implements MessageSender {
         send(new ObjectMessageFactory(object));
     }
 
-    public void send(final Serializable object,
-            final Map<String, Object> properties) {
+    public void send(final Serializable object, final Map<String, Object> properties) {
         send(new ObjectMessageFactory(object, properties));
     }
 
@@ -201,8 +199,7 @@ public class MessageSenderImpl implements MessageSender {
         send(new MapMessageFactory(map));
     }
 
-    public void send(final Map<String, Object> map,
-            final Map<String, Object> properties) {
+    public void send(final Map<String, Object> map, final Map<String, Object> properties) {
         send(new MapMessageFactory(map, properties));
     }
 
@@ -218,7 +215,7 @@ public class MessageSenderImpl implements MessageSender {
 
     public void send(final MessageFactory messageFactory) {
         sessionFactory.operateSession(false, new SessionHandler() {
-            public void handleSession(Session session) throws JMSException {
+            public void handleSession(final Session session) throws JMSException {
                 final MessageProducer producer = createMessageProducer(session);
                 final Message message = messageFactory.createMessage(session);
                 producer.send(message, deliveryMode, priority, timeToLive);
@@ -235,10 +232,8 @@ public class MessageSenderImpl implements MessageSender {
      * @throws JMSException
      *             JMS実装で例外が発生した場合にスローされます
      */
-    protected MessageProducer createMessageProducer(final Session session)
-            throws JMSException {
-        final Destination destination = destinationFactory
-                .getDestination(session);
+    protected MessageProducer createMessageProducer(final Session session) throws JMSException {
+        final Destination destination = destinationFactory.getDestination(session);
         final MessageProducer producer = session.createProducer(destination);
         producer.setDisableMessageID(disableMessageID);
         producer.setDisableMessageTimestamp(disableMessageTimestamp);

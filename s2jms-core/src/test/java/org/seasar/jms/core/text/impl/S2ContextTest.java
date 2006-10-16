@@ -15,10 +15,10 @@
  */
 package org.seasar.jms.core.text.impl;
 
+import junit.framework.TestCase;
+
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerImpl;
-
-import junit.framework.TestCase;
 
 /**
  * 
@@ -27,15 +27,15 @@ import junit.framework.TestCase;
 public class S2ContextTest extends TestCase {
 
     /*
-     * Test method for 'org.seasar.jms.core.text.impl.S2Context.put(String, Object)'
+     * Test method for 'org.seasar.jms.core.text.impl.S2Context.put(String,
+     * Object)'
      */
     public void testPut() {
         S2Context context = new S2Context();
         try {
             context.put("foo", "bar");
             fail();
-        } 
-        catch (final UnsupportedOperationException e) {
+        } catch (final UnsupportedOperationException e) {
         }
     }
 
@@ -48,18 +48,19 @@ public class S2ContextTest extends TestCase {
         container.register("FOO", "foo");
         container.register("BAR", "bar");
         container.init();
-        
+
         S2Context context = new S2Context();
         context.setContainer(container);
         assertEquals("Hoge", context.get("hoge"));
         assertEquals("FOO", context.get("foo"));
         assertEquals("BAR", context.get("bar"));
-        
+
         assertNull(context.get("piyo"));
     }
 
     /*
-     * Test method for 'org.seasar.jms.core.text.impl.S2Context.containsKey(Object)'
+     * Test method for
+     * 'org.seasar.jms.core.text.impl.S2Context.containsKey(Object)'
      */
     public void testContainsKey() {
         S2Container container = new S2ContainerImpl();
@@ -67,13 +68,13 @@ public class S2ContextTest extends TestCase {
         container.register("FOO", "foo");
         container.register("BAR", "bar");
         container.init();
-        
+
         S2Context context = new S2Context();
         context.setContainer(container);
         assertTrue(context.containsKey("hoge"));
         assertTrue(context.containsKey("foo"));
         assertTrue(context.containsKey("bar"));
-        
+
         assertFalse(context.containsKey("piyo"));
     }
 
@@ -85,8 +86,7 @@ public class S2ContextTest extends TestCase {
         try {
             context.getKeys();
             fail();
-        } 
-        catch (final UnsupportedOperationException e) {
+        } catch (final UnsupportedOperationException e) {
         }
     }
 
@@ -98,8 +98,7 @@ public class S2ContextTest extends TestCase {
         try {
             context.remove("foo");
             fail();
-        } 
-        catch (final UnsupportedOperationException e) {
+        } catch (final UnsupportedOperationException e) {
         }
     }
 

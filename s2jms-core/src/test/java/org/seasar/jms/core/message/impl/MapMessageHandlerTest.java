@@ -49,9 +49,9 @@ public class MapMessageHandlerTest extends EasyMockTestCase {
 
     public void testGetProperties() throws Exception {
         new Subsequence() {
+            @SuppressWarnings("unchecked")
             @Override
             public void replay() throws Exception {
-
                 Map<String, Object> map = target.handleMessage(message);
                 assertNotNull("1", map);
                 assertEquals("2", 2, map.size());

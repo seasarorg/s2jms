@@ -20,8 +20,7 @@ import javax.jms.Message;
 /**
  * 受信したJMSメッセージを処理するコンポーネントのインタフェースです。
  * <p>
- * {@link MessageHandler}は処理対象となるJMSメッセージ型とのそのペイロード型を型引数として持ちます。
- * JMSメッセージ型とは{@link javax.jms.Message}を拡張したインタフェースまたは実装したクラスで、ペイロード型はJMSメッセージ型の持つペイロードの型です。<br>
+ * {@link MessageHandler}は処理対象となるJMSメッセージ型とのそのペイロード型を型引数として持ちます。 JMSメッセージ型とは{@link javax.jms.Message}を拡張したインタフェースまたは実装したクラスで、ペイロード型はJMSメッセージ型の持つペイロードの型です。<br>
  * 受信したJMSメッセージが{@link MessageHandler}の処理対象となるJMSメッセージ型に代入可能でない場合、そのメッセージは{@link #handleMessage}に渡されません。
  * </p>
  * 
@@ -36,9 +35,17 @@ public interface MessageHandler<MSGTYPE extends Message, PAYLOADTYPE> {
     Class<MSGTYPE> getMessageType();
 
     /**
+     * 処理対象となるJMSメッセージのペイロード型を返します。
+     * 
+     * @return JMSメッセージのペイロード型
+     */
+    Class<PAYLOADTYPE> getPayloadType();
+
+    /**
      * JMSメッセージを処理してペイロードを返します。
      * 
-     * @param message 受信したJMSメッセージ
+     * @param message
+     *            受信したJMSメッセージ
      * @return JMSメッセージのペイロード
      */
     PAYLOADTYPE handleMessage(MSGTYPE message);

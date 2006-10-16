@@ -178,8 +178,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
     }
 
     /**
-     * JMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID}
-     * ヘッダの値を返します。
+     * JMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID} ヘッダの値を返します。
      * 
      * @return JMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID}ヘッダの値
      * @throws SJMSRuntimeException
@@ -194,8 +193,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
     }
 
     /**
-     * JMSメッセージの{@link javax.jms.Message#getJMSPriority priority}
-     * ヘッダの値を返します。
+     * JMSメッセージの{@link javax.jms.Message#getJMSPriority priority} ヘッダの値を返します。
      * 
      * @return JMSメッセージの{@link javax.jms.Message#getJMSPriority priority}ヘッダの値
      * @throws SJMSRuntimeException
@@ -226,8 +224,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
     }
 
     /**
-     * JMSメッセージの{@link javax.jms.Message#getJMSReplyTo replyTo}
-     * ヘッダの値を返します。
+     * JMSメッセージの{@link javax.jms.Message#getJMSReplyTo replyTo} ヘッダの値を返します。
      * 
      * @return JMSメッセージの{@link javax.jms.Message#getJMSReplyTo replyTo}ヘッダの値
      * @throws SJMSRuntimeException
@@ -242,8 +239,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
     }
 
     /**
-     * JMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp}
-     * ヘッダの値を返します。
+     * JMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp} ヘッダの値を返します。
      * 
      * @return JMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp}ヘッダの値
      * @throws SJMSRuntimeException

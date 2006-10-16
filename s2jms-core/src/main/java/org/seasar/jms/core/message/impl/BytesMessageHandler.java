@@ -33,7 +33,7 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 public class BytesMessageHandler extends AbstractMessageHandler<BytesMessage, byte[]> {
     /**
      * インスタンスを構築します。
-     *
+     * 
      */
     public BytesMessageHandler() {
     }
@@ -47,5 +47,9 @@ public class BytesMessageHandler extends AbstractMessageHandler<BytesMessage, by
 
     public Class<BytesMessage> getMessageType() {
         return BytesMessage.class;
+    }
+
+    public Class<byte[]> getPayloadType() {
+        return byte[].class;
     }
 }

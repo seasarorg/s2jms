@@ -19,6 +19,7 @@ import java.util.Hashtable;
 
 import javax.jms.Destination;
 import javax.jms.Session;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -52,7 +53,7 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      */
     public JndiDestinationFactory() {
         env = new Hashtable<String, Object>();
-        env.put(InitialContext.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class.getName());
+        env.put(Context.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class.getName());
     }
 
     /**

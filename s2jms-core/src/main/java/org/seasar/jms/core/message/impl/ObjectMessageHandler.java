@@ -35,7 +35,7 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
 public class ObjectMessageHandler extends AbstractMessageHandler<ObjectMessage, Serializable> {
     /**
      * インスタンスを構築します。
-     *
+     * 
      */
     public ObjectMessageHandler() {
     }
@@ -47,5 +47,9 @@ public class ObjectMessageHandler extends AbstractMessageHandler<ObjectMessage, 
 
     public Class<ObjectMessage> getMessageType() {
         return ObjectMessage.class;
+    }
+
+    public Class<Serializable> getPayloadType() {
+        return Serializable.class;
     }
 }
