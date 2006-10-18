@@ -25,7 +25,7 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.jms.container.JMSRequest;
 import org.seasar.jms.container.external.JMSExternalContext;
 import org.seasar.jms.container.external.JMSRequestImpl;
-import org.seasar.jms.container.unit.MapMessageMock;
+import org.seasar.jms.core.mock.MapMessageMock;
 
 /**
  * @author y-komori

@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 
 import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.exception.MessageListenerNotFoundException;
-import org.seasar.jms.container.unit.MessageMock;
-import org.seasar.jms.container.unit.TextMessageMock;
+import org.seasar.jms.core.mock.MessageMock;
+import org.seasar.jms.core.mock.TextMessageMock;
 
 public class MessageListenerSupportTest extends TestCase {
     Message message;

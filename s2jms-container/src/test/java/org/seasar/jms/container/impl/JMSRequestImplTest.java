@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import org.seasar.jms.container.JMSRequest;
 import org.seasar.jms.container.external.JMSRequestImpl;
-import org.seasar.jms.container.unit.MessageMock;
+import org.seasar.jms.core.mock.MessageMock;
 
 /**
  * @author y-komori
