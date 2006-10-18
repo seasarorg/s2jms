@@ -88,8 +88,10 @@ public class Bootstrap {
     protected void destoryS2Container() {
         logger.log(Level.INFO, "IJMS-SERVER3002");
         try {
-            final Method destoroy = s2container.getClass().getMethod("destroy");
-            destoroy.invoke(s2container);
+            if (s2container != null) {
+                final Method destoroy = s2container.getClass().getMethod("destroy");
+                destoroy.invoke(s2container);
+            }
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "EJMS-SERVER3003", e);
         }
