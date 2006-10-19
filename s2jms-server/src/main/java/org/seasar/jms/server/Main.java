@@ -35,26 +35,37 @@ import java.util.logging.Logger;
  * @author bowez
  * 
  */
-public class Bootstrap {
-    static final String DEFAULT_DICON_FILE = "app.dicon";
-    static final String JMS_CONTAINER_INITIALIZER = "org.seasar.jms.container.impl.JMSContainerInitializer";
-    static final String BOOTSTRAP_CLASS_FILE_NAME = Bootstrap.class.getName().replace('.', '/')
+public class Main {
+
+    protected static final String DEFAULT_DICON_FILE = "app.dicon";
+    protected static final String JMS_CONTAINER_INITIALIZER = "org.seasar.jms.container.impl.JMSContainerInitializer";
+    protected static final String BOOTSTRAP_CLASS_FILE_NAME = Main.class.getName()
+            .replace('.', '/')
             + ".class";
 
-    private static final Logger logger = Logger.getLogger(Bootstrap.class.getName(),
+    private static final Logger logger = Logger.getLogger(Main.class.getName(),
             "JMS-SERVERMessages");
 
+    protected static CountDownLatch latch = new CountDownLatch(1);
+
     protected Object s2container;
-    protected CountDownLatch latch = new CountDownLatch(1);
 
     public static void main(final String[] args) {
         logger.log(Level.INFO, "IJMS-SERVER3000");
         try {
-            new Bootstrap().run(args);
+            new Main().run(args);
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "EJMS-SERVER3001", e);
             System.exit(1);
         }
+    }
+
+    public static void stop() {
+        latch.countDown();
+    }
+
+    public static boolean isWaiting() {
+        return latch.getCount() > 0;
     }
 
     protected void run(final String[] args) throws Exception {

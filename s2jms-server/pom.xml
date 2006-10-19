@@ -70,7 +70,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>org.seasar.jms.server.Bootstrap</mainClass>
+                <mainClass>org.seasar.jms.server.Main</mainClass>
               </manifest>
             </archive>
           </configuration>
