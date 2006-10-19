@@ -42,7 +42,7 @@ public class Bootstrap {
             + ".class";
 
     private static final Logger logger = Logger.getLogger(Bootstrap.class.getName(),
-            "JMS-ServerMessages");
+            "JMS-SERVERMessages");
 
     protected Object s2container;
     protected CountDownLatch latch = new CountDownLatch(1);
