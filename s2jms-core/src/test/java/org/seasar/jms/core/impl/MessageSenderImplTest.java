@@ -97,6 +97,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
                 bytesMessage.writeBytes(aryEq(new byte[] { 1, 2, 3 }));
                 producer.send(bytesMessage, Message.DEFAULT_DELIVERY_MODE,
                         Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+                producer.close();
             }
         }.doTest();
     }
@@ -125,6 +126,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
                 mapMessage.setObject("bar", "BAR");
                 producer.send(mapMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
                         Message.DEFAULT_TIME_TO_LIVE);
+                producer.close();
             }
         }.doTest();
     }
@@ -149,6 +151,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
                 objectMessage.setObject(666);
                 producer.send(objectMessage, Message.DEFAULT_DELIVERY_MODE,
                         Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+                producer.close();
             }
         }.doTest();
     }
@@ -173,6 +176,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
                 textMessage.setText("HogeHoge");
                 producer.send(textMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
                         Message.DEFAULT_TIME_TO_LIVE);
+                producer.close();
             }
         }.doTest();
     }

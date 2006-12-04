@@ -258,12 +258,16 @@ public class MessageReceiverImpl implements MessageReceiver {
          */
         public void handleSession(final Session session) throws JMSException {
             final MessageConsumer consumer = createMessageConsumer(session);
-            if (timeout > 0) {
-                message = consumer.receive(timeout);
-            } else if (timeout == 0) {
-                message = consumer.receiveNoWait();
-            } else {
-                message = consumer.receive();
+            try {
+                if (timeout > 0) {
+                    message = consumer.receive(timeout);
+                } else if (timeout == 0) {
+                    message = consumer.receiveNoWait();
+                } else {
+                    message = consumer.receive();
+                }
+            } finally {
+                consumer.close();
             }
         }
     }

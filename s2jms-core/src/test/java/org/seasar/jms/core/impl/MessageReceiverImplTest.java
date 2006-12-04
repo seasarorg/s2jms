@@ -102,6 +102,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(consumer.receive()).andReturn(bytesMessage);
                 expect(bytesMessage.getBodyLength()).andReturn(3L);
                 expect(bytesMessage.readBytes(eqBytes(new byte[] { 1, 2, 3 }))).andReturn(3);
+                consumer.close();
             }
         }.doTest();
     }
@@ -131,6 +132,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(enumeration.nextElement()).andReturn("bar");
                 expect(mapMessage.getObject("bar")).andReturn("BAR");
                 expect(enumeration.hasMoreElements()).andReturn(false);
+                consumer.close();
             }
         }.doTest();
     }
@@ -150,6 +152,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive()).andReturn(objectMessage);
                 expect(objectMessage.getObject()).andReturn(-100);
+                consumer.close();
             }
         }.doTest();
     }
@@ -169,6 +172,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive()).andReturn(textMessage);
                 expect(textMessage.getText()).andReturn("HogeHoge");
+                consumer.close();
             }
         }.doTest();
     }
@@ -190,6 +194,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(session.createDurableSubscriber(topic, "Geho", null, false)).andReturn(
                         subscriber);
                 expect(subscriber.receive()).andReturn(textMessage);
+                subscriber.close();
                 expect(textMessage.getText()).andReturn("HogeHoge");
             }
         }.doTest();
@@ -253,6 +258,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receiveNoWait()).andReturn(null);
+                consumer.close();
             }
         }.doTest();
     }
@@ -272,6 +278,7 @@ public class MessageReceiverImplTest extends EasyMockTestCase {
                 expect(df.getDestination(session)).andReturn(destination);
                 expect(session.createConsumer(destination, null, false)).andReturn(consumer);
                 expect(consumer.receive(100)).andReturn(null);
+                consumer.close();
             }
         }.doTest();
     }

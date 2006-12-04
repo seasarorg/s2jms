@@ -217,8 +217,12 @@ public class MessageSenderImpl implements MessageSender {
         sessionFactory.operateSession(false, new SessionHandler() {
             public void handleSession(final Session session) throws JMSException {
                 final MessageProducer producer = createMessageProducer(session);
-                final Message message = messageFactory.createMessage(session);
-                producer.send(message, deliveryMode, priority, timeToLive);
+                try {
+                    final Message message = messageFactory.createMessage(session);
+                    producer.send(message, deliveryMode, priority, timeToLive);
+                } finally {
+                    producer.close();
+                }
             }
         });
     }
