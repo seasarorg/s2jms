@@ -40,7 +40,7 @@ public class JMSHeaderSupport {
             .newHashMap();
 
     protected static final Map<String, Method> setterMethods = CollectionsUtil
-            .newHashMap();
+            .newLinkedHashMap();
 
     static {
         getterMethods.put("JMSCorrelationID", ClassUtil.getMethod(
