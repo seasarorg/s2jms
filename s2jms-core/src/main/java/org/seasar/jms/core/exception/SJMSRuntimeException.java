@@ -15,6 +15,11 @@
  */
 package org.seasar.jms.core.exception;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
+import javax.jms.JMSException;
+
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
@@ -72,4 +77,49 @@ public class SJMSRuntimeException extends SRuntimeException {
     public SJMSRuntimeException(final String messageCode, final Object[] args, final Throwable cause) {
         super(messageCode, args, cause);
     }
+
+    @Override
+    public void printStackTrace() {
+        super.printStackTrace();
+        if (JMSException.class.isInstance(getCause())) {
+            final JMSException jmsException = JMSException.class.cast(getCause());
+            if (jmsException.getLinkedException() != null) {
+                jmsException.getLinkedException().printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void printStackTrace(final PrintStream s) {
+        super.printStackTrace(s);
+        if (JMSException.class.isInstance(getCause())) {
+            final JMSException jmsException = JMSException.class.cast(getCause());
+            if (jmsException.getLinkedException() != null) {
+                jmsException.getLinkedException().printStackTrace(s);
+            }
+        }
+    }
+
+    @Override
+    public void printStackTrace(final PrintWriter s) {
+        super.printStackTrace(s);
+        if (JMSException.class.isInstance(getCause())) {
+            final JMSException jmsException = JMSException.class.cast(getCause());
+            if (jmsException.getLinkedException() != null) {
+                jmsException.getLinkedException().printStackTrace(s);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (JMSException.class.isInstance(getCause())) {
+            final JMSException jmsException = JMSException.class.cast(getCause());
+            if (jmsException.getLinkedException() != null) {
+                return super.toString() + " linked " + jmsException.getLinkedException();
+            }
+        }
+        return super.toString();
+    }
+
 }
