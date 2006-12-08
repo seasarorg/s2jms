@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.jms.Message;
-import javax.transaction.TransactionManager;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.annotation.tiger.Binding;
@@ -27,7 +26,6 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.StringUtil;
@@ -53,13 +51,8 @@ import org.seasar.jms.container.filter.FilterChain;
 @Component
 public class JMSContainerImpl implements JMSContainer, Disposable {
 
-    private static Logger logger = Logger.getLogger(JMSContainerImpl.class);
-
     @Binding(bindingType = BindingType.MUST)
     protected S2Container container;
-
-    @Binding(bindingType = BindingType.MAY)
-    protected TransactionManager transactionManager;
 
     @Binding(bindingType = BindingType.MAY)
     protected Filter[] filters;
@@ -101,8 +94,7 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
         try {
             final FilterChain filterChain = new FilterChainImpl();
             filterChain.doFilter(message);
-        } catch (final Throwable e) {
-            rollBack();
+        } catch (final Exception ignore) {
         }
     }
 
@@ -165,21 +157,6 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
     }
 
     /**
-     * JTAトランザクションをロールバックします。
-     * 
-     */
-    protected void rollBack() {
-        try {
-            if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {
-                logger.log("IJMS-CONTAINER2105", new Object[0]);
-                transactionManager.setRollbackOnly();
-            }
-        } catch (final Exception e) {
-            logger.log("EJMS-CONTAINER2106", new Object[0], e);
-        }
-    }
-
-    /**
      * フィルタチェーンの実装クラスです。
      * 
      * @author koichik
@@ -197,13 +174,13 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
         }
 
         /**
-         * 次のフィルタを呼び出します。
+         * 後続のフィルタを呼び出します。
          * <p>
          * 後続のフィルタがなければ{@link org.seasar.jms.container.impl.JMSContainerImpl}に
          * 制御を戻します．
          * </p>
          */
-        public void doFilter(Message message) throws Throwable {
+        public void doFilter(final Message message) throws Exception {
             if (filters != null && filters.length > index) {
                 filters[index++].doFilter(message, this);
             } else {

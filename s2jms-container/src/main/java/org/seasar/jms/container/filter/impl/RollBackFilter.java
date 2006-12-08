@@ -17,8 +17,11 @@
 package org.seasar.jms.container.filter.impl;
 
 import javax.jms.Message;
+import javax.transaction.TransactionManager;
 
-import org.seasar.framework.container.hotdeploy.HotdeployUtil;
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
 
@@ -26,14 +29,32 @@ import org.seasar.jms.container.filter.FilterChain;
  * @author koichik
  * 
  */
-public class HotdeployFilter implements Filter {
+public class RollBackFilter implements Filter {
+
+    private static final Logger logger = Logger.getLogger(RollBackFilter.class);
+
+    @Binding(bindingType = BindingType.MAY)
+    protected TransactionManager transactionManager;
 
     public void doFilter(final Message message, final FilterChain chain) throws Exception {
-        HotdeployUtil.start();
         try {
             chain.doFilter(message);
-        } finally {
-            HotdeployUtil.stop();
+        } catch (final Exception e) {
+            rollBack();
+            throw e;
+        } catch (final Error e) {
+            throw e;
+        }
+    }
+
+    protected void rollBack() {
+        try {
+            if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {
+                logger.log("IJMS-CONTAINER2105", new Object[0]);
+                transactionManager.setRollbackOnly();
+            }
+        } catch (final Exception e) {
+            logger.log("EJMS-CONTAINER2106", new Object[0], e);
         }
     }
 

@@ -29,7 +29,6 @@ import javax.jms.TextMessage;
 import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
-import org.seasar.jms.container.impl.JMSContainerImpl;
 import org.seasar.jms.core.util.IterableAdapter;
 
 /**
@@ -38,9 +37,9 @@ import org.seasar.jms.core.util.IterableAdapter;
  */
 public class DumpMessageFilter implements Filter {
 
-    private static final Logger logger = Logger.getLogger(JMSContainerImpl.class);
+    private static final Logger logger = Logger.getLogger(DumpMessageFilter.class);
 
-    public void doFilter(final Message message, final FilterChain chain) throws Throwable {
+    public void doFilter(final Message message, final FilterChain chain) throws Exception {
         if (logger.isDebugEnabled()) {
             if (TextMessage.class.isInstance(message)) {
                 dumpMessage(TextMessage.class.cast(message));

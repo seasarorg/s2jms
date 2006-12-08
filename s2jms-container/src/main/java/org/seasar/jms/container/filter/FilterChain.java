@@ -24,6 +24,6 @@ import javax.jms.Message;
  */
 public interface FilterChain {
 
-    void doFilter(Message message) throws Throwable;
+    void doFilter(Message message) throws Exception;
 
 }

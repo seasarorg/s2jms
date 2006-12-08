@@ -36,7 +36,7 @@ public class ExternalContextFilter implements Filter {
     @Binding(bindingType = BindingType.MUST)
     protected S2Container container;
 
-    public void doFilter(final Message message, final FilterChain chain) throws Throwable {
+    public void doFilter(final Message message, final FilterChain chain) throws Exception {
         final ExternalContext externalContext = container.getRoot().getExternalContext();
         setRequest(externalContext, new JMSRequestImpl(message));
         try {
