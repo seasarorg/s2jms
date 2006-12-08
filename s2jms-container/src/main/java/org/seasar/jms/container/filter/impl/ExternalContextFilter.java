@@ -31,7 +31,7 @@ import org.seasar.jms.container.filter.FilterChain;
  * @author koichik
  * 
  */
-public class ExternalContextFilterImpl implements Filter {
+public class ExternalContextFilter implements Filter {
 
     @Binding(bindingType = BindingType.MUST)
     protected S2Container container;

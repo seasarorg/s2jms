@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component class="org.seasar.jms.container.filter.impl.TraceFilter"/>
+	<component class="org.seasar.jms.container.filter.impl.DumpMessageFilter"/>
+	<component class="org.seasar.jms.container.filter.impl.ExternalContextFilter"/>
+	<component class="org.seasar.jms.container.filter.impl.HotdeployFilter"/>
+</components>

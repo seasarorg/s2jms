@@ -37,6 +37,11 @@ public class TraceFilter implements Filter {
         }
         try {
             chain.doFilter(message);
+        } catch (final Throwable e) {
+            if (logger.isDebugEnabled()) {
+                logger.log("EJMS-CONTAINER2102", new Object[0], e);
+            }
+            throw e;
         } finally {
             if (logger.isDebugEnabled()) {
                 logger.log("DJMS-CONTAINER2101", new Object[0]);

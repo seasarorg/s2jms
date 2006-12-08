@@ -36,7 +36,7 @@ import org.seasar.jms.core.util.IterableAdapter;
  * @author koichik
  * 
  */
-public class MessaeDumpFilter implements Filter {
+public class DumpMessageFilter implements Filter {
 
     private static final Logger logger = Logger.getLogger(JMSContainerImpl.class);
 
@@ -50,6 +50,9 @@ public class MessaeDumpFilter implements Filter {
                 dumpMessage(MapMessage.class.cast(message));
             } else if (ObjectMessage.class.isInstance(message)) {
                 dumpMessage(ObjectMessage.class.cast(message));
+            } else {
+                logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(),
+                        message });
             }
         }
         chain.doFilter(message);
@@ -57,7 +60,7 @@ public class MessaeDumpFilter implements Filter {
 
     protected void dumpMessage(final TextMessage message) throws JMSException {
         final String payload = message.getText();
-        logger.log("D2107", new Object[] { message.getClass().getName(), payload });
+        logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(), payload });
     }
 
     protected void dumpMessage(final BytesMessage message) throws JMSException {
@@ -74,8 +77,8 @@ public class MessaeDumpFilter implements Filter {
             remain -= length;
         }
         pw.close();
-        logger.log("D2107",
-                new Object[] { message.getClass().getName(), new String(sw.getBuffer()) });
+        logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(),
+                new String(sw.getBuffer()) });
     }
 
     protected void dumpMessage(final MapMessage message) throws JMSException {
@@ -83,12 +86,13 @@ public class MessaeDumpFilter implements Filter {
         for (final String key : new IterableAdapter(message.getMapNames())) {
             buf.append(key).append(" : ").append(message.getObject(key)).append("\n");
         }
-        logger.log("D2107", new Object[] { message.getClass().getName(), new String(buf) });
+        logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(),
+                new String(buf) });
     }
 
     protected void dumpMessage(final ObjectMessage message) throws JMSException {
         final Object payload = message.getObject();
-        logger.log("D2107", new Object[] { message.getClass().getName(), payload });
+        logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(), payload });
     }
 
 }

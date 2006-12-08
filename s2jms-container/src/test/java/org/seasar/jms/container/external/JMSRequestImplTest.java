@@ -13,14 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.jms.container.impl;
+package org.seasar.jms.container.external;
 
 import javax.jms.Message;
 
 import junit.framework.TestCase;
 
 import org.seasar.jms.container.JMSRequest;
-import org.seasar.jms.container.external.JMSRequestImpl;
 import org.seasar.jms.core.mock.MessageMock;
 
 /**

@@ -102,9 +102,6 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
             final FilterChain filterChain = new FilterChainImpl();
             filterChain.doFilter(message);
         } catch (final Throwable e) {
-            if (logger.isDebugEnabled()) {
-                logger.log("EJMS-CONTAINER2102", new Object[0], e);
-            }
             rollBack();
         }
     }

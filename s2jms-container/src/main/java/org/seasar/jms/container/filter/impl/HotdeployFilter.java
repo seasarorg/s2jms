@@ -26,7 +26,7 @@ import org.seasar.jms.container.filter.FilterChain;
  * @author koichik
  * 
  */
-public class HotdeployFilterImpl implements Filter {
+public class HotdeployFilter implements Filter {
 
     public void doFilter(final Message message, final FilterChain chain) throws Throwable {
         HotdeployUtil.start();
