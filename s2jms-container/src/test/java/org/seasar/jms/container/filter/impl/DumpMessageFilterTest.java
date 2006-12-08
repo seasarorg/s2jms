@@ -37,7 +37,7 @@ import static org.easymock.EasyMock.reportMatcher;
  * @author koichik
  * 
  */
-public class MessageDumpFilterTest extends EasyMockTestCase {
+public class DumpMessageFilterTest extends EasyMockTestCase {
 
     protected DumpMessageFilter filter;
     protected FilterChain chain;
@@ -176,7 +176,7 @@ public class MessageDumpFilterTest extends EasyMockTestCase {
                 return false;
             }
             for (int i = 0; i < 16; ++i) {
-                bytes[i] = (byte) i;
+                bytes[i] = (byte) (i + 'a');
             }
             return true;
         }
