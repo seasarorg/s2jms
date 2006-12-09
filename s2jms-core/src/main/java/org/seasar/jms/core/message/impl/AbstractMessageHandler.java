@@ -61,7 +61,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
             this.message = message;
             return getPayload();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             message.acknowledge();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -109,7 +109,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSCorrelationID();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -125,7 +125,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSCorrelationIDAsBytes();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -141,7 +141,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSDeliveryMode();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -157,7 +157,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSDestination();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -173,7 +173,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSExpiration();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -188,7 +188,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSMessageID();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -203,7 +203,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSPriority();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -219,7 +219,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSRedelivered();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -234,7 +234,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSReplyTo();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -249,7 +249,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSTimestamp();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -264,7 +264,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
         try {
             return message.getJMSType();
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -283,7 +283,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
             }
             return map;
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 }

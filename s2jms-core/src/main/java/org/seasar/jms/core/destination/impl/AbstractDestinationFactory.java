@@ -62,7 +62,7 @@ public abstract class AbstractDestinationFactory implements DestinationFactory {
             try {
                 destination = createDestination(session);
             } catch (final JMSException e) {
-                throw new SJMSRuntimeException("EJMS0000", e);
+                throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
             }
         }
         return destination;

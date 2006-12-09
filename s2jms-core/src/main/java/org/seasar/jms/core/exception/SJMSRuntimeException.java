@@ -79,47 +79,27 @@ public class SJMSRuntimeException extends SRuntimeException {
     }
 
     @Override
-    public void printStackTrace() {
-        super.printStackTrace();
+    public void printStackTrace(final PrintStream ps) {
+        super.printStackTrace(ps);
         if (JMSException.class.isInstance(getCause())) {
             final JMSException jmsException = JMSException.class.cast(getCause());
             if (jmsException.getLinkedException() != null) {
-                jmsException.getLinkedException().printStackTrace();
+                ps.print("Linked by: ");
+                jmsException.getLinkedException().printStackTrace(ps);
             }
         }
     }
 
     @Override
-    public void printStackTrace(final PrintStream s) {
-        super.printStackTrace(s);
+    public void printStackTrace(final PrintWriter pw) {
+        super.printStackTrace(pw);
         if (JMSException.class.isInstance(getCause())) {
             final JMSException jmsException = JMSException.class.cast(getCause());
             if (jmsException.getLinkedException() != null) {
-                jmsException.getLinkedException().printStackTrace(s);
+                pw.print("Linked by: ");
+                jmsException.getLinkedException().printStackTrace(pw);
             }
         }
-    }
-
-    @Override
-    public void printStackTrace(final PrintWriter s) {
-        super.printStackTrace(s);
-        if (JMSException.class.isInstance(getCause())) {
-            final JMSException jmsException = JMSException.class.cast(getCause());
-            if (jmsException.getLinkedException() != null) {
-                jmsException.getLinkedException().printStackTrace(s);
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        if (JMSException.class.isInstance(getCause())) {
-            final JMSException jmsException = JMSException.class.cast(getCause());
-            if (jmsException.getLinkedException() != null) {
-                return super.toString() + " linked " + jmsException.getLinkedException();
-            }
-        }
-        return super.toString();
     }
 
 }

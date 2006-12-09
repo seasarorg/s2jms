@@ -189,7 +189,7 @@ public class MessageSenderImplTest extends EasyMockTestCase {
                     handler.handleSession(session);
                     return true;
                 } catch (JMSException e) {
-                    throw new SJMSRuntimeException("EJMS0000", e);
+                    throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
                 }
             }
 
