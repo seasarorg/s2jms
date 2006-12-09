@@ -62,7 +62,7 @@ public class JMSRequestParameterMap extends AbstractUnmodifiableExternalContextM
                     tempNames.add(name);
                 }
             } catch (final JMSException e) {
-                throw new SJMSRuntimeException("EJMS0000", e);
+                throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
             }
         }
         names = Collections.unmodifiableSet(tempNames);
@@ -78,7 +78,7 @@ public class JMSRequestParameterMap extends AbstractUnmodifiableExternalContextM
             try {
                 return MapMessage.class.cast(message).getObject(key);
             } catch (final JMSException e) {
-                throw new SJMSRuntimeException("EJMS0000", e);
+                throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
             }
         }
         return null;

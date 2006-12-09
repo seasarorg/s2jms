@@ -44,7 +44,7 @@ public class JMSRequestHeaderMap extends AbstractUnmodifiableExternalContextMap 
                 names.add(name);
             }
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
@@ -57,7 +57,7 @@ public class JMSRequestHeaderMap extends AbstractUnmodifiableExternalContextMap 
             }
             return JMSHeaderSupport.getValue(message, key);
         } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0000", e);
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
 
