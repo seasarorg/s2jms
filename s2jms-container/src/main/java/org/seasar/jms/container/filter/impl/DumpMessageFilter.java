@@ -18,6 +18,7 @@ package org.seasar.jms.container.filter.impl;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Enumeration;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -44,9 +45,9 @@ public class DumpMessageFilter implements Filter {
 
     private static final Logger logger = Logger.getLogger(DumpMessageFilter.class);
 
-    protected boolean dumpHeader;
+    protected boolean dumpHeader = true;
 
-    protected boolean dumpProperty;
+    protected boolean dumpProperty = true;
 
     @Binding(bindingType = BindingType.MAY)
     public void setDumpHeader(boolean dumpHeader) {
@@ -92,20 +93,22 @@ public class DumpMessageFilter implements Filter {
     }
 
     private void dumpProperty(final StringBuilder buf, Message message) throws JMSException {
-        buf.append("===== Properties =====\n");
-        for (final String key : new IterableAdapter(message.getPropertyNames())) {
-            final Object value = message.getObjectProperty(key);
-            buf.append(key).append(" : ").append(value).append("\n");
+        final Enumeration propertyNames = message.getPropertyNames();
+        if (propertyNames.hasMoreElements()) {
+            buf.append("===== Properties =====\n");
+            for (final String key : new IterableAdapter(propertyNames)) {
+                final Object value = message.getObjectProperty(key);
+                buf.append(key).append(" : ").append(value).append("\n");
+            }
+            buf.append("\n");
         }
-        buf.append("\n");
     }
 
     protected void dumpMessage(final StringBuilder buf, final TextMessage message)
             throws JMSException {
         buf.append("===== Payload =====\n");
         final String payload = message.getText();
-        buf.append(payload);
-        buf.append("\n");
+        buf.append(payload).append("\n");
     }
 
     protected void dumpMessage(final StringBuilder buf, final BytesMessage message)
@@ -118,25 +121,30 @@ public class DumpMessageFilter implements Filter {
         while (remain > 0) {
             final int length = message.readBytes(bytes);
             for (int i = 0; i < length; ++i) {
-                pw.printf("%02x ", bytes[i]);
+                if (i == 8) {
+                    pw.print(" ");
+                }
+                pw.printf("%02X ", bytes[i]);
             }
-            for (int i = 0; i < 16 - length; ++i) {
+            for (int i = length; i < 16; ++i) {
                 pw.print("   ");
+                if (i == 8) {
+                    pw.print(" ");
+                }
             }
             pw.print("  ");
             for (int i = 0; i < length; ++i) {
                 if (bytes[i] > 0x20 && bytes[i] < 0x80) {
                     pw.print((char) bytes[i]);
                 } else {
-                    pw.print(' ');
+                    pw.print('.');
                 }
             }
             pw.println();
             remain -= length;
         }
         pw.close();
-        buf.append(sw.getBuffer());
-        buf.append("\n");
+        buf.append(sw.getBuffer()).append("\n");
     }
 
     protected void dumpMessage(final StringBuilder buf, final MapMessage message)
@@ -153,8 +161,7 @@ public class DumpMessageFilter implements Filter {
             throws JMSException {
         buf.append("===== Payload =====\n");
         final Object payload = message.getObject();
-        buf.append(payload);
-        buf.append("\n");
+        buf.append(payload).append("\n");
     }
 
 }
