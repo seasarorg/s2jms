@@ -50,6 +50,8 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         filter = new DumpMessageFilter();
+        filter.setDumpHeader(false);
+        filter.setDumpProperty(false);
         chain = createStrictMock(FilterChain.class);
         textMessage = createStrictMock(TextMessage.class);
         bytesMessage = createStrictMock(BytesMessage.class);
@@ -64,7 +66,7 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
                 try {
                     filter.doFilter(textMessage, chain);
                 } catch (Throwable e) {
-                    fail();
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -73,8 +75,7 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
                 expect(textMessage.getText()).andReturn("foo bar baz");
                 try {
                     chain.doFilter(textMessage);
-                } catch (Throwable e) {
-                    fail();
+                } catch (Throwable ignore) {
                 }
             }
         }.doTest();
@@ -87,8 +88,7 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
                 try {
                     filter.doFilter(bytesMessage, chain);
                 } catch (Throwable e) {
-                    e.printStackTrace();
-                    fail();
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -112,8 +112,7 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
                 try {
                     filter.doFilter(mapMessage, chain);
                 } catch (Throwable e) {
-                    e.printStackTrace();
-                    fail();
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -141,8 +140,7 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
                 try {
                     filter.doFilter(objectMessage, chain);
                 } catch (Throwable e) {
-                    e.printStackTrace();
-                    fail();
+                    throw new RuntimeException(e);
                 }
             }
 
