@@ -55,7 +55,7 @@ public class Main {
         try {
             new Main().run(args);
         } catch (final Exception e) {
-            logger.log(Level.SEVERE, "EJMS-SERVER3001", e);
+            logger.log(Level.SEVERE, "EJMS-SERVER3005", e);
             System.exit(1);
         }
     }
@@ -80,6 +80,7 @@ public class Main {
             }
         });
         s2container = createS2Container(dicon);
+        logger.log(Level.INFO, "IJMS-SERVER3001");
 
         try {
             latch.await();
