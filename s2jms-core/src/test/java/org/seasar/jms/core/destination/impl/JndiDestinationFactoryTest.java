@@ -19,12 +19,12 @@ import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Session;
 
-import org.seasar.framework.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2TigerTestCase;
 
 /**
  * @author koichik
  */
-public class JndiDestinationFactoryTest extends S2EasyMockTestCase {
+public class JndiDestinationFactoryTest extends S2TigerTestCase {
     JndiDestinationFactory target;
     Session session;
 

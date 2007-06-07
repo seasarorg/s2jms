@@ -16,13 +16,13 @@
 package org.seasar.jms.core.interceptor;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2TigerTestCase;
 import org.seasar.jms.core.MessageSender;
 
 /**
  * @author koichik
  */
-public class SendMessageInterceptorTest extends S2EasyMockTestCase {
+public class SendMessageInterceptorTest extends S2TigerTestCase {
     NormalTarget normal;
     FailTarget fail;
     MessageSender sender;

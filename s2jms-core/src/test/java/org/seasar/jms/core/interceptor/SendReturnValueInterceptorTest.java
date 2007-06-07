@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.unit.S2EasyMockTestCase;
+import org.seasar.framework.unit.S2TigerTestCase;
 import org.seasar.jms.core.MessageSender;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
 import org.seasar.jms.core.message.impl.MapMessageFactory;
@@ -35,7 +35,7 @@ import static org.easymock.EasyMock.isA;
 /**
  * @author koichik
  */
-public class SendReturnValueInterceptorTest extends S2EasyMockTestCase {
+public class SendReturnValueInterceptorTest extends S2TigerTestCase {
     SendReturnValueInterceptor interceptor;
     MessageSender sender;
     Function function;
