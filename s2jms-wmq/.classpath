@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/s2jms-container"/>
+	<classpathentry kind="lib" path="lib/com.ibm.mqjms.jar"/>
+	<classpathentry kind="lib" path="lib/com.ibm.mq.jar"/>
+	<classpathentry kind="lib" path="lib/dhbcore.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

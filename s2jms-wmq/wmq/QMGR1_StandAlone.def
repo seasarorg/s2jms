@@ -1,0 +1,2 @@
+DEFINE QLOCAL(LQ1) DESCR('Local test queue 1')
+DEFINE QLOCAL(LQ2) DESCR('Local test queue 2')

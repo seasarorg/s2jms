@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<include path="jms-ra.dicon"/>
+	<include path="jms-outbound.dicon"/>
+
+	<component
+		class="org.seasar.jca.deploy.impl.MessageEndpointDeployer"
+	>
+		<property name="activationSpecClassName">"com.sun.genericra.inbound.ActivationSpec"</property>
+		<initMethod name="setProperty">
+			<arg>"userName"</arg>
+			<arg>"koichik"</arg>
+		</initMethod>
+		<initMethod name="setProperty">
+			<arg>"password"</arg>
+			<arg>"hi_mi_tsu"</arg>
+		</initMethod>
+		<initMethod name="setProperty">
+			<arg>"connectionFactoryProperties"</arg>
+			<arg>"QueueManager=QMGR1"</arg>
+		</initMethod>
+		<initMethod name="setProperty">
+			<arg>"destinationProperties"</arg>
+			<arg>"BaseQueueName=LQ1"</arg>
+		</initMethod>
+		<initMethod name="setProperty">
+			<arg>"destinationType"</arg>
+			<arg>"javax.jms.Queue"</arg>
+		</initMethod>
+	</component>
+	<component
+		class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"
+	/>
+
+	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
+		<initMethod name="addMessageListener">
+			<arg>"listener1"</arg>
+		</initMethod>
+		<initMethod name="addMessageListener">
+			<arg>"listener2"</arg>
+		</initMethod>
+	</component>
+	
+	<component name="listener1" instance="prototype" externalBinding="true"
+		class="org.seasar.jms.container.JMSContainerTest$MessageListener1"
+	/>
+	<component name="listener2" instance="prototype" externalBinding="true"
+		class="org.seasar.jms.container.JMSContainerTest$MessageListener2"
+	/>
+</components>
