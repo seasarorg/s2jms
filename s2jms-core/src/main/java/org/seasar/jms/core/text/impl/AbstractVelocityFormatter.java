@@ -31,9 +31,17 @@ import org.seasar.jms.core.text.TextProvider;
  * @author bowez
  */
 public abstract class AbstractVelocityFormatter implements TextProvider {
+
+    // instance fields
+    /** Velocity エンジン */
     protected VelocityEngine velocityEngine = new VelocityEngine();
+
+    /** コンテキスト */
     protected Context context = new S2Context();
 
+    /**
+     * インスタンスを構築します。
+     */
     public AbstractVelocityFormatter() {
         try {
             velocityEngine.init();
@@ -42,6 +50,12 @@ public abstract class AbstractVelocityFormatter implements TextProvider {
         }
     }
 
+    /**
+     * コンテキストを設定します。
+     * 
+     * @param context
+     *            コンテキスト
+     */
     @Binding(bindingType = BindingType.MAY)
     public void setContext(final Context context) {
         this.context = context;
@@ -62,5 +76,14 @@ public abstract class AbstractVelocityFormatter implements TextProvider {
         return out.toString();
     }
 
+    /**
+     * このインスタンスを評価して結果の文字列を{#code out}に書き出します。
+     * 
+     * @param out
+     *            結果文字列を書き出すライタ
+     * @throws Exception
+     *             Velocitテンプレートの評価中に例外が発生した場合にスローされます
+     */
     protected abstract void eval(StringWriter out) throws Exception;
+
 }

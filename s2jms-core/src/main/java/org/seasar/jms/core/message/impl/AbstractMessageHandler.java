@@ -36,10 +36,17 @@ import org.seasar.jms.core.util.IterableAdapter;
  * このクラスおよびサブクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
  * </p>
  * 
+ * @param <MSGTYPE>
+ *            JMSメッセージの型
+ * @param <PAYLOADTYPE>
+ *            JMSメッセージのペイロードの型
  * @author koichik
  */
-public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> implements
-        MessageHandler<MSGTYPE, T> {
+public abstract class AbstractMessageHandler<MSGTYPE extends Message, PAYLOADTYPE> implements
+        MessageHandler<MSGTYPE, PAYLOADTYPE> {
+
+    // instance fields
+    /** 受信したJMSメッセージ */
     protected MSGTYPE message;
 
     /**
@@ -56,7 +63,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
      *            受信したJMSメッセージ
      * @return JMSメッセージのペイロード
      */
-    public T handleMessage(final MSGTYPE message) {
+    public PAYLOADTYPE handleMessage(final MSGTYPE message) {
         try {
             this.message = message;
             return getPayload();
@@ -72,7 +79,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
      * @throws JMSException
      *             ペイロードを取得できなかった場合にスローされます
      */
-    public abstract T getPayload() throws JMSException;
+    public abstract PAYLOADTYPE getPayload() throws JMSException;
 
     /**
      * JMSメッセージを返します。
@@ -286,4 +293,5 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, T> impleme
             throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
         }
     }
+
 }

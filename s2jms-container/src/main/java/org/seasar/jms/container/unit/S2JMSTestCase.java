@@ -44,6 +44,12 @@ public abstract class S2JMSTestCase extends S2TestCase {
                 new JMSExternalContextComponentDefRegister());
     }
 
+    /**
+     * JMSメッセージを外部コンテキストに登録します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     */
     protected void registerMessage(final Message message) {
         getContainer().getExternalContext().setRequest(new JMSRequestImpl(message));
     }

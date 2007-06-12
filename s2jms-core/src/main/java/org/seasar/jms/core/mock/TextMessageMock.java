@@ -25,6 +25,8 @@ import javax.jms.TextMessage;
  */
 public class TextMessageMock extends MessageMock implements TextMessage {
 
+    // instance fields
+    /** JMSメッセージのペイロード */
     protected String text;
 
     /**
@@ -33,6 +35,12 @@ public class TextMessageMock extends MessageMock implements TextMessage {
     public TextMessageMock() {
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param text
+     *            JMSメッセージのペイロード
+     */
     public TextMessageMock(final String text) {
         this.text = text;
     }

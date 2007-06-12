@@ -21,12 +21,11 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
- * 
  * @author bowez
  */
 public class S2ContextTest extends TestCase {
 
-    /*
+    /**
      * Test method for 'org.seasar.jms.core.text.impl.S2Context.put(String,
      * Object)'
      */
@@ -39,7 +38,7 @@ public class S2ContextTest extends TestCase {
         }
     }
 
-    /*
+    /**
      * Test method for 'org.seasar.jms.core.text.impl.S2Context.get(String)'
      */
     public void testGet() {
@@ -58,7 +57,7 @@ public class S2ContextTest extends TestCase {
         assertNull(context.get("piyo"));
     }
 
-    /*
+    /**
      * Test method for
      * 'org.seasar.jms.core.text.impl.S2Context.containsKey(Object)'
      */
@@ -78,7 +77,7 @@ public class S2ContextTest extends TestCase {
         assertFalse(context.containsKey("piyo"));
     }
 
-    /*
+    /**
      * Test method for 'org.seasar.jms.core.text.impl.S2Context.getKeys()'
      */
     public void testGetKeys() {
@@ -90,7 +89,7 @@ public class S2ContextTest extends TestCase {
         }
     }
 
-    /*
+    /**
      * Test method for 'org.seasar.jms.core.text.impl.S2Context.remove(Object)'
      */
     public void testRemove() {

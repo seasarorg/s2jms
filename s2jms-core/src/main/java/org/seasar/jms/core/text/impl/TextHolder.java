@@ -28,6 +28,9 @@ import org.seasar.jms.core.text.TextProvider;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TextHolder implements TextProvider {
+
+    // instance fields
+    /** 文字列 */
     protected String text;
 
     /**

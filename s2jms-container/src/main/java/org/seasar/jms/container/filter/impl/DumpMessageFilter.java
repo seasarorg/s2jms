@@ -37,30 +37,61 @@ import org.seasar.jms.core.util.IterableAdapter;
 import org.seasar.jms.core.util.JMSHeaderSupport;
 
 /**
- * @author koichik
+ * JMSメッセージの内容をログにダンプ出力するフィルタです。
  * 
+ * @author koichik
  */
 @Component
 public class DumpMessageFilter implements Filter {
 
+    // static fields
     private static final Logger logger = Logger.getLogger(DumpMessageFilter.class);
 
+    // instance fields
+    /** ログの出力レベルに依存せずログ出力を強制する場合に<code>true</code> */
+    protected boolean forceDump = false;
+
+    /** JMSメッセージのヘッダをダンプ出力する場合に<code>true</code> */
     protected boolean dumpHeader = true;
 
+    /** JMSメッセージのプロパティをダンプ出力する場合に<code>true</code> */
     protected boolean dumpProperty = true;
 
+    /**
+     * ログの出力レベルに依存せずログ出力を強制する場合に<code>true</code>を設定します。
+     * 
+     * @param forceDump
+     *            ログの出力レベルに依存せずログ出力を強制する場合に<code>true</code>
+     */
     @Binding(bindingType = BindingType.MAY)
-    public void setDumpHeader(boolean dumpHeader) {
+    public void setForceDump(final boolean forceDump) {
+        this.forceDump = forceDump;
+    }
+
+    /**
+     * JMSメッセージのヘッダをダンプ出力する場合に<code>true</code>を設定します。
+     * 
+     * @param dumpHeader
+     *            JMSメッセージのヘッダをダンプ出力する場合に<code>true</code>
+     */
+    @Binding(bindingType = BindingType.MAY)
+    public void setDumpHeader(final boolean dumpHeader) {
         this.dumpHeader = dumpHeader;
     }
 
+    /**
+     * JMSメッセージのプロパティをダンプ出力する場合に<code>true</code>を設定します。
+     * 
+     * @param dumpProperty
+     *            JMSメッセージのプロパティをダンプ出力する場合に<code>true</code>
+     */
     @Binding(bindingType = BindingType.MAY)
-    public void setDumpProperty(boolean dumpProperty) {
+    public void setDumpProperty(final boolean dumpProperty) {
         this.dumpProperty = dumpProperty;
     }
 
     public void doFilter(final Message message, final FilterChain chain) throws Exception {
-        if (logger.isDebugEnabled()) {
+        if (forceDump || logger.isDebugEnabled()) {
             final StringBuilder buf = new StringBuilder(500);
             if (dumpHeader) {
                 dumpHeader(buf, message);
@@ -69,13 +100,13 @@ public class DumpMessageFilter implements Filter {
                 dumpProperty(buf, message);
             }
             if (TextMessage.class.isInstance(message)) {
-                dumpMessage(buf, TextMessage.class.cast(message));
+                dumpPayload(buf, TextMessage.class.cast(message));
             } else if (BytesMessage.class.isInstance(message)) {
-                dumpMessage(buf, BytesMessage.class.cast(message));
+                dumpPayload(buf, BytesMessage.class.cast(message));
             } else if (MapMessage.class.isInstance(message)) {
-                dumpMessage(buf, MapMessage.class.cast(message));
+                dumpPayload(buf, MapMessage.class.cast(message));
             } else if (ObjectMessage.class.isInstance(message)) {
-                dumpMessage(buf, ObjectMessage.class.cast(message));
+                dumpPayload(buf, ObjectMessage.class.cast(message));
             }
             logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(),
                     new String(buf) });
@@ -83,7 +114,15 @@ public class DumpMessageFilter implements Filter {
         chain.doFilter(message);
     }
 
-    protected void dumpHeader(final StringBuilder buf, Message message) {
+    /**
+     * JMSメッセージのヘッダをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     */
+    protected void dumpHeader(final StringBuilder buf, final Message message) {
         buf.append("===== Headers =====\n");
         for (final String key : JMSHeaderSupport.getNames()) {
             final Object value = JMSHeaderSupport.getValue(message, key);
@@ -92,7 +131,18 @@ public class DumpMessageFilter implements Filter {
         buf.append("\n");
     }
 
-    private void dumpProperty(final StringBuilder buf, Message message) throws JMSException {
+    /**
+     * JMSメッセージのプロパティをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             例外が発生した場合にスローされます
+     */
+    @SuppressWarnings("unchecked")
+    private void dumpProperty(final StringBuilder buf, final Message message) throws JMSException {
         final Enumeration propertyNames = message.getPropertyNames();
         if (propertyNames.hasMoreElements()) {
             buf.append("===== Properties =====\n");
@@ -104,14 +154,34 @@ public class DumpMessageFilter implements Filter {
         }
     }
 
-    protected void dumpMessage(final StringBuilder buf, final TextMessage message)
+    /**
+     * {@link TextMessage}のペイロードをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             例外が発生した場合にスローされます
+     */
+    protected void dumpPayload(final StringBuilder buf, final TextMessage message)
             throws JMSException {
         buf.append("===== Payload =====\n");
         final String payload = message.getText();
         buf.append(payload).append("\n");
     }
 
-    protected void dumpMessage(final StringBuilder buf, final BytesMessage message)
+    /**
+     * {@link BytesMessage}のペイロードをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             例外が発生した場合にスローされます
+     */
+    protected void dumpPayload(final StringBuilder buf, final BytesMessage message)
             throws JMSException {
         buf.append("===== Payload =====\n");
         int remain = (int) message.getBodyLength();
@@ -147,7 +217,17 @@ public class DumpMessageFilter implements Filter {
         buf.append(sw.getBuffer()).append("\n");
     }
 
-    protected void dumpMessage(final StringBuilder buf, final MapMessage message)
+    /**
+     * {@link MapMessage}のペイロードをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             例外が発生した場合にスローされます
+     */
+    protected void dumpPayload(final StringBuilder buf, final MapMessage message)
             throws JMSException {
         buf.append("===== Payload =====\n");
         for (final String key : new IterableAdapter(message.getMapNames())) {
@@ -157,7 +237,17 @@ public class DumpMessageFilter implements Filter {
         buf.append("\n");
     }
 
-    protected void dumpMessage(final StringBuilder buf, final ObjectMessage message)
+    /**
+     * {@link ObjectMessage}のペイロードをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     * @throws JMSException
+     *             例外が発生した場合にスローされます
+     */
+    protected void dumpPayload(final StringBuilder buf, final ObjectMessage message)
             throws JMSException {
         buf.append("===== Payload =====\n");
         final Object payload = message.getObject();

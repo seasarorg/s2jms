@@ -46,15 +46,33 @@ import javax.jms.MessageNotWriteableException;
  */
 public class BytesMessageMock extends MessageMock implements BytesMessage {
 
+    /**
+     * BytesMessageMockの状態を表す列挙
+     */
     public enum State {
-        WRITABLE, READABLE
+        /** メッセージにデータを設定できる状態 */
+        WRITABLE,
+
+        /** メッセージからデータを読み出せる状態 */
+        READABLE
     };
 
+    /** 状態 */
     protected State state;
+
+    /** JMSメッセージのペイロード */
     protected byte[] bytes;
+
+    /** 状態が{@link State#WRITABLE}の場合に{@link #bytes}に書き込むための出力ストリーム */
     protected ByteArrayOutputStream baos;
+
+    /** 状態が{@link State#WRITABLE}の場合に{@link #bytes}に書き込むための出力ストリーム */
     protected DataOutputStream os;
+
+    /** 状態が{@link State#READABLE}の場合に{@link #bytes}から読み込むための入力ストリーム */
     protected ByteArrayInputStream bais;
+
+    /** 状態が{@link State#READABLE}の場合に{@link #bytes}から読み込むための入力ストリーム */
     protected DataInputStream is;
 
     /**
@@ -103,10 +121,17 @@ public class BytesMessageMock extends MessageMock implements BytesMessage {
         }
     }
 
-    protected JMSException newJMSException(final Throwable cause) throws JMSException {
+    /**
+     * <code>cause</code>を原因として持つ{@link JMSException}を作成してスローします。
+     * 
+     * @param cause
+     *            原因となった例外
+     * @return <code>cause</code>を原因として持つ{@link JMSException}
+     */
+    protected JMSException newJMSException(final Throwable cause) {
         final JMSException e = new JMSException("exception occurd");
         e.initCause(cause);
-        throw e;
+        return e;
     }
 
     public long getBodyLength() throws JMSException {

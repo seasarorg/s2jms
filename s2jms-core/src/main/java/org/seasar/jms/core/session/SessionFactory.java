@@ -25,6 +25,7 @@ package org.seasar.jms.core.session;
  * @author koichik
  */
 public interface SessionFactory {
+
     /**
      * JMSセッションを作成し、{@link SessionHandler#handleSession}を呼び出した後JMSセッションをクローズします。
      * <p>
@@ -38,4 +39,5 @@ public interface SessionFactory {
      *            JMSセッションを処理するハンドラ
      */
     void operateSession(boolean startConnection, SessionHandler handler);
+
 }

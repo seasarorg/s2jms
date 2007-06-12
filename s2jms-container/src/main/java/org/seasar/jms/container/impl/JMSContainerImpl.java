@@ -16,6 +16,7 @@
 package org.seasar.jms.container.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.jms.Message;
@@ -31,8 +32,12 @@ import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.container.JMSContainer;
+import org.seasar.jms.container.exception.NotSupportedMessageException;
 import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
+import org.seasar.jms.core.message.MessageHandler;
+import org.seasar.jms.core.message.impl.MessageHandlerFactory;
+import org.seasar.jms.core.util.MessageHandlerUtil;
 
 /**
  * S2JMS-Containerの実装クラスです。
@@ -46,21 +51,26 @@ import org.seasar.jms.container.filter.FilterChain;
  * </p>
  * 
  * @author y-komori
- * 
  */
 @Component
 public class JMSContainerImpl implements JMSContainer, Disposable {
 
+    // instance fields
+    /** S2コンテナ */
     @Binding(bindingType = BindingType.MUST)
     protected S2Container container;
 
+    /** フィルタの配列 */
     @Binding(bindingType = BindingType.MAY)
     protected Filter[] filters;
 
+    /** インスタンスが初期化済みなら<code>true</code> */
     protected boolean initialized;
 
+    /** メッセージリスナのコンポーネント名の配列 */
     protected List<String> messageListeners = CollectionsUtil.newArrayList();
 
+    /** リスナコンポーネントにJMSメッセージをバインドするコンポーネントの{@link Map} */
     protected ConcurrentMap<Class<?>, MessageListenerSupport> listenerSupportMap = CollectionsUtil
             .newConcurrentHashMap();
 
@@ -122,9 +132,16 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
      *             リスナーメソッドの処理中に例外が発生した場合にスローされます
      */
     protected void invokeMessageListeners(final Message message) throws Exception {
+        final MessageHandler<?, ?> messageHandler = MessageHandlerFactory
+                .getMessageHandlerFromMessageType(message.getClass());
+        if (messageHandler == null) {
+            throw new NotSupportedMessageException(message);
+        }
+        final Object payload = MessageHandlerUtil.getPayload(messageHandler, message);
         for (final String listenerName : messageListeners) {
-            final Object listener = container.getComponent(listenerName);
+            final Object listener = container.getRoot().getComponent(listenerName);
             final MessageListenerSupport support = getMessageListenerSupport(listener.getClass());
+            support.bind(listener, message, payload);
             support.invoke(listener, message);
         }
     }
@@ -164,11 +181,11 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
      */
     public class FilterChainImpl implements FilterChain {
 
+        /** 呼び出すフィルタのインデックス */
         protected int index;
 
         /**
          * インスタンスを構築します。
-         * 
          */
         public FilterChainImpl() {
         }
@@ -179,6 +196,9 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
          * 後続のフィルタがなければ{@link org.seasar.jms.container.impl.JMSContainerImpl}に
          * 制御を戻します．
          * </p>
+         * 
+         * @param message
+         *            受信したJMSメッセージ
          */
         public void doFilter(final Message message) throws Exception {
             if (filters != null && filters.length > index) {
@@ -187,6 +207,7 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
                 invokeMessageListeners(message);
             }
         }
+
     }
 
 }

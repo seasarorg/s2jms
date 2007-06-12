@@ -37,6 +37,9 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> {
+
+    // instance fields
+    /** 受信したJMSメッセージのペイロード */
     protected Serializable object;
 
     /**
@@ -132,4 +135,5 @@ public class ObjectMessageFactory extends AbstractMessageFactory<ObjectMessage> 
     protected void setupPayload(final ObjectMessage message) throws JMSException {
         message.setObject(object);
     }
+
 }

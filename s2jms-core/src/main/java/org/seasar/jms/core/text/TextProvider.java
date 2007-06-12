@@ -21,10 +21,12 @@ package org.seasar.jms.core.text;
  * @author koichik
  */
 public interface TextProvider {
+
     /**
      * JMSテキストメッセージのペイロードに設定する文字列を返します。
      * 
      * @return JMSテキストメッセージのペイロードに設定する文字列
      */
     String getText();
+
 }

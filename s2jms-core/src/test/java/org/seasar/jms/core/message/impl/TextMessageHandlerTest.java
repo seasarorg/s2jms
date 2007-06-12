@@ -19,21 +19,16 @@ import javax.jms.TextMessage;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class TextMessageHandlerTest extends EasyMockTestCase {
+
     TextMessageHandler target;
+
     TextMessage message;
-
-    public TextMessageHandlerTest() {
-    }
-
-    public TextMessageHandlerTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -42,17 +37,18 @@ public class TextMessageHandlerTest extends EasyMockTestCase {
         message = createStrictMock(TextMessage.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetProperties() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertEquals("1", "HogeHoge", target.handleMessage(message));
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(message.getText()).andReturn("HogeHoge");
-            }
-        }.doTest();
+        assertEquals("1", "HogeHoge", target.handleMessage(message));
     }
+
+    /**
+     * @throws Exception
+     */
+    public void recordGetProperties() throws Exception {
+        expect(message.getText()).andReturn("HogeHoge");
+    }
+
 }

@@ -28,14 +28,24 @@ import org.seasar.jms.core.util.IterableAdapter;
 import org.seasar.jms.core.util.JMSHeaderSupport;
 
 /**
+ * JMSメッセージのヘッダおよびプロパティを外部コンテキストのリクエストマップとして扱うコンポーネントです。
+ * 
  * @author koichik
  */
 public class JMSRequestHeaderMap extends AbstractUnmodifiableExternalContextMap {
 
+    // instance fields
+    /** JMSメッセージ */
     protected final Message message;
 
+    /** JMSメッセージが持つヘッダおよびプロパティの名前の{@link Set} */
     protected final Set<String> names = CollectionsUtil.newHashSet();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param message
+     */
     public JMSRequestHeaderMap(final Message message) {
         this.message = message;
         try {
@@ -61,6 +71,7 @@ public class JMSRequestHeaderMap extends AbstractUnmodifiableExternalContextMap 
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Iterator getAttributeNames() {
         return names.iterator();

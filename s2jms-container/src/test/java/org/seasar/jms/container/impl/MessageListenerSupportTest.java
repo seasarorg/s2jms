@@ -24,15 +24,12 @@ import org.seasar.jms.container.exception.MessageListenerNotFoundException;
 import org.seasar.jms.core.mock.MessageMock;
 import org.seasar.jms.core.mock.TextMessageMock;
 
+/**
+ * @author koichik
+ */
 public class MessageListenerSupportTest extends TestCase {
+
     Message message;
-
-    public MessageListenerSupportTest() {
-    }
-
-    public MessageListenerSupportTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -40,6 +37,9 @@ public class MessageListenerSupportTest extends TestCase {
         message = new MessageMock();
     }
 
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         MessageListenerSupport support = new MessageListenerSupport(Test1.class);
         assertEquals("onMessage", support.getListenerMethodName());
@@ -49,6 +49,9 @@ public class MessageListenerSupportTest extends TestCase {
         assertTrue(test.called);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMethod() throws Exception {
         MessageListenerSupport support = new MessageListenerSupport(Test2.class);
         assertEquals("invoke", support.getListenerMethodName());
@@ -58,6 +61,9 @@ public class MessageListenerSupportTest extends TestCase {
         assertTrue(test.called);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMethodNotFound() throws Exception {
         try {
             new MessageListenerSupport(Test3.class);
@@ -67,6 +73,9 @@ public class MessageListenerSupportTest extends TestCase {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public void testMessageParameter() throws Exception {
         MessageListenerSupport support = new MessageListenerSupport(Test4.class);
         assertEquals("invoke", support.getListenerMethodName());
@@ -76,6 +85,9 @@ public class MessageListenerSupportTest extends TestCase {
         assertTrue(test.called);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testPayloadParameter() throws Exception {
         MessageListenerSupport support = new MessageListenerSupport(Test5.class);
         assertEquals("onMessage", support.getListenerMethodName());
@@ -86,51 +98,98 @@ public class MessageListenerSupportTest extends TestCase {
         assertEquals("Hoge", test.text);
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class Test1 {
+
         boolean called;
 
+        /**
+         * 
+         */
         public void onMessage() {
             called = true;
         }
+
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class Test2 {
+
         boolean called;
 
+        /**
+         * 
+         */
         @OnMessage
         public void invoke() {
             called = true;
         }
+
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class Test3 {
+
         boolean called;
 
+        /**
+         * 
+         */
         public void invoke() {
             called = true;
         }
+
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class Test4 {
+
         boolean called;
+
         Message msg;
 
+        /**
+         * @param msg
+         */
         @OnMessage
         public void invoke(Message msg) {
             called = true;
             this.msg = msg;
         }
+
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class Test5 {
+
         boolean called;
+
         String text;
 
+        /**
+         * @param text
+         */
         @OnMessage
         public void onMessage(String text) {
             called = true;
             this.text = text;
         }
+
     }
 
 }

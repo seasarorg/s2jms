@@ -29,38 +29,38 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.easymock.IArgumentMatcher;
-import org.seasar.framework.unit.EasyMockTestCase;
+import org.seasar.framework.unit.S2TigerTestCase;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.session.SessionFactory;
 import org.seasar.jms.core.session.SessionHandler;
 
-import static org.easymock.EasyMock.aryEq;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.reportMatcher;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
-public class MessageSenderImplTest extends EasyMockTestCase {
+public class MessageSenderImplTest extends S2TigerTestCase {
+
     MessageSenderImpl target;
+
     SessionFactory sf;
+
     DestinationFactory df;
+
     Session session;
+
     Destination destination;
+
     MessageProducer producer;
+
     BytesMessage bytesMessage;
+
     MapMessage mapMessage;
+
     ObjectMessage objectMessage;
+
     TextMessage textMessage;
-
-    public MessageSenderImplTest() {
-    }
-
-    public MessageSenderImplTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -77,112 +77,137 @@ public class MessageSenderImplTest extends EasyMockTestCase {
         textMessage = createStrictMock(TextMessage.class);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void setUpSendBytes() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testSendBytes() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.send(new byte[] { 1, 2, 3 });
-            }
-
-            @Override
-            public void record() throws Exception {
-                sf.operateSession(eq(false), handler(session));
-                expect(df.getDestination(session)).andReturn(destination);
-                expect(session.createProducer(destination)).andReturn(producer);
-                producer.setDisableMessageID(false);
-                producer.setDisableMessageTimestamp(false);
-                expect(session.createBytesMessage()).andReturn(bytesMessage);
-                bytesMessage.writeBytes(aryEq(new byte[] { 1, 2, 3 }));
-                producer.send(bytesMessage, Message.DEFAULT_DELIVERY_MODE,
-                        Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
-                producer.close();
-            }
-        }.doTest();
+        target.send(new byte[] { 1, 2, 3 });
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordSendBytes() throws Exception {
+        sf.operateSession(eq(false), handler(session));
+        expect(df.getDestination(session)).andReturn(destination);
+        expect(session.createProducer(destination)).andReturn(producer);
+        producer.setDisableMessageID(false);
+        producer.setDisableMessageTimestamp(false);
+        expect(session.createBytesMessage()).andReturn(bytesMessage);
+        bytesMessage.writeBytes(aryEq(new byte[] { 1, 2, 3 }));
+        producer.send(bytesMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
+                Message.DEFAULT_TIME_TO_LIVE);
+        producer.close();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void setUpSendMap() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testSendMap() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                Map<String, Object> map = new LinkedHashMap<String, Object>();
-                map.put("foo", "FOO");
-                map.put("bar", "BAR");
-                target.send(map);
-            }
-
-            @Override
-            public void record() throws Exception {
-                sf.operateSession(eq(false), handler(session));
-                expect(df.getDestination(session)).andReturn(destination);
-                expect(session.createProducer(destination)).andReturn(producer);
-                producer.setDisableMessageID(false);
-                producer.setDisableMessageTimestamp(false);
-                expect(session.createMapMessage()).andReturn(mapMessage);
-                mapMessage.setObject("foo", "FOO");
-                mapMessage.setObject("bar", "BAR");
-                producer.send(mapMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
-                        Message.DEFAULT_TIME_TO_LIVE);
-                producer.close();
-            }
-        }.doTest();
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("foo", "FOO");
+        map.put("bar", "BAR");
+        target.send(map);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordSendMap() throws Exception {
+        sf.operateSession(eq(false), handler(session));
+        expect(df.getDestination(session)).andReturn(destination);
+        expect(session.createProducer(destination)).andReturn(producer);
+        producer.setDisableMessageID(false);
+        producer.setDisableMessageTimestamp(false);
+        expect(session.createMapMessage()).andReturn(mapMessage);
+        mapMessage.setObject("foo", "FOO");
+        mapMessage.setObject("bar", "BAR");
+        producer.send(mapMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
+                Message.DEFAULT_TIME_TO_LIVE);
+        producer.close();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void setUpSendObject() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testSendObject() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.send(666);
-            }
-
-            @Override
-            public void record() throws Exception {
-                sf.operateSession(eq(false), handler(session));
-                expect(df.getDestination(session)).andReturn(destination);
-                expect(session.createProducer(destination)).andReturn(producer);
-                producer.setDisableMessageID(false);
-                producer.setDisableMessageTimestamp(false);
-                expect(session.createObjectMessage()).andReturn(objectMessage);
-                objectMessage.setObject(666);
-                producer.send(objectMessage, Message.DEFAULT_DELIVERY_MODE,
-                        Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
-                producer.close();
-            }
-        }.doTest();
+        target.send(666);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordSendObject() throws Exception {
+        sf.operateSession(eq(false), handler(session));
+        expect(df.getDestination(session)).andReturn(destination);
+        expect(session.createProducer(destination)).andReturn(producer);
+        producer.setDisableMessageID(false);
+        producer.setDisableMessageTimestamp(false);
+        expect(session.createObjectMessage()).andReturn(objectMessage);
+        objectMessage.setObject(666);
+        producer.send(objectMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
+                Message.DEFAULT_TIME_TO_LIVE);
+        producer.close();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void setUpSendText() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testSendText() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.send("HogeHoge");
-            }
-
-            @Override
-            public void record() throws Exception {
-                sf.operateSession(eq(false), handler(session));
-                expect(df.getDestination(session)).andReturn(destination);
-                expect(session.createProducer(destination)).andReturn(producer);
-                producer.setDisableMessageID(false);
-                producer.setDisableMessageTimestamp(false);
-                expect(session.createTextMessage()).andReturn(textMessage);
-                textMessage.setText("HogeHoge");
-                producer.send(textMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
-                        Message.DEFAULT_TIME_TO_LIVE);
-                producer.close();
-            }
-        }.doTest();
+        target.send("HogeHoge");
     }
 
-    public static SessionHandler handler(final Session session) {
+    /**
+     * @throws Exception
+     */
+    public void recordSendText() throws Exception {
+        sf.operateSession(eq(false), handler(session));
+        expect(df.getDestination(session)).andReturn(destination);
+        expect(session.createProducer(destination)).andReturn(producer);
+        producer.setDisableMessageID(false);
+        producer.setDisableMessageTimestamp(false);
+        expect(session.createTextMessage()).andReturn(textMessage);
+        textMessage.setText("HogeHoge");
+        producer.send(textMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
+                Message.DEFAULT_TIME_TO_LIVE);
+        producer.close();
+    }
+
+    static SessionHandler handler(final Session session) {
         reportMatcher(new IArgumentMatcher() {
+
             public boolean matches(Object arg) {
                 try {
                     SessionHandler handler = SessionHandler.class.cast(arg);
@@ -199,4 +224,5 @@ public class MessageSenderImplTest extends EasyMockTestCase {
         });
         return null;
     }
+
 }

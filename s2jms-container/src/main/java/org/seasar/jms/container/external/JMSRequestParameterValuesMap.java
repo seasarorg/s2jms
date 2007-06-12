@@ -18,12 +18,22 @@ package org.seasar.jms.container.external;
 import javax.jms.Message;
 
 /**
+ * JMSメッセージを外部コンテキストのリクエストパラメータとして扱うコンポーネントです。
+ * 
  * @author koichik
  */
 public class JMSRequestParameterValuesMap extends JMSRequestParameterMap {
 
+    // constants
+    /** 空の配列 */
     protected static final Object[] EMPTY_ARRAY = new Object[0];
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     */
     public JMSRequestParameterValuesMap(final Message message) {
         super(message);
     }

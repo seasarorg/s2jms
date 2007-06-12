@@ -24,9 +24,9 @@ import org.seasar.jms.core.mock.MessageMock;
 
 /**
  * @author y-komori
- * 
  */
 public class JMSRequestImplTest extends TestCase {
+
     JMSRequest request;
 
     Message message;
@@ -38,6 +38,9 @@ public class JMSRequestImplTest extends TestCase {
         request = new JMSRequestImpl(message);
     }
 
+    /**
+     * 
+     */
     public void testSetAttribute() {
         Object foo = new Object();
         try {
@@ -47,6 +50,9 @@ public class JMSRequestImplTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testGetAttribute() {
         Object foo = new Object();
         Object bar = new Object();
@@ -55,4 +61,5 @@ public class JMSRequestImplTest extends TestCase {
         assertEquals(foo, request.getAttribute("foo"));
         assertEquals(bar, request.getAttribute("bar"));
     }
+
 }

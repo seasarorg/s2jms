@@ -31,6 +31,8 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class MapMessageMock extends MessageMock implements MapMessage {
 
+    // instance fields
+    /** JMSメッセージのペイロード */
     protected Map<String, Object> map = CollectionsUtil.newHashMap();
 
     /**
@@ -71,6 +73,7 @@ public class MapMessageMock extends MessageMock implements MapMessage {
         return Long.class.cast(map.get(name));
     }
 
+    @SuppressWarnings("unchecked")
     public Enumeration getMapNames() throws JMSException {
         return new EnumerationAdapter(map.keySet().iterator());
     }

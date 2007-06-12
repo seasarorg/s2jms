@@ -21,23 +21,20 @@ import javax.jms.Session;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class ReplyToDestinationFactoryTest extends EasyMockTestCase {
+
     ReplyToDestinationFactory target;
+
     Session session;
+
     Message message;
+
     Destination destination;
-
-    public ReplyToDestinationFactoryTest() {
-    }
-
-    public ReplyToDestinationFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -48,19 +45,20 @@ public class ReplyToDestinationFactoryTest extends EasyMockTestCase {
         destination = createStrictMock(Destination.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateDestination() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setMessage(message);
-                Destination dest = target.getDestination(session);
-                assertSame("1", destination, dest);
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(message.getJMSReplyTo()).andReturn(destination);
-            }
-        }.doTest();
+        target.setMessage(message);
+        Destination dest = target.getDestination(session);
+        assertSame("1", destination, dest);
     }
+
+    /**
+     * @throws Exception
+     */
+    public void recordCreateDestination() throws Exception {
+        expect(message.getJMSReplyTo()).andReturn(destination);
+    }
+
 }

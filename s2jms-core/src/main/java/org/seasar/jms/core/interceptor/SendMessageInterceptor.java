@@ -28,6 +28,7 @@ import org.seasar.framework.container.annotation.tiger.Component;
  */
 @Component
 public class SendMessageInterceptor extends AbstractSendMessageInterceptor {
+
     /**
      * ターゲットメソッドが例外をスローすることなく終了した後にJMSメッセージを送信します。
      * 
@@ -42,4 +43,5 @@ public class SendMessageInterceptor extends AbstractSendMessageInterceptor {
         getMessageSender().send();
         return result;
     }
+
 }

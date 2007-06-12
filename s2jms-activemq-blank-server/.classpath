@@ -6,19 +6,22 @@
 	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-jta_1.1_spec-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/geronimo-j2ee_1.4_spec-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/javassist-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.4.ga.jar"/>
 	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
 	<classpathentry kind="lib" path="lib/ognl-2.6.7.jar"/>
 	<classpathentry kind="lib" path="lib/poi-2.5.1-final-20040804.jar"/>
-	<classpathentry kind="lib" path="lib/s2-framework-2.4.0-beta-2.jar"/>
-	<classpathentry kind="lib" path="lib/s2-extension-2.4.0-beta-2.jar"/>
-	<classpathentry kind="lib" path="lib/s2-tiger-2.4.0-beta-2.jar"/>
-	<classpathentry kind="lib" path="lib/s2jca-1.0.0-M1.jar"/>
-	<classpathentry kind="lib" path="lib/s2jms-1.0.0-M1.jar"/>
-	<classpathentry kind="lib" path="lib/s2jms-server-1.0.0-M1.jar"/>
+	<classpathentry sourcepath="libsrc/s2-framework-2.4.14-SNAPSHOT-sources.jar" kind="lib" path="lib/s2-framework-2.4.14-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="libsrc/s2-extension-2.4.14-SNAPSHOT-sources.jar" kind="lib" path="lib/s2-extension-2.4.14-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="libsrc/s2-tiger-2.4.14-SNAPSHOT-sources.jar" kind="lib" path="lib/s2-tiger-2.4.14-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="libsrc/s2jca-1.0.0-M2-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jca-1.0.0-M2-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="libsrc/s2jms-core-1.0.0-M2-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jms-core-1.0.0-M2-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="libsrc/s2jms-container-1.0.0-M2-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jms-container-1.0.0-M2-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="libsrc/s2jms-server-1.0.0-M2-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jms-server-1.0.0-M2-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/velocity-dep-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/velocity-tools-generic-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

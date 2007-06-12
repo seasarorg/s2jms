@@ -34,6 +34,9 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class QueueFactory extends AbstractDestinationFactory {
+
+    // instance fields
+    /** キュー名 */
     protected String name;
 
     /**

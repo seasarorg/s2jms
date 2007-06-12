@@ -55,6 +55,7 @@ import org.seasar.jms.core.message.MessageHandler;
  * @author koichik
  */
 public interface MessageReceiver {
+
     /**
      * JMSの{@link javax.jms.BytesMessage}を受信してペイロード(メッセージボディ)をバイト配列として返します。
      * 
@@ -94,6 +95,10 @@ public interface MessageReceiver {
     /**
      * JMSメッセージを受信して{@link MessageHandler}が処理した結果を返します。
      * 
+     * @param <MSGTYPE>
+     *            JMSメッセージの型
+     * @param <T>
+     *            JMSメッセージを処理した結果の型
      * @param messageHandler
      *            受信したメッセージを処理する{@link MessageHandler}
      * @return 受信したJMSメッセージを{@link MessageHandler}が処理した結果です。タイムアウトとした場合は{@code null}を返します。

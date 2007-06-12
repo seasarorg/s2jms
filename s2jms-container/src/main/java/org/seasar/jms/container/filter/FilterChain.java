@@ -19,11 +19,20 @@ package org.seasar.jms.container.filter;
 import javax.jms.Message;
 
 /**
- * @author koichik
+ * 後続のフィルタを呼び出すためのチェーンを表現します。
  * 
+ * @author koichik
  */
 public interface FilterChain {
 
+    /**
+     * 後続のフィルタを呼び出します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @throws Exception
+     *             フィルタまたはリスナコンポーネントで例外が発生した場合にスローされます
+     */
     void doFilter(Message message) throws Exception;
 
 }

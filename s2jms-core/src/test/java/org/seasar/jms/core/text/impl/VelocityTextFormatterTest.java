@@ -24,13 +24,10 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
  * @author koichik
  */
 public class VelocityTextFormatterTest extends TestCase {
-    public VelocityTextFormatterTest() {
-    }
 
-    public VelocityTextFormatterTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         S2Container container = new S2ContainerImpl();
         container.register("Hoge", "hoge");
@@ -58,27 +55,47 @@ public class VelocityTextFormatterTest extends TestCase {
         assertEquals("4", "Yuri 26 $model.birthday", formatter.getText());
     }
 
+    /**
+     */
     public static class Model {
+
         String name;
+
         int age;
 
+        /**
+         * @param name
+         * @param age
+         */
         public Model(String name, int age) {
             this.name = name;
             this.age = age;
         }
 
+        /**
+         * @return 名前
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @param name
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * @return 年齢
+         */
         public int getAge() {
             return age;
         }
 
+        /**
+         * @param age
+         */
         public void setAge(int age) {
             this.age = age;
         }

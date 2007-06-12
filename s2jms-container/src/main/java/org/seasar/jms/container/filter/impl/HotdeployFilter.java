@@ -23,8 +23,9 @@ import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
 
 /**
- * @author koichik
+ * HOT deployを有効にするためのフィルタです。
  * 
+ * @author koichik
  */
 public class HotdeployFilter implements Filter {
 

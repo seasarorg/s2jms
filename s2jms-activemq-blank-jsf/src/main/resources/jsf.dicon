@@ -5,12 +5,14 @@
 
 	<include path="jsfErrorPage.dicon"/>
 
+	<!--
 	<component class="org.seasar.jsf.runtime.ServletContextTaglibManagerImpl">
 		<initMethod name="init"/>
 		<destroyMethod name="destroy"/>
 	</component>
-	<!--
+	-->
 	<component class="org.seasar.jsf.runtime.CompositeTaglibManager">
+		<!--
 		<initMethod name="addTaglibManager">
 			<arg>
 				<component class="org.seasar.jsf.runtime.WebappConfigTaglibManagerImpl">
@@ -19,6 +21,7 @@
 				</component>
 			</arg>
 		</initMethod>
+		-->
 		<initMethod name="addTaglibManager">
 			<arg>
 				<component class="org.seasar.jsf.runtime.FileSystemTaglibManagerImpl">
@@ -36,7 +39,6 @@
 			</arg>
 		</initMethod>
 	</component>
-	-->
 
 	<component class="org.seasar.jsf.runtime.JsfConfigImpl">
 		<initMethod name="addTaglibUri">
@@ -51,6 +53,18 @@
 			<arg>"s"</arg>
 			<arg>"http://www.seasar.org/jsf"</arg>
 		</initMethod>
+		<initMethod name="addTaglibUri">
+    		<arg>"x"</arg>
+    		<arg>"http://myfaces.apache.org/tomahawk"</arg>
+		</initMethod>	
+		<initMethod name="addTaglibUri">
+    		<arg>"hello"</arg>
+    		<arg>"http://examples.jsf/taglib"</arg>
+		</initMethod>	
+		<initMethod name="addTaglibUri">
+    		<arg>"r"</arg>
+    		<arg>"http://examples.jsf.hoge/taglib"</arg>
+		</initMethod>	
 	</component>
 	
 	<component class="org.seasar.jsf.runtime.TagPoolImpl"/>

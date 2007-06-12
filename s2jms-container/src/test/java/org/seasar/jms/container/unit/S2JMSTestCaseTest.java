@@ -23,7 +23,6 @@ import org.seasar.jms.core.mock.MapMessageMock;
 
 /**
  * @author y-komori
- * 
  */
 public class S2JMSTestCaseTest extends S2JMSTestCase {
 
@@ -33,6 +32,9 @@ public class S2JMSTestCaseTest extends S2JMSTestCase {
         registerMessage(new MapMessageMock());
     }
 
+    /**
+     * 
+     */
     public void testSetUpContainer() {
         ExternalContext externalContext = getContainer().getExternalContext();
         assertEquals(JMSExternalContext.class, externalContext.getClass());

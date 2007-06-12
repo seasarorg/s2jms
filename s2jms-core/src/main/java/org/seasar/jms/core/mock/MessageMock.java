@@ -32,28 +32,41 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class MessageMock implements Message {
 
+    // instance fields
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID() correlationID} */
     protected String JMSCorrelationID;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes() correlationID} */
     protected byte[] JMSCorrelationIDAsBytes;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSDeliveryMode() デリバリモード} */
     protected int JMSDeliveryMode = DEFAULT_DELIVERY_MODE;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSDestination() デスティネーション} */
     protected Destination JMSDestination;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSExpiration() メッセージの寿命 } */
     protected long JMSExpiration = DEFAULT_TIME_TO_LIVE;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSMessageID() メッセージId} */
     protected String JMSMessageID;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSPriority() プライオリティ} */
     protected int JMSPriority = DEFAULT_PRIORITY;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSRedelivered() 再送フラグ} */
     protected boolean JMSRedelivered;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSReplyTo() 返信先デスティネーション} */
     protected Destination JMSReplyTo;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSTimestamp() タイムスタンプ } */
     protected long JMSTimestamp;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSType() メッセージのタイプ} */
     protected String JMSType;
 
+    /** JMSメッセージのプロパティ */
     protected Map<String, Object> properties = CollectionsUtil.newHashMap();
 
     /**
@@ -144,6 +157,7 @@ public class MessageMock implements Message {
         return properties.get(name);
     }
 
+    @SuppressWarnings("unchecked")
     public Enumeration getPropertyNames() throws JMSException {
         return new EnumerationAdapter(properties.keySet().iterator());
     }

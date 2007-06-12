@@ -26,13 +26,17 @@ import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
 
 /**
- * @author koichik
+ * リスナコンポーネントまたはフィルタで例外が発生した場合にトランザクションをロールバックするフィルタです。
  * 
+ * @author koichik
  */
 public class RollBackFilter implements Filter {
 
+    // static filelds
     private static final Logger logger = Logger.getLogger(RollBackFilter.class);
 
+    // instance fields
+    /** トランザクションマネージャ */
     @Binding(bindingType = BindingType.MAY)
     protected TransactionManager transactionManager;
 
@@ -43,10 +47,15 @@ public class RollBackFilter implements Filter {
             rollBack();
             throw e;
         } catch (final Error e) {
+            rollBack();
             throw e;
         }
     }
 
+    /**
+     * トランザクションをロールバックします。
+     * 
+     */
     protected void rollBack() {
         try {
             if ((transactionManager != null) && (transactionManager.getTransaction() != null)) {

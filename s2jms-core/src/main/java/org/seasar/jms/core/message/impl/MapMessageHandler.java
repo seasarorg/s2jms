@@ -34,7 +34,8 @@ import org.seasar.jms.core.util.IterableAdapter;
  * @author koichik
  */
 @Component(instance = InstanceType.PROTOTYPE)
-public class MapMessageHandler extends AbstractMessageHandler<MapMessage, Map> {
+public class MapMessageHandler extends AbstractMessageHandler<MapMessage, Map<String, Object>> {
+
     /**
      * インスタンスを構築します。
      * 
@@ -55,6 +56,7 @@ public class MapMessageHandler extends AbstractMessageHandler<MapMessage, Map> {
         return MapMessage.class;
     }
 
+    @SuppressWarnings("unchecked")
     public Class<Map> getPayloadType() {
         return Map.class;
     }

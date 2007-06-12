@@ -32,15 +32,10 @@ import org.seasar.jms.core.impl.MessageSenderImpl;
  * @author koichik
  */
 public class AbstractSendMessageInterceptorTest extends TestCase {
+
     SendInterceptor interceptor;
+
     Hoge hoge;
-
-    public AbstractSendMessageInterceptorTest() {
-    }
-
-    public AbstractSendMessageInterceptorTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -50,14 +45,23 @@ public class AbstractSendMessageInterceptorTest extends TestCase {
         hoge = (Hoge) new AopProxy(HogeImpl.class, new Aspect[] { aspect }).create();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConcreteMethod() throws Exception {
         assertEquals("1", 100, hoge.foo());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testAbstractMethod() throws Exception {
         assertNull("1", hoge.bar());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInitializeByType() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef cd = new ComponentDefImpl(MessageSenderImpl.class);
@@ -68,6 +72,9 @@ public class AbstractSendMessageInterceptorTest extends TestCase {
         assertSame("1", cd, interceptor.componentDef);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testInitializeByName() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDef cd = new ComponentDefImpl(MessageSenderImpl.class, "sender");
@@ -79,19 +86,34 @@ public class AbstractSendMessageInterceptorTest extends TestCase {
         assertSame("1", cd, interceptor.componentDef);
     }
 
+    /**
+     */
     public interface Hoge {
+
+        /**
+         * @return int
+         */
         int foo();
 
+        /**
+         * @return String
+         */
         String bar();
     }
 
+    /**
+     */
     public static abstract class HogeImpl implements Hoge {
+
         public int foo() {
             return 100;
         }
     }
 
+    /**
+     */
     public static class SendInterceptor extends AbstractSendMessageInterceptor {
+
         public Object invoke(MethodInvocation invocation) throws Throwable {
             return proceed(invocation);
         }

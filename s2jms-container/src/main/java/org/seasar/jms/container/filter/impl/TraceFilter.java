@@ -23,11 +23,13 @@ import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
 
 /**
- * @author koichik
+ * リスナコンポーネントの呼び出し前後にトレースをログ出力するコンポーネントです。
  * 
+ * @author koichik
  */
 public class TraceFilter implements Filter {
 
+    // static fields
     private static final Logger logger = Logger.getLogger(TraceFilter.class);
 
     public void doFilter(final Message message, final FilterChain chain) throws Exception {

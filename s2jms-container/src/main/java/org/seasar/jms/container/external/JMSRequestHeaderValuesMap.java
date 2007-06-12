@@ -18,12 +18,21 @@ package org.seasar.jms.container.external;
 import javax.jms.Message;
 
 /**
+ * JMSメッセージのヘッダおよびプロパティを外部コンテキストのリクエストマップとして扱うコンポーネントです。
+ * 
  * @author koichik
  */
 public class JMSRequestHeaderValuesMap extends JMSRequestHeaderMap {
 
+    // constants
+    /** 空の配列 */
     protected static final Object[] EMPTY_ARRAY = new Object[0];
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param message
+     */
     public JMSRequestHeaderValuesMap(final Message message) {
         super(message);
     }

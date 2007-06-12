@@ -34,8 +34,15 @@ import org.seasar.jms.core.MessageSender;
  * @author koichik
  */
 public abstract class AbstractSendMessageInterceptor implements MethodInterceptor {
+
+    // instance fields
+    /** S2コンテナ */
     protected S2Container container;
+
+    /** {@link MessageSender}のコンポーネント名 */
     protected String messageSenderName;
+
+    /** {@link MessageSender}のコンポーネント定義 */
     protected ComponentDef componentDef;
 
     /**
@@ -107,4 +114,5 @@ public abstract class AbstractSendMessageInterceptor implements MethodIntercepto
     protected MessageSender getMessageSender() {
         return (MessageSender) componentDef.getComponent();
     }
+
 }

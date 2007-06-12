@@ -19,10 +19,24 @@ import javax.jms.Message;
 
 import org.seasar.framework.exception.SRuntimeException;
 
+/**
+ * サポートしていないJMSメッセージ型を受信した場合にスローされます。
+ * 
+ * @author koichik
+ */
 public class NotSupportedMessageException extends SRuntimeException {
+
+    // static fields
     private static final long serialVersionUID = 1L;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param message
+     *            受信したJMSメッセージ
+     */
     public NotSupportedMessageException(final Message message) {
         super("EJMS-CONTAINER2002", new Object[] { message.getClass() });
     }
+
 }

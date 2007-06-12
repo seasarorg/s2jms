@@ -29,8 +29,11 @@ import org.seasar.framework.log.Logger;
  */
 @Component
 public class VelocityTextFormatter extends AbstractVelocityFormatter {
+
+    // static fields
     private static final Logger logger = Logger.getLogger(VelocityTextFormatter.class);
 
+    /** テンプレート文字列 */
     protected String templateText;
 
     /**
@@ -58,4 +61,5 @@ public class VelocityTextFormatter extends AbstractVelocityFormatter {
             logger.error("Failed to evaluate velocity template text: " + templateText);
         }
     }
+
 }

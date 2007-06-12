@@ -27,17 +27,14 @@ import org.seasar.framework.unit.EasyMockTestCase;
  * @author koichik
  */
 public class AbstractMessageFactoryTest extends EasyMockTestCase {
+
     MessageFactory target;
+
     Session session;
+
     TextMessage message;
+
     int count;
-
-    public AbstractMessageFactoryTest() {
-    }
-
-    public AbstractMessageFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -48,6 +45,9 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
         count = 0;
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCorrelationID() throws Exception {
         assertNull("1", target.getCorrelationID());
         assertNull("2", target.getCorrelationIDAsBytes());
@@ -61,6 +61,9 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
         assertTrue("4", Arrays.equals(new byte[] { 1, 2, 3 }, target.correlationIDAsBytes));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testProperty() throws Exception {
         assertNull("1", target.getProperty("foo"));
         assertNull("2", target.getProperty("bar"));
@@ -77,25 +80,28 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
         assertNull("9", target.getProperty("baz"));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateMessage() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setCorrelationID("id");
-                target.addProperty("foo", "FOO");
-                assertSame("1", message, target.createMessage(session));
-                assertEquals("2", 1, count);
-            }
-
-            @Override
-            public void record() throws Exception {
-                message.setJMSCorrelationID("id");
-                message.setObjectProperty("foo", "FOO");
-            }
-        }.doTest();
+        target.setCorrelationID("id");
+        target.addProperty("foo", "FOO");
+        assertSame("1", message, target.createMessage(session));
+        assertEquals("2", 1, count);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordCreateMessage() throws Exception {
+        message.setJMSCorrelationID("id");
+        message.setObjectProperty("foo", "FOO");
+    }
+
+    /**
+     */
     public class MessageFactory extends AbstractMessageFactory<TextMessage> {
+
         @Override
         protected TextMessage createMessageInstance(Session session) throws JMSException {
             return message;
@@ -106,4 +112,5 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
             ++count;
         }
     }
+
 }

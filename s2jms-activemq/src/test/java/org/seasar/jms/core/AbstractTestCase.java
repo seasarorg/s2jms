@@ -18,8 +18,6 @@ package org.seasar.jms.core;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.unit.S2TestCase;
-import org.seasar.jms.core.MessageReceiver;
-import org.seasar.jms.core.MessageSender;
 
 /**
  * @author koichik

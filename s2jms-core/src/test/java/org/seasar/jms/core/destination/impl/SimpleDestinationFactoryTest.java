@@ -24,16 +24,12 @@ import org.seasar.framework.unit.EasyMockTestCase;
  * @author koichik
  */
 public class SimpleDestinationFactoryTest extends EasyMockTestCase {
+
     SimpleDestinationFactory target;
+
     Session session;
+
     Destination destination;
-
-    public SimpleDestinationFactoryTest() {
-    }
-
-    public SimpleDestinationFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -43,17 +39,12 @@ public class SimpleDestinationFactoryTest extends EasyMockTestCase {
         destination = createMock(Destination.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateDestination() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setDestination(destination);
-                assertSame("1", destination, target.getDestination(null));
-            }
-
-            @Override
-            public void record() throws Exception {
-            }
-        }.doTest();
+        target.setDestination(destination);
+        assertSame("1", destination, target.getDestination(null));
     }
+
 }

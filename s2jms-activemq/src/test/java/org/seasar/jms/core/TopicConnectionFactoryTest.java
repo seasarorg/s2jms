@@ -17,7 +17,6 @@ package org.seasar.jms.core;
 
 /**
  * <p>
- * ActiveMQ �� TopicConnectionFactory ��g�B��e�X�g�D
  * </p>
  * 
  * @author koichik
@@ -30,8 +29,7 @@ public class TopicConnectionFactoryTest extends AbstractTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include("topic-cf-test.dicon");
-        super.setUp();
+        include("jms-outbound-topic.dicon");
     }
 
     public void test() throws Exception {

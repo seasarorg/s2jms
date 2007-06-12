@@ -30,26 +30,30 @@ import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.jms.container.filter.FilterChain;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.reportMatcher;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
- * 
  */
 public class DumpMessageFilterTest extends EasyMockTestCase {
 
-    protected DumpMessageFilter filter;
-    protected FilterChain chain;
-    protected TextMessage textMessage;
-    protected BytesMessage bytesMessage;
-    protected MapMessage mapMessage;
-    protected ObjectMessage objectMessage;
+    DumpMessageFilter filter;
+
+    FilterChain chain;
+
+    TextMessage textMessage;
+
+    BytesMessage bytesMessage;
+
+    MapMessage mapMessage;
+
+    ObjectMessage objectMessage;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         filter = new DumpMessageFilter();
+        filter.setForceDump(true);
         filter.setDumpHeader(false);
         filter.setDumpProperty(false);
         chain = createStrictMock(FilterChain.class);
@@ -59,109 +63,119 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
         objectMessage = createStrictMock(ObjectMessage.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTextMessage() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try {
-                    filter.doFilter(textMessage, chain);
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(textMessage.getText()).andReturn("foo bar baz");
-                try {
-                    chain.doFilter(textMessage);
-                } catch (Throwable ignore) {
-                }
-            }
-        }.doTest();
+        try {
+            System.out.println("before call doFilter");
+            filter.doFilter(textMessage, chain);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordTextMessage() throws Exception {
+        expect(textMessage.getText()).andReturn("foo bar baz");
+        try {
+            chain.doFilter(textMessage);
+        } catch (Throwable ignore) {
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testBytesMessage() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try {
-                    filter.doFilter(bytesMessage, chain);
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(bytesMessage.getBodyLength()).andReturn(20L);
-                expect(bytesMessage.readBytes(eqArrayLength())).andReturn(16);
-                expect(bytesMessage.readBytes(eqArrayLength())).andReturn(4);
-                try {
-                    chain.doFilter(bytesMessage);
-                } catch (Throwable ignore) {
-                }
-            }
-        }.doTest();
+        try {
+            filter.doFilter(bytesMessage, chain);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordBytesMessage() throws Exception {
+        expect(bytesMessage.getBodyLength()).andReturn(20L);
+        expect(bytesMessage.readBytes(eqArrayLength())).andReturn(16);
+        expect(bytesMessage.readBytes(eqArrayLength())).andReturn(4);
+        try {
+            chain.doFilter(bytesMessage);
+        } catch (Throwable ignore) {
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testMapMessage() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try {
-                    filter.doFilter(mapMessage, chain);
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void record() throws Exception {
-                Map<String, Object> map = new LinkedHashMap<String, Object>();
-                map.put("a", "A");
-                map.put("b", "B");
-                expect(mapMessage.getMapNames()).andReturn(
-                        new EnumerationAdapter(map.keySet().iterator()));
-                expect(mapMessage.getObject("a")).andReturn("A");
-                expect(mapMessage.getObject("b")).andReturn("B");
-                try {
-                    chain.doFilter(mapMessage);
-                } catch (Throwable ignore) {
-                }
-            }
-        }.doTest();
+        try {
+            filter.doFilter(mapMessage, chain);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordMapMessage() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("a", "A");
+        map.put("b", "B");
+        expect(mapMessage.getMapNames()).andReturn(new EnumerationAdapter(map.keySet().iterator()));
+        expect(mapMessage.getObject("a")).andReturn("A");
+        expect(mapMessage.getObject("b")).andReturn("B");
+        try {
+            chain.doFilter(mapMessage);
+        } catch (Throwable ignore) {
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testObjectMessage() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try {
-                    filter.doFilter(objectMessage, chain);
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(objectMessage.getObject()).andReturn(new BigDecimal("100.00"));
-                try {
-                    chain.doFilter(objectMessage);
-                } catch (Throwable ignore) {
-                }
-            }
-        }.doTest();
+        try {
+            filter.doFilter(objectMessage, chain);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordObjectMessage() throws Exception {
+        expect(objectMessage.getObject()).andReturn(new BigDecimal("100.00"));
+        try {
+            chain.doFilter(objectMessage);
+        } catch (Throwable ignore) {
+        }
+    }
+
+    /**
+     * @return <code>null</code>を返します
+     */
     public static byte[] eqArrayLength() {
         reportMatcher(new ArrayLengthMatcher());
         return null;
     }
 
+    /**
+     * @author koichik
+     * 
+     */
     public static class ArrayLengthMatcher implements IArgumentMatcher {
 
+        /**
+         * 
+         */
         public ArrayLengthMatcher() {
         }
 
@@ -182,6 +196,7 @@ public class DumpMessageFilterTest extends EasyMockTestCase {
         public void appendTo(StringBuffer buf) {
             buf.append("eqArrayLength()");
         }
+
     }
 
 }

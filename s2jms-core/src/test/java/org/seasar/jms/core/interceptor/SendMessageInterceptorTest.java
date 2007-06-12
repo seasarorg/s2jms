@@ -23,16 +23,12 @@ import org.seasar.jms.core.MessageSender;
  * @author koichik
  */
 public class SendMessageInterceptorTest extends S2TigerTestCase {
+
     NormalTarget normal;
+
     FailTarget fail;
+
     MessageSender sender;
-
-    public SendMessageInterceptorTest() {
-    }
-
-    public SendMessageInterceptorTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -45,50 +41,58 @@ public class SendMessageInterceptorTest extends S2TigerTestCase {
         container.init();
     }
 
+    /**
+     * @throws Exception
+     */
     public void testNormalReturn() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertEquals("1", "test", normal.execute());
-            }
-
-            @Override
-            public void record() throws Exception {
-                sender.send();
-            }
-        }.doTest();
+        assertEquals("1", "test", normal.execute());
     }
 
-    public void testThrownException() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                try {
-                    fail.execute();
-                    fail("1");
-                } catch (RuntimeException expect) {
-                }
-            }
+    /**
+     * @throws Exception
+     */
+    public void recordNormalReturn() throws Exception {
+        sender.send();
+    }
 
-            @Override
-            public void record() throws Exception {
-            }
-        }.doTest();
+    /**
+     * @throws Exception
+     */
+    public void testThrownException() throws Exception {
+        try {
+            fail.execute();
+            fail("1");
+        } catch (RuntimeException expect) {
+        }
     }
 
     interface Function {
+
+        /**
+         * @return String
+         */
         String execute();
+
     }
 
+    /**
+     */
     public static class NormalTarget implements Function {
+
         public String execute() {
             return "test";
         }
+
     }
 
+    /**
+     */
     public static class FailTarget implements Function {
+
         public String execute() {
             throw new RuntimeException();
         }
+
     }
+
 }

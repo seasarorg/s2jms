@@ -61,20 +61,31 @@ import org.seasar.jms.core.session.SessionHandler;
  * @author koichik
  */
 public class MessageSenderImpl implements MessageSender {
+
+    // instance fields
+
+    /** 送信に使用するJMSセッションのファクトリ */
     protected SessionFactory sessionFactory;
 
+    /** 送信に使用するJMSデスティネーションのファクトリ */
     protected DestinationFactory destinationFactory;
 
-    protected MessageFactory messageFactory;
+    /** 送信するJMSメッセージのファクトリ */
+    protected MessageFactory<?> messageFactory;
 
+    /** 送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード} */
     protected int deliveryMode = Message.DEFAULT_DELIVERY_MODE;
 
+    /** 送信するJMSメッセージの優先度 */
     protected int priority = Message.DEFAULT_PRIORITY;
 
+    /** 送信するJMSメッセージの生存時間 (ミリ秒単位) */
     protected long timeToLive = Message.DEFAULT_TIME_TO_LIVE;
 
+    /** 送信するJMSメッセージのメッセージIDを無効化する場合に{@code true} */
     protected boolean disableMessageID = false;
 
+    /** 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true} */
     protected boolean disableMessageTimestamp = false;
 
     /**
@@ -97,7 +108,7 @@ public class MessageSenderImpl implements MessageSender {
     /**
      * 送信に使用するJMSデスティネーションのファクトリを設定します(必須)。
      * 
-     * @param sessionFactory
+     * @param destinationFactory
      *            JMSデスティネーションファクトリ
      */
     @Binding(bindingType = BindingType.MUST)
@@ -112,7 +123,7 @@ public class MessageSenderImpl implements MessageSender {
      *            JMSメッセージのファクトリ
      */
     @Binding(bindingType = BindingType.MAY)
-    public void setMessageFactory(final MessageFactory messageFactory) {
+    public void setMessageFactory(final MessageFactory<?> messageFactory) {
         this.messageFactory = messageFactory;
     }
 
@@ -213,8 +224,10 @@ public class MessageSenderImpl implements MessageSender {
         send(messageFactory);
     }
 
+    @SuppressWarnings("unchecked")
     public void send(final MessageFactory messageFactory) {
         sessionFactory.operateSession(false, new SessionHandler() {
+
             public void handleSession(final Session session) throws JMSException {
                 final MessageProducer producer = createMessageProducer(session);
                 try {
@@ -243,4 +256,5 @@ public class MessageSenderImpl implements MessageSender {
         producer.setDisableMessageTimestamp(disableMessageTimestamp);
         return producer;
     }
+
 }

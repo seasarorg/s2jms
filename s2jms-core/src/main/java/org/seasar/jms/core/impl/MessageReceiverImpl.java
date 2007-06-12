@@ -72,12 +72,27 @@ import org.seasar.jms.core.session.SessionHandler;
  */
 @Component
 public class MessageReceiverImpl implements MessageReceiver {
+
+    // instance fields
+    /** 受信に使用するJMSセッションのファクトリ */
     protected SessionFactory sessionFactory;
+
+    /** 受信に使用するJMSデスティネーションのファクトリ */
     protected DestinationFactory destinationFactory;
+
+    /** JMSメッセージをデュラブル(継続的)に受信する場合は{@code true} */
     protected boolean durable;
+
+    /** JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名 */
     protected String subscriptionName;
+
+    /** 受信するJMSメッセージを選択するためのメッセージセレクタ */
     protected String messageSelector = null;
+
+    /** 受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true} */
     protected boolean noLocal = false;
+
+    /** JMSメッセージを受信するまで待機する時間 (ミリ秒単位) */
     protected long timeout = -1;
 
     /**
@@ -100,7 +115,7 @@ public class MessageReceiverImpl implements MessageReceiver {
     /**
      * 受信に使用するJMSデスティネーションのファクトリを設定します(必須)。
      * 
-     * @param sessionFactory
+     * @param destinationFactory
      *            JMSデスティネーションファクトリ
      */
     @Binding(bindingType = BindingType.MUST)
@@ -237,6 +252,9 @@ public class MessageReceiverImpl implements MessageReceiver {
      * 
      */
     public class SessionHandlerImpl implements SessionHandler {
+
+        // instance fields
+        /** JMSメッセージ */
         protected Message message;
 
         /**

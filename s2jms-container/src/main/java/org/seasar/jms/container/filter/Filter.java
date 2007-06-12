@@ -19,11 +19,22 @@ package org.seasar.jms.container.filter;
 import javax.jms.Message;
 
 /**
- * @author koichik
+ * JMSメッセージを処理するフィルタのインタフェースです。
  * 
+ * @author koichik
  */
 public interface Filter {
 
+    /**
+     * フィルタを実行します。
+     * 
+     * @param message
+     *            受信したJMSメッセージ
+     * @param chain
+     *            後続のフィルタを呼び出すためのチェーン
+     * @throws Exception
+     *             フィルタまたはリスナコンポーネントで例外が発生した場合にスローされます
+     */
     void doFilter(Message message, FilterChain chain) throws Exception;
 
 }

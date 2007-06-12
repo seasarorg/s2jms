@@ -23,22 +23,18 @@ import javax.jms.Session;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class MapMessageFactoryTest extends EasyMockTestCase {
+
     MapMessageFactory target;
+
     Session session;
+
     MapMessage message;
-
-    public MapMessageFactoryTest() {
-    }
-
-    public MapMessageFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -48,27 +44,27 @@ public class MapMessageFactoryTest extends EasyMockTestCase {
         message = createStrictMock(MapMessage.class);
     }
 
-    public void test() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setCorrelationID("id");
-                target.addProperty("foo", "FOO");
-                Map<String, Object> map = new LinkedHashMap<String, Object>();
-                map.put("hoge", new Integer(1));
-                map.put("hogehoge", "HogeHoge");
-                target.setMap(map);
-                assertSame("1", message, target.createMessage(session));
-            }
+    /**
+     * @throws Exception
+     */
+    public void testMapMessage() throws Exception {
+        target.setCorrelationID("id");
+        target.addProperty("foo", "FOO");
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("hoge", new Integer(1));
+        map.put("hogehoge", "HogeHoge");
+        target.setMap(map);
+        assertSame("1", message, target.createMessage(session));
+    }
 
-            @Override
-            public void record() throws Exception {
-                expect(session.createMapMessage()).andReturn(message);
-                message.setJMSCorrelationID("id");
-                message.setObjectProperty("foo", "FOO");
-                message.setObject("hoge", new Integer(1));
-                message.setObject("hogehoge", "HogeHoge");
-            }
-        }.doTest();
+    /**
+     * @throws Exception
+     */
+    public void recordMapMessage() throws Exception {
+        expect(session.createMapMessage()).andReturn(message);
+        message.setJMSCorrelationID("id");
+        message.setObjectProperty("foo", "FOO");
+        message.setObject("hoge", new Integer(1));
+        message.setObject("hogehoge", "HogeHoge");
     }
 }

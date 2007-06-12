@@ -25,6 +25,8 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author koichik
  */
 public class IllegalMessageListenerException extends SRuntimeException {
+
+    // static fields
     private static final long serialVersionUID = 1L;
 
     /**
@@ -36,4 +38,5 @@ public class IllegalMessageListenerException extends SRuntimeException {
     public IllegalMessageListenerException(final Method method) {
         super("EJMS-CONTAINER2001", new Object[] { method });
     }
+
 }

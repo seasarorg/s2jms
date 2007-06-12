@@ -25,14 +25,29 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.container.JMSRequest;
 
 /**
+ * JMSメッセージを外部コンテキストのリクエストとして扱うコンポーネントです。
+ * 
  * @author koichik
  */
 public class JMSRequestImpl extends AbstractExternalContextMap implements JMSRequest {
 
+    // instance fields
+    /** JMSメッセージ */
     protected Message message;
 
+    /**
+     * リクエストの属性
+     * 
+     * @see javax.servlet.ServletRequest#getAttribute(String)
+     */
     protected Map<String, Object> attributes = CollectionsUtil.newHashMap();
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     */
     public JMSRequestImpl(final Message message) {
         this.message = message;
     }
@@ -51,6 +66,7 @@ public class JMSRequestImpl extends AbstractExternalContextMap implements JMSReq
         attributes.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Iterator getAttributeNames() {
         return attributes.keySet().iterator();

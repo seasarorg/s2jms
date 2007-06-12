@@ -38,6 +38,9 @@ import org.seasar.jms.core.text.impl.TextHolder;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
+
+    // instance fields
+    /** 受信したJMSメッセージのペイロード */
     protected TextProvider textProvider;
 
     /**
@@ -149,7 +152,7 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
      * デフォルトコンストラクタでインスタンスを構築した場合、このプロパティまたは {@link #setText text}プロパティの設定は必須です。
      * </p>
      * 
-     * @param text
+     * @param textProvider
      *            JMSメッセージのペイロードに設定される文字列を提供するプロバイダ
      */
     @Binding(bindingType = BindingType.MAY)
@@ -181,4 +184,5 @@ public class TextMessageFactory extends AbstractMessageFactory<TextMessage> {
     protected void setupPayload(final TextMessage message) throws JMSException {
         message.setText(getText());
     }
+
 }

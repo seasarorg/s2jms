@@ -37,6 +37,9 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
+
+    // instance fields
+    /** 受信したJMSメッセージのペイロード */
     protected Map<String, Object> map;
 
     /**
@@ -52,7 +55,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     /**
      * インスタンスを構築します。
      * 
-     * @param bytes
+     * @param map
      *            JMSメッセージのペイロードに設定される{@link java.util.Map}
      */
     public MapMessageFactory(final Map<String, Object> map) {
@@ -62,7 +65,7 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     /**
      * インスタンスを構築します。
      * 
-     * @param bytes
+     * @param map
      *            JMSメッセージのペイロードに設定される{@link java.util.Map}
      * @param properties
      *            JMSメッセージのプロパティに設定される{@link java.util.Map}
@@ -136,4 +139,5 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
             message.setObject(entry.getKey(), entry.getValue());
         }
     }
+
 }

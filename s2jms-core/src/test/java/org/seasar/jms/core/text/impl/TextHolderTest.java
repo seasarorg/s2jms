@@ -22,13 +22,9 @@ import junit.framework.TestCase;
  */
 public class TextHolderTest extends TestCase {
 
-    public TextHolderTest() {
-    }
-
-    public TextHolderTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         TextHolder holder = new TextHolder("foo");
         assertEquals("1", "foo", holder.getText());
@@ -36,4 +32,5 @@ public class TextHolderTest extends TestCase {
         holder.setText("bar");
         assertEquals("2", "bar", holder.getText());
     }
+
 }

@@ -21,9 +21,12 @@ import javax.jms.Session;
 /**
  * JMSメッセージを作成するコンポーネントのインタフェースです。
  * 
+ * @param <MSGTYPE>
+ *            JMSメッセージの型
  * @author koichik
  */
 public interface MessageFactory<MSGTYPE extends Message> {
+
     /**
      * JMSメッセージを作成して返します。
      * 
@@ -32,4 +35,5 @@ public interface MessageFactory<MSGTYPE extends Message> {
      * @return JMSメッセージ
      */
     MSGTYPE createMessage(Session session);
+
 }

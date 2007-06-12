@@ -17,10 +17,26 @@ package org.seasar.jms.container.exception;
 
 import org.seasar.framework.exception.SRuntimeException;
 
+/**
+ * リスナコンポーネントのフィールドまたはプロパティにJMSメッセージをバインドできなかった場合にスローされます。
+ * 
+ * @author koichik
+ */
 public class NotBoundException extends SRuntimeException {
+
+    // static fields
     private static final long serialVersionUID = 1L;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param className
+     *            リスナコンポーネントのクラス名
+     * @param propertyName
+     *            バインドできなかったフィールドまたはプロパティ名
+     */
     public NotBoundException(final String className, final String propertyName) {
-        super("EJMS2002", new Object[] { className, propertyName });
+        super("EJMS-CONTAINER2004", new Object[] { className, propertyName });
     }
+
 }

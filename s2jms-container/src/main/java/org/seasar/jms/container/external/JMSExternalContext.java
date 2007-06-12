@@ -16,7 +16,6 @@
 package org.seasar.jms.container.external;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.jms.Message;
@@ -25,15 +24,15 @@ import org.seasar.framework.container.ExternalContext;
 import org.seasar.jms.container.JMSRequest;
 
 /**
- * @author y-komori
+ * JMSメッセージを外部コンテキストとして扱うコンポーネントです。
  * 
+ * @author y-komori
  */
 public class JMSExternalContext implements ExternalContext {
 
-    @SuppressWarnings("unchecked")
-    private static final Map EMPTY_MAP = Collections.unmodifiableMap(new HashMap());
-
-    private final ThreadLocal<JMSRequest> requests = new ThreadLocal<JMSRequest>();
+    // instance fields
+    /** 現在の{@link JMSRequest}を保持するスレッドローカル */
+    protected final ThreadLocal<JMSRequest> requests = new ThreadLocal<JMSRequest>();
 
     public JMSRequest getRequest() {
         return requests.get();
@@ -61,42 +60,56 @@ public class JMSExternalContext implements ExternalContext {
     public void setApplication(final Object application) {
     }
 
+    @SuppressWarnings("unchecked")
     public Map getApplicationMap() {
-        return EMPTY_MAP;
+        return Collections.EMPTY_MAP;
     }
 
+    @SuppressWarnings("unchecked")
     public Map getInitParameterMap() {
-        return EMPTY_MAP;
+        return Collections.EMPTY_MAP;
     }
 
+    @SuppressWarnings("unchecked")
     public Map getRequestCookieMap() {
-        return EMPTY_MAP;
+        return Collections.EMPTY_MAP;
     }
 
+    @SuppressWarnings("unchecked")
     public Map getRequestHeaderMap() {
         return new JMSRequestHeaderMap(getMessage());
     }
 
+    @SuppressWarnings("unchecked")
     public Map getRequestHeaderValuesMap() {
         return new JMSRequestHeaderValuesMap(getMessage());
     }
 
+    @SuppressWarnings("unchecked")
     public Map getRequestMap() {
         return JMSRequestImpl.class.cast(getRequest());
     }
 
+    @SuppressWarnings("unchecked")
     public Map getRequestParameterMap() {
         return new JMSRequestParameterMap(getMessage());
     }
 
+    @SuppressWarnings("unchecked")
     public Map getRequestParameterValuesMap() {
         return new JMSRequestParameterValuesMap(getMessage());
     }
 
+    @SuppressWarnings("unchecked")
     public Map getSessionMap() {
-        return EMPTY_MAP;
+        return Collections.EMPTY_MAP;
     }
 
+    /**
+     * 現在のスレッドに関連づけられた{@link Message}を返します。
+     * 
+     * @return 現在のスレッドに関連づけられた{@link Message}
+     */
     protected Message getMessage() {
         return getRequest().getMessage();
     }

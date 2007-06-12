@@ -16,6 +16,7 @@
 package org.seasar.jms.core.message.impl;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.jms.Message;
 
@@ -31,7 +32,10 @@ import org.seasar.jms.core.message.MessageHandler;
  */
 public class MessageHandlerFactory {
 
-    protected static LinkedList<MessageHandler<?, ?>> handlers = CollectionsUtil.newLinkedList();
+    // static fields
+    /** {@link MessageHandler}の{@link Map} */
+    protected static LinkedList<MessageHandler<? extends Message, ?>> handlers = CollectionsUtil
+            .newLinkedList();
     static {
         handlers.add(new TextMessageHandler());
         handlers.add(new MapMessageHandler());
@@ -77,8 +81,17 @@ public class MessageHandlerFactory {
         return null;
     }
 
-    public static MessageHandler<?, ?> getMessageHandlerFromPayloadType(final Class<?> payloadType) {
-        for (final MessageHandler<?, ?> messageHandler : handlers) {
+    /**
+     * JMSメッセージのペイロード型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスを返します。
+     * 
+     * @param payloadType
+     *            JMSメッセージのペイロード型
+     * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラス。
+     *         対応するクラスがない場合は{@code null}
+     */
+    public static MessageHandler<? extends Message, ?> getMessageHandlerFromPayloadType(
+            final Class<?> payloadType) {
+        for (final MessageHandler<? extends Message, ?> messageHandler : handlers) {
             if (messageHandler.getPayloadType().isAssignableFrom(payloadType)) {
                 return messageHandler;
             }

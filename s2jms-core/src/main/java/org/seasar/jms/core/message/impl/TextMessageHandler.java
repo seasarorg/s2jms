@@ -31,6 +31,7 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TextMessageHandler extends AbstractMessageHandler<TextMessage, String> {
+
     /**
      * インスタンスを構築します。
      * 
@@ -50,4 +51,5 @@ public class TextMessageHandler extends AbstractMessageHandler<TextMessage, Stri
     public Class<String> getPayloadType() {
         return String.class;
     }
+
 }

@@ -21,24 +21,35 @@ import junit.framework.TestCase;
 
 /**
  * @author bowez
- * 
  */
 public class MainTest extends TestCase {
+
+    /**
+     * 
+     */
     public void testGetDicon() {
-        assertEquals("test.dicon", new Main()
-                .getDicon(new String[] { "--dicon", "test.dicon" }));
+        assertEquals("test.dicon", new Main().getDicon(new String[] { "--dicon", "test.dicon" }));
     }
 
+    /**
+     * 
+     */
     public void testGetDicon2() {
         assertEquals("test.dicon", new Main().getDicon(new String[] { "--classpath",
                 "/usr/local/foo/bar", "--dicon", "test.dicon" }));
     }
 
+    /**
+     * 
+     */
     public void testGetDiconDefault() {
         assertEquals("app.dicon", new Main().getDicon(new String[] { "--classpath",
                 "/usr/local/foo/bar" }));
     }
 
+    /**
+     * 
+     */
     public void testGetDiconError() {
         try {
             new Main().getDicon(new String[] { "--dicon" });
@@ -47,10 +58,14 @@ public class MainTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testIsJar() {
         assertTrue(new Main().isJar(new File("/foo/var/baz.jar")));
         assertTrue(new Main().isJar(new File("/foo/var/baz.JAR")));
         assertTrue(new Main().isJar(new File("/foo/var/baz.Jar")));
         assertTrue(new Main().isJar(new File("/foo/var/baz.Jar")));
     }
+
 }

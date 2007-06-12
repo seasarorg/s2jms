@@ -38,14 +38,21 @@ import org.seasar.jms.core.message.MessageFactory;
  * このクラスおよびサブクラスはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
  * </p>
  * 
+ * @param <MSGTYPE>
+ *            JMSメッセージの型
  * @author koichik
  */
 public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
         MessageFactory<MSGTYPE> {
+
+    // instance fields
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID() correlationID} */
     protected String correlationID;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes() correlationID} */
     protected byte[] correlationIDAsBytes;
 
+    /** JMSメッセージのプロパティに設定される{@link java.util.Map} */
     protected final Map<String, Object> properties = CollectionsUtil.newHashMap();
 
     /**
@@ -80,7 +87,8 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
      * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationID}でヘッダに設定されます。
      * </p>
      * 
-     * @param JMSメッセージのヘッダに設定される
+     * @param correlationID
+     *            JMSメッセージのヘッダに設定される
      *            {@link javax.jms.Message#setJMSCorrelationID correlationID}
      */
     @Binding(bindingType = BindingType.MAY)
@@ -104,7 +112,7 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
      * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationIDAsBytes}でヘッダに設定されます。
      * </p>
      * 
-     * @param correlationIdAsBytes
+     * @param correlationIDAsBytes
      *            JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}
      */
     @Binding(bindingType = BindingType.MAY)
@@ -224,4 +232,5 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
      *             JMSメッセージにペイロードを設定できなかった場合にスローされます
      */
     protected abstract void setupPayload(MSGTYPE message) throws JMSException;
+
 }

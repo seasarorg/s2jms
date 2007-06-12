@@ -28,6 +28,9 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
  * @author bowez
  */
 public class S2Context implements Context {
+
+    // instance fields
+    /** S2コンテナ */
     protected S2Container container;
 
     /**

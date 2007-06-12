@@ -37,6 +37,9 @@ import org.seasar.jms.core.destination.DestinationFactory;
  */
 @Component(instance = InstanceType.SINGLETON)
 public class SimpleDestinationFactory implements DestinationFactory {
+
+    // instance fields
+    /** デスティネーション */
     protected Destination destination;
 
     /**

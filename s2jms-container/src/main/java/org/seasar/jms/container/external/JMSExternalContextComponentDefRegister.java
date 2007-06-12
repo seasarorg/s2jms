@@ -25,8 +25,9 @@ import org.seasar.framework.container.external.RequestParameterValuesMapComponen
 import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
- * @author y-komori
+ * JMSメッセージを外部コンテキストとして扱うコンポーネント定義をS2コンテナに登録するコンポーネントです。
  * 
+ * @author y-komori
  */
 public class JMSExternalContextComponentDefRegister implements ExternalContextComponentDefRegister {
 
@@ -40,4 +41,5 @@ public class JMSExternalContextComponentDefRegister implements ExternalContextCo
         impl.register0(new RequestParameterMapComponentDef());
         impl.register0(new RequestParameterValuesMapComponentDef());
     }
+
 }

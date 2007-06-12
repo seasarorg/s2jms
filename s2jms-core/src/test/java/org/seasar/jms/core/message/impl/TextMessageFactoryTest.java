@@ -21,22 +21,18 @@ import javax.jms.TextMessage;
 import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.text.impl.TextHolder;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class TextMessageFactoryTest extends EasyMockTestCase {
+
     TextMessageFactory target;
+
     Session session;
+
     TextMessage message;
-
-    public TextMessageFactoryTest() {
-    }
-
-    public TextMessageFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -46,24 +42,24 @@ public class TextMessageFactoryTest extends EasyMockTestCase {
         message = createStrictMock(TextMessage.class);
     }
 
-    public void test() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setCorrelationID("id");
-                target.addProperty("foo", "FOO");
-                target.setTextProvider(new TextHolder("Hoge"));
-                assertSame("1", message, target.createMessage(session));
-            }
+    /**
+     * @throws Exception
+     */
+    public void testTextMessage() throws Exception {
+        target.setCorrelationID("id");
+        target.addProperty("foo", "FOO");
+        target.setTextProvider(new TextHolder("Hoge"));
+        assertSame("1", message, target.createMessage(session));
+    }
 
-            @Override
-            public void record() throws Exception {
-                expect(session.createTextMessage()).andReturn(message);
-                message.setJMSCorrelationID("id");
-                message.setObjectProperty("foo", "FOO");
-                message.setText("Hoge");
-            }
-        }.doTest();
+    /**
+     * @throws Exception
+     */
+    public void recordTextMessage() throws Exception {
+        expect(session.createTextMessage()).andReturn(message);
+        message.setJMSCorrelationID("id");
+        message.setObjectProperty("foo", "FOO");
+        message.setText("Hoge");
     }
 
 }

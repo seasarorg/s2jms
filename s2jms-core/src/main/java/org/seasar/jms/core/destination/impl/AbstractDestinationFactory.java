@@ -34,6 +34,8 @@ import org.seasar.jms.core.exception.SJMSRuntimeException;
  * @author koichik
  */
 public abstract class AbstractDestinationFactory implements DestinationFactory {
+
+    /** JMSデスティネーション */
     protected Destination destination;
 
     /**

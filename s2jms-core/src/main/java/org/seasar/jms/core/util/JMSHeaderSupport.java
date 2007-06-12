@@ -34,11 +34,15 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  */
 public class JMSHeaderSupport {
 
+    // static fields
+    /** JMSメッセージのヘッダ名の{@link Set} */
     protected static final Set<String> headerNames;
 
+    /** JMSメッセージのヘッダ名と{@link Message}からその値を取得するgetterメソッドの{@link Map} */
     protected static final Map<String, Method> getterMethods = CollectionsUtil
             .newHashMap();
 
+    /** JMSメッセージのヘッダ名と{@link Message}にその値を設定するsetterメソッドの{@link Map} */
     protected static final Map<String, Method> setterMethods = CollectionsUtil
             .newLinkedHashMap();
 

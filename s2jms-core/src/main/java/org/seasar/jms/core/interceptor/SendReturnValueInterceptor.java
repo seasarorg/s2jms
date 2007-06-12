@@ -17,12 +17,14 @@ package org.seasar.jms.core.interceptor;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.jms.Message;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.exception.SIllegalStateException;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 import org.seasar.jms.core.message.MessageFactory;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
@@ -78,7 +80,11 @@ import org.seasar.jms.core.message.impl.TextMessageFactory;
  */
 @Component
 public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
-    protected Map<Class<?>, Class<? extends MessageFactory>> factories = new LinkedHashMap<Class<?>, Class<? extends MessageFactory>>();
+
+    // instance fields
+    /** {@link MessageFactory}の{@link Map} */
+    protected Map<Class<?>, Class<? extends MessageFactory<? extends Message>>> factories = CollectionsUtil
+            .newLinkedHashMap();
 
     /**
      * インスタンスを構築します。
@@ -107,7 +113,7 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
      *            戻り値型に対応したJMSメッセージのファクトリ
      */
     public void addMessageFactory(final Class<?> returnType,
-            final Class<? extends MessageFactory> messageFactoryClass) {
+            final Class<? extends MessageFactory<? extends Message>> messageFactoryClass) {
         factories.put(returnType, messageFactoryClass);
     }
 
@@ -145,12 +151,14 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
         final Class<?> returnType = returnValue.getClass();
         for (final Class<?> payloadType : factories.keySet()) {
             if (payloadType.isAssignableFrom(returnType)) {
-                final Class<? extends MessageFactory> factoryClass = factories.get(payloadType);
-                final Constructor<? extends MessageFactory> ctor = ReflectionUtil.getConstructor(
-                        factoryClass, payloadType);
+                final Class<? extends MessageFactory<? extends Message>> factoryClass = factories
+                        .get(payloadType);
+                final Constructor<? extends MessageFactory<? extends Message>> ctor = ReflectionUtil
+                        .getConstructor(factoryClass, payloadType);
                 return ReflectionUtil.newInstance(ctor, returnValue);
             }
         }
         throw new SIllegalStateException("EJMS-CORE1003", new Object[] { returnType });
     }
+
 }

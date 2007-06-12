@@ -26,17 +26,14 @@ import org.seasar.jms.core.destination.DestinationFactory;
  * @author koichik
  */
 public class AbstractDestinationFactoryTest extends EasyMockTestCase {
+
     DestinationFactory target;
+
     Session session;
+
     Destination destination;
+
     int count;
-
-    public AbstractDestinationFactoryTest() {
-    }
-
-    public AbstractDestinationFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -44,29 +41,25 @@ public class AbstractDestinationFactoryTest extends EasyMockTestCase {
         session = createStrictMock(Session.class);
         destination = createStrictMock(Destination.class);
         count = 0;
-    }
 
-    public void testGetDestination() throws Exception {
         target = new AbstractDestinationFactory() {
+
             @Override
             protected Destination createDestination(Session session) throws JMSException {
                 ++count;
                 return AbstractDestinationFactoryTest.this.destination;
             }
         };
-
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertEquals("1", destination, target.getDestination(session));
-                assertEquals("2", 1, count);
-                assertEquals("3", destination, target.getDestination(session));
-                assertEquals("4", 1, count);
-            }
-
-            @Override
-            public void record() throws Exception {
-            }
-        }.doTest();
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetDestination() throws Exception {
+        assertEquals("1", destination, target.getDestination(session));
+        assertEquals("2", 1, count);
+        assertEquals("3", destination, target.getDestination(session));
+        assertEquals("4", 1, count);
+    }
+
 }

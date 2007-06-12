@@ -32,8 +32,15 @@ import org.seasar.jms.core.session.SessionHandler;
  * @author koichik
  */
 public class SessionFactoryImpl implements SessionFactory {
+
+    // instance fields
+    /** JMSコネクションファクトリ */
     protected ConnectionFactory connectionFactory;
+
+    /** JMSメッセージをトランザクショナルに受信する場合は{@code true} */
     protected boolean transacted = true;
+
+    /** Acknowledge(応答)モード */
     protected int acknowledgeMode = Session.AUTO_ACKNOWLEDGE;
 
     /**
@@ -137,4 +144,5 @@ public class SessionFactoryImpl implements SessionFactory {
             }
         }
     }
+
 }

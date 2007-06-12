@@ -28,6 +28,8 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author koichik
  */
 public class SJMSRuntimeException extends SRuntimeException {
+
+    // constants
     private static final long serialVersionUID = 1L;
 
     /**

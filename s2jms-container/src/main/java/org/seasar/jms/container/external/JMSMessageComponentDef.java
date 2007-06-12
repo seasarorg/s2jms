@@ -20,20 +20,23 @@ import javax.jms.Message;
 import org.seasar.framework.container.impl.SimpleComponentDef;
 
 /**
- * @author y-komori
+ * {@link Message}を外部コンテキストのコンポーネントとして扱うコンポーネント定義です。
  * 
+ * @author y-komori
  */
 public class JMSMessageComponentDef extends SimpleComponentDef {
 
+    // constants
+    /** {@link Message}のコンポーネント名 */
     public static final String MESSAGE_NAME = "message";
 
+    /**
+     * インスタンスを構築します。
+     */
     public JMSMessageComponentDef() {
         super(Message.class, MESSAGE_NAME);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
     @Override
     public Object getComponent() {
         return JMSRequestImpl.class

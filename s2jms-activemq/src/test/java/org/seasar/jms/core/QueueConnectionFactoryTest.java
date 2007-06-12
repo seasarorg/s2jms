@@ -17,7 +17,6 @@ package org.seasar.jms.core;
 
 /**
  * <p>
- * ActiveMQ �� QueueConnectionFactory ��g�B��e�X�g�D
  * </p>
  * 
  * @author koichik
@@ -30,8 +29,7 @@ public class QueueConnectionFactoryTest extends AbstractTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include("queue-cf-test.dicon");
-        super.setUp();
+        include("jms-outbound-queue.dicon");
     }
 
     public void test() throws Exception {

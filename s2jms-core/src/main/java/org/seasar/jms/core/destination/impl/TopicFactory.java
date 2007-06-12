@@ -34,6 +34,9 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class TopicFactory extends AbstractDestinationFactory {
+
+    // instance fields
+    /** トピック名 */
     protected String name;
 
     /**

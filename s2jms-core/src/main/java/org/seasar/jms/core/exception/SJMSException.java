@@ -25,9 +25,15 @@ import org.seasar.framework.message.MessageFormatter;
  * @author koichik
  */
 public class SJMSException extends JMSException {
+
+    // constants
     private static final long serialVersionUID = 1L;
 
+    // instance fields
+    /** メッセージコード */
     protected String messageCode;
+
+    /** メッセージに埋め込まれる引数 */
     protected Object[] args;
 
     /**

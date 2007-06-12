@@ -23,7 +23,11 @@ import java.util.Iterator;
  * 
  * @author koichik
  */
+@SuppressWarnings("unchecked")
 public class IterableAdapter implements Iterable<String>, Iterator<String> {
+
+    // instance fields
+    /** 列挙 */
     Enumeration enumeration;
 
     /**
@@ -67,4 +71,5 @@ public class IterableAdapter implements Iterable<String>, Iterator<String> {
     public void remove() {
         throw new UnsupportedOperationException("remove");
     }
+
 }

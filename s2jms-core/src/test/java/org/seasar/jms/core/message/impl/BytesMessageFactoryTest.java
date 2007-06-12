@@ -20,24 +20,18 @@ import javax.jms.Session;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.aryEq;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class BytesMessageFactoryTest extends EasyMockTestCase {
+
     BytesMessageFactory target;
+
     Session session;
+
     BytesMessage message;
-
-    public BytesMessageFactoryTest() {
-        super();
-    }
-
-    public BytesMessageFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -47,23 +41,23 @@ public class BytesMessageFactoryTest extends EasyMockTestCase {
         message = createStrictMock(BytesMessage.class);
     }
 
-    public void test() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setCorrelationID("id");
-                target.addProperty("foo", "FOO");
-                target.setBytes(new byte[] { 1, 2, 3 });
-                assertSame("1", message, target.createMessage(session));
-            }
+    /**
+     * @throws Exception
+     */
+    public void testByteMessage() throws Exception {
+        target.setCorrelationID("id");
+        target.addProperty("foo", "FOO");
+        target.setBytes(new byte[] { 1, 2, 3 });
+        assertSame("1", message, target.createMessage(session));
+    }
 
-            @Override
-            public void record() throws Exception {
-                expect(session.createBytesMessage()).andReturn(message);
-                message.setJMSCorrelationID("id");
-                message.setObjectProperty("foo", "FOO");
-                message.writeBytes(aryEq(new byte[] { 1, 2, 3 }));
-            }
-        }.doTest();
+    /**
+     * @throws Exception
+     */
+    public void recordByteMessage() throws Exception {
+        expect(session.createBytesMessage()).andReturn(message);
+        message.setJMSCorrelationID("id");
+        message.setObjectProperty("foo", "FOO");
+        message.writeBytes(aryEq(new byte[] { 1, 2, 3 }));
     }
 }

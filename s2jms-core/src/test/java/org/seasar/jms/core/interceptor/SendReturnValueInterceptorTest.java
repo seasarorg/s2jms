@@ -30,22 +30,18 @@ import org.seasar.jms.core.message.impl.MapMessageFactory;
 import org.seasar.jms.core.message.impl.ObjectMessageFactory;
 import org.seasar.jms.core.message.impl.TextMessageFactory;
 
-import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class SendReturnValueInterceptorTest extends S2TigerTestCase {
+
     SendReturnValueInterceptor interceptor;
+
     MessageSender sender;
+
     Function function;
-
-    public SendReturnValueInterceptorTest() {
-    }
-
-    public SendReturnValueInterceptorTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -58,6 +54,10 @@ public class SendReturnValueInterceptorTest extends S2TigerTestCase {
         container.init();
     }
 
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
     public void testCreateMessageFactory() throws Exception {
         SendReturnValueInterceptor interceptor = new SendReturnValueInterceptor();
 
@@ -79,86 +79,89 @@ public class SendReturnValueInterceptorTest extends S2TigerTestCase {
         assertEquals("4", 1, objectMessageFactory.getObject());
     }
 
+    /**
+     * @throws Exception
+     */
     public void testBytes() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                byte[] bytes = new byte[] { 1, 2, 3 };
-                assertTrue("1", Arrays.equals(bytes, (byte[]) function.execute(bytes)));
-            }
-
-            @Override
-            public void record() throws Exception {
-                sender.send(isA(BytesMessageFactory.class));
-            }
-        }.doTest();
+        byte[] bytes = new byte[] { 1, 2, 3 };
+        assertTrue("1", Arrays.equals(bytes, (byte[]) function.execute(bytes)));
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordBytes() throws Exception {
+        sender.send(isA(BytesMessageFactory.class));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testMap() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("foo", "FOO");
-                map.put("bar", "BAR");
-                assertEquals("1", map, function.execute(map));
-            }
-
-            @Override
-            public void record() throws Exception {
-                sender.send(isA(MapMessageFactory.class));
-            }
-        }.doTest();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("foo", "FOO");
+        map.put("bar", "BAR");
+        assertEquals("1", map, function.execute(map));
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordMap() throws Exception {
+        sender.send(isA(MapMessageFactory.class));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testObject() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertEquals("1", 123, function.execute(123));
-            }
-
-            @Override
-            public void record() throws Exception {
-                sender.send(isA(ObjectMessageFactory.class));
-            }
-        }.doTest();
+        assertEquals("1", 123, function.execute(123));
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordObject() throws Exception {
+        sender.send(isA(ObjectMessageFactory.class));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testText() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertEquals("1", "Hoge", function.execute("Hoge"));
-            }
-
-            @Override
-            public void record() throws Exception {
-                sender.send(isA(TextMessageFactory.class));
-            }
-        }.doTest();
+        assertEquals("1", "Hoge", function.execute("Hoge"));
     }
 
-    public void testNull() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertNull("1", function.execute(null));
-            }
+    /**
+     * @throws Exception
+     */
+    public void recordText() throws Exception {
+        sender.send(isA(TextMessageFactory.class));
+    }
 
-            @Override
-            public void record() throws Exception {
-            }
-        }.doTest();
+    /**
+     * @throws Exception
+     */
+    public void testNull() throws Exception {
+        assertNull("1", function.execute(null));
     }
 
     interface Function {
+
+        /**
+         * @param arg
+         * @return Object
+         */
         Object execute(Object arg);
     }
 
+    /**
+     */
     public static class FunctionImpl implements Function {
+
         public Object execute(Object arg) {
             return arg;
         }
     }
+
 }

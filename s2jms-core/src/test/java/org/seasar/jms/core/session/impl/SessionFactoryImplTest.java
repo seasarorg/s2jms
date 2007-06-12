@@ -22,24 +22,22 @@ import javax.jms.Session;
 import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.jms.core.session.SessionHandler;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class SessionFactoryImplTest extends EasyMockTestCase {
+
     SessionFactoryImpl target;
+
     ConnectionFactory cf;
+
     Connection con;
+
     Session session;
+
     SessionHandler handler;
-
-    public SessionFactoryImplTest() {
-    }
-
-    public SessionFactoryImplTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -51,85 +49,86 @@ public class SessionFactoryImplTest extends EasyMockTestCase {
         handler = createStrictMock(SessionHandler.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testTransactedWithStart() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setConnectionFactory(cf);
-                target.operateSession(true, handler);
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(cf.createConnection()).andReturn(con);
-                con.start();
-                expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-                handler.handleSession(session);
-                session.close();
-                con.stop();
-                con.close();
-            }
-        }.doTest();
+        target.setConnectionFactory(cf);
+        target.operateSession(true, handler);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordTransactedWithStart() throws Exception {
+        expect(cf.createConnection()).andReturn(con);
+        con.start();
+        expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
+        handler.handleSession(session);
+        session.close();
+        con.stop();
+        con.close();
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testTransactedWithoutStart() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setConnectionFactory(cf);
-                target.operateSession(false, handler);
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(cf.createConnection()).andReturn(con);
-                expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-                handler.handleSession(session);
-                session.close();
-                con.close();
-            }
-        }.doTest();
+        target.setConnectionFactory(cf);
+        target.operateSession(false, handler);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordTransactedWithoutStart() throws Exception {
+        expect(cf.createConnection()).andReturn(con);
+        expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
+        handler.handleSession(session);
+        session.close();
+        con.close();
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testNotTransactedWithStart() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setConnectionFactory(cf);
-                target.setTransacted(false);
-                target.operateSession(true, handler);
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(cf.createConnection()).andReturn(con);
-                con.start();
-                expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-                handler.handleSession(session);
-                session.close();
-                con.stop();
-                con.close();
-            }
-        }.doTest();
+        target.setConnectionFactory(cf);
+        target.setTransacted(false);
+        target.operateSession(true, handler);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordNotTransactedWithStart() throws Exception {
+        expect(cf.createConnection()).andReturn(con);
+        con.start();
+        expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
+        handler.handleSession(session);
+        session.close();
+        con.stop();
+        con.close();
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testNotTransactedWithoutStart() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setConnectionFactory(cf);
-                target.setTransacted(false);
-                target.operateSession(false, handler);
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(cf.createConnection()).andReturn(con);
-                expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-                handler.handleSession(session);
-                session.close();
-                con.close();
-            }
-        }.doTest();
+        target.setConnectionFactory(cf);
+        target.setTransacted(false);
+        target.operateSession(false, handler);
     }
+
+    /**
+     * @throws Exception
+     */
+    public void recordNotTransactedWithoutStart() throws Exception {
+        expect(cf.createConnection()).andReturn(con);
+        expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
+        handler.handleSession(session);
+        session.close();
+        con.close();
+    }
+
 }

@@ -22,22 +22,16 @@ import javax.jms.BytesMessage;
 import org.easymock.IArgumentMatcher;
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.reportMatcher;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class BytesMessageHandlerTest extends EasyMockTestCase {
+
     BytesMessageHandler target;
+
     BytesMessage message;
-
-    public BytesMessageHandlerTest() {
-    }
-
-    public BytesMessageHandlerTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -46,24 +40,24 @@ public class BytesMessageHandlerTest extends EasyMockTestCase {
         message = createStrictMock(BytesMessage.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetProperties() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertTrue("1", Arrays
-                        .equals(new byte[] { 1, 2, 3 }, target.handleMessage(message)));
-            }
+        assertTrue("1", Arrays.equals(new byte[] { 1, 2, 3 }, target.handleMessage(message)));
+    }
 
-            @Override
-            public void record() throws Exception {
-                expect(message.getBodyLength()).andReturn(3L);
-                expect(message.readBytes(eqBytes(new byte[] { 1, 2, 3 }))).andReturn(3);
-            }
-        }.doTest();
+    /**
+     * @throws Exception
+     */
+    public void recordGetProperties() throws Exception {
+        expect(message.getBodyLength()).andReturn(3L);
+        expect(message.readBytes(eqBytes(new byte[] { 1, 2, 3 }))).andReturn(3);
     }
 
     private static byte[] eqBytes(final byte[] expected) {
         reportMatcher(new IArgumentMatcher() {
+
             public boolean matches(Object arg) {
                 byte[] actual = byte[].class.cast(arg);
                 if (expected.length != actual.length) {
@@ -79,4 +73,5 @@ public class BytesMessageHandlerTest extends EasyMockTestCase {
         });
         return expected;
     }
+
 }

@@ -36,6 +36,9 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
+
+    // instance fields
+    /** 受信したJMSメッセージのペイロード */
     protected byte[] bytes;
 
     /**
@@ -131,4 +134,5 @@ public class BytesMessageFactory extends AbstractMessageFactory<BytesMessage> {
     protected void setupPayload(final BytesMessage message) throws JMSException {
         message.writeBytes(bytes);
     }
+
 }

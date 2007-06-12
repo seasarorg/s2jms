@@ -24,13 +24,9 @@ import junit.framework.TestCase;
  */
 public class IterableAdapterTest extends TestCase {
 
-    public IterableAdapterTest() {
-    }
-
-    public IterableAdapterTest(String name) {
-        super(name);
-    }
-
+    /**
+     * @throws Exception
+     */
     public void test() throws Exception {
         Vector<String> vector = new Vector<String>();
         vector.add("1");
@@ -43,4 +39,5 @@ public class IterableAdapterTest extends TestCase {
         }
         assertEquals("1", "1-2-3-", new String(buf));
     }
+
 }

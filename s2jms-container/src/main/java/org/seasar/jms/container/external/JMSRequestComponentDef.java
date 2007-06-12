@@ -20,19 +20,22 @@ import org.seasar.framework.container.impl.SimpleComponentDef;
 import org.seasar.jms.container.JMSRequest;
 
 /**
- * @author y-komori
+ * JMSメッセージを外部コンテキストのリクエストとして扱うコンポーネント定義です。
  * 
+ * @author y-komori
  */
 public class JMSRequestComponentDef extends SimpleComponentDef {
+
+    /**
+     * インスタンスを構築します。
+     */
     public JMSRequestComponentDef() {
         super(JMSRequest.class, ContainerConstants.REQUEST_NAME);
     }
 
-    /**
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
     @Override
     public Object getComponent() {
         return getContainer().getRoot().getExternalContext().getRequest();
     }
+
 }

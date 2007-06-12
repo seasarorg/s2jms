@@ -30,25 +30,38 @@ import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageHandler;
 import org.seasar.jms.core.message.impl.MessageHandlerFactory;
 import org.seasar.jms.core.util.IterableAdapter;
+import org.seasar.jms.core.util.MessageHandlerUtil;
 
 /**
- * @author shot
- * @author higa
+ * JMSメッセージを外部コンテキストのリクエストパラメータとして扱うコンポーネントです。
+ * 
+ * @author koichik
  */
 public class JMSRequestParameterMap extends AbstractUnmodifiableExternalContextMap {
 
-    protected static final String PAYLOAD_NAME = "payload";
+    // constants
+    /** JMSメッセージのペイロードを表すコンポーネント名 */
+    public static final String PAYLOAD_NAME = "payload";
 
+    // instance fields
+    /** JMSメッセージ */
     protected final Message message;
 
-    protected final MessageHandler messageHandler;
+    /** メッセージハンドラ */
+    protected final MessageHandler<?, ?> messageHandler;
 
+    /** リクエストのパラメータとして持つ名前の{@link Set} */
     protected final Set<String> names;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     */
     public JMSRequestParameterMap(final Message message) {
         this.message = message;
-        this.messageHandler = MessageHandlerFactory.getMessageHandlerFromMessageType(message
-                .getClass());
+        messageHandler = MessageHandlerFactory.getMessageHandlerFromMessageType(message.getClass());
         if (messageHandler == null) {
             throw new NotSupportedMessageException(message);
         }
@@ -72,7 +85,7 @@ public class JMSRequestParameterMap extends AbstractUnmodifiableExternalContextM
     @SuppressWarnings("unchecked")
     protected Object getAttribute(final String key) {
         if (PAYLOAD_NAME.equals(key)) {
-            return messageHandler.handleMessage(message);
+            return MessageHandlerUtil.getPayload(messageHandler, message);
         }
         if (MapMessage.class.isInstance(message)) {
             try {
@@ -84,6 +97,7 @@ public class JMSRequestParameterMap extends AbstractUnmodifiableExternalContextM
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Iterator getAttributeNames() {
         return names.iterator();

@@ -23,22 +23,19 @@ import javax.jms.TextMessage;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class AbstractMessageHandlerTest extends EasyMockTestCase {
+
     MessageHandler target;
+
     TextMessage message;
+
+    @SuppressWarnings("unchecked")
     Enumeration enumeration;
-
-    public AbstractMessageHandlerTest() {
-    }
-
-    public AbstractMessageHandlerTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -48,33 +45,36 @@ public class AbstractMessageHandlerTest extends EasyMockTestCase {
         enumeration = createStrictMock(Enumeration.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetProperties() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                assertEquals("1", "Test", target.handleMessage(message));
-                Map<String, Object> map = target.getProperties();
-                assertNotNull("2", map);
-                assertEquals("3", 2, map.size());
-                assertEquals("4", "FOO", map.get("foo"));
-                assertEquals("5", "BAR", map.get("bar"));
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(message.getPropertyNames()).andReturn(enumeration);
-                expect(enumeration.hasMoreElements()).andReturn(true);
-                expect(enumeration.nextElement()).andReturn("foo");
-                expect(message.getObjectProperty("foo")).andReturn("FOO");
-                expect(enumeration.hasMoreElements()).andReturn(true);
-                expect(enumeration.nextElement()).andReturn("bar");
-                expect(message.getObjectProperty("bar")).andReturn("BAR");
-                expect(enumeration.hasMoreElements()).andReturn(false);
-            }
-        }.doTest();
+        assertEquals("1", "Test", target.handleMessage(message));
+        Map<String, Object> map = target.getProperties();
+        assertNotNull("2", map);
+        assertEquals("3", 2, map.size());
+        assertEquals("4", "FOO", map.get("foo"));
+        assertEquals("5", "BAR", map.get("bar"));
     }
 
+    /**
+     * @throws Exception
+     */
+    public void recordGetProperties() throws Exception {
+        expect(message.getPropertyNames()).andReturn(enumeration);
+        expect(enumeration.hasMoreElements()).andReturn(true);
+        expect(enumeration.nextElement()).andReturn("foo");
+        expect(message.getObjectProperty("foo")).andReturn("FOO");
+        expect(enumeration.hasMoreElements()).andReturn(true);
+        expect(enumeration.nextElement()).andReturn("bar");
+        expect(message.getObjectProperty("bar")).andReturn("BAR");
+        expect(enumeration.hasMoreElements()).andReturn(false);
+    }
+
+    /**
+     */
     public class MessageHandler extends AbstractMessageHandler<TextMessage, String> {
+
         @Override
         public String getPayload() throws JMSException {
             return "Test";
@@ -87,5 +87,7 @@ public class AbstractMessageHandlerTest extends EasyMockTestCase {
         public Class<String> getPayloadType() {
             return String.class;
         }
+
     }
+
 }

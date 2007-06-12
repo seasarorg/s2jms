@@ -27,6 +27,8 @@ import javax.jms.ObjectMessage;
  */
 public class ObjectMessageMock extends MessageMock implements ObjectMessage {
 
+    // instance fields
+    /** JMSメッセージのペイロード */
     protected Serializable payload;
 
     /**

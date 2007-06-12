@@ -38,6 +38,9 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class ReplyToDestinationFactory extends AbstractDestinationFactory {
+
+    // instance fields
+    /** 受信JMSメッセージ */
     protected Message message;
 
     /**

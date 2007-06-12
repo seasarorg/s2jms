@@ -28,11 +28,14 @@ import org.seasar.jms.container.filter.Filter;
 import org.seasar.jms.container.filter.FilterChain;
 
 /**
- * @author koichik
+ * JMSメッセージを外部コンテキストに設定するフィルタです。
  * 
+ * @author koichik
  */
 public class ExternalContextFilter implements Filter {
 
+    // instance fields
+    /** S2コンテナ */
     @Binding(bindingType = BindingType.MUST)
     protected S2Container container;
 
@@ -46,6 +49,14 @@ public class ExternalContextFilter implements Filter {
         }
     }
 
+    /**
+     * 外部コンテキストに設定します。
+     * 
+     * @param externalContext
+     *            外部コンテキスト
+     * @param request
+     *            JMSリクエスト
+     */
     protected void setRequest(final ExternalContext externalContext, final JMSRequest request) {
         if (externalContext != null) {
             externalContext.setRequest(request);

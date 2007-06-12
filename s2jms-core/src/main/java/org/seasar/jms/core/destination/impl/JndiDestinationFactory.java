@@ -40,7 +40,12 @@ import org.seasar.jms.core.exception.SJMSRuntimeException;
  */
 @Component(instance = InstanceType.SINGLETON)
 public class JndiDestinationFactory extends AbstractDestinationFactory {
+
+    // instance fields
+    /** JNDI環境プロパティ */
     protected Hashtable<String, Object> env;
+
+    /** デスティネーションのJNDI名 */
     protected String name;
 
     /**
@@ -74,6 +79,7 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      * 
      * @return 初期コンテキストの作成に使用される環境
      */
+    @SuppressWarnings("unchecked")
     public Hashtable getEnv() {
         return this.env;
     }

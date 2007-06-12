@@ -46,6 +46,7 @@ import org.seasar.jms.core.message.MessageFactory;
  * @author koichik
  */
 public interface MessageSender {
+
     /**
      * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
      * 
@@ -59,6 +60,8 @@ public interface MessageSender {
      * 
      * @param bytes
      *            送信するバイト配列
+     * @param properties
+     *            JMSメッセージのプロパティ
      */
     void send(byte[] bytes, Map<String, Object> properties);
 
@@ -75,6 +78,8 @@ public interface MessageSender {
      * 
      * @param text
      *            送信する文字列
+     * @param properties
+     *            JMSメッセージのプロパティ
      */
     void send(String text, Map<String, Object> properties);
 
@@ -91,6 +96,8 @@ public interface MessageSender {
      * 
      * @param object
      *            送信するオブジェクト
+     * @param properties
+     *            JMSメッセージのプロパティ
      */
     void send(Serializable object, Map<String, Object> properties);
 
@@ -107,6 +114,8 @@ public interface MessageSender {
      * 
      * @param map
      *            送信するマップ
+     * @param properties
+     *            JMSメッセージのプロパティ
      */
     void send(Map<String, Object> map, Map<String, Object> properties);
 
@@ -119,6 +128,8 @@ public interface MessageSender {
     /**
      * {@link MessageFactory}が作成したJMSメッセージを送信します。
      * 
+     * @param <MSGTYPE>
+     *            JMSメッセージの型
      * @param messageFactory
      *            メッセージファクトリ
      */

@@ -25,15 +25,10 @@ import org.seasar.framework.unit.S2TigerTestCase;
  * @author koichik
  */
 public class JndiDestinationFactoryTest extends S2TigerTestCase {
+
     JndiDestinationFactory target;
+
     Session session;
-
-    public JndiDestinationFactoryTest() {
-    }
-
-    public JndiDestinationFactoryTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -43,19 +38,14 @@ public class JndiDestinationFactoryTest extends S2TigerTestCase {
         session = createStrictMock(Session.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testCreateDestination() throws Exception {
-        new Subsequence() {
-            @Override
-            public void replay() throws Exception {
-                target.setName("jms.queue");
-                Destination dest = target.getDestination(session);
-                assertNotNull("1", dest);
-                assertTrue("2", dest instanceof Queue);
-            }
-
-            @Override
-            public void record() throws Exception {
-            }
-        }.doTest();
+        target.setName("jms.queue");
+        Destination dest = target.getDestination(session);
+        assertNotNull("1", dest);
+        assertTrue("2", dest instanceof Queue);
     }
+
 }

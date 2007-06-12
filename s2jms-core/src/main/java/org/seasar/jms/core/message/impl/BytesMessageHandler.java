@@ -31,6 +31,7 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  */
 @Component(instance = InstanceType.PROTOTYPE)
 public class BytesMessageHandler extends AbstractMessageHandler<BytesMessage, byte[]> {
+
     /**
      * インスタンスを構築します。
      * 
@@ -52,4 +53,5 @@ public class BytesMessageHandler extends AbstractMessageHandler<BytesMessage, by
     public Class<byte[]> getPayloadType() {
         return byte[].class;
     }
+
 }

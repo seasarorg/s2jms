@@ -18,12 +18,14 @@ package org.seasar.jms.container.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * メッセージリスナーコンポーネントにリスナーメソッドが見つからなかった場合にスローされます。
+ * メッセージリスナコンポーネントにリスナーメソッドが見つからなかった場合にスローされます。
  * 
  * @author y-komori
  * 
  */
 public class MessageListenerNotFoundException extends SRuntimeException {
+
+    // static fields
     private static final long serialVersionUID = 1L;
 
     /**
@@ -45,4 +47,5 @@ public class MessageListenerNotFoundException extends SRuntimeException {
     public MessageListenerNotFoundException(final String listenerClassName) {
         super("EJMS-CONTAINER2000", new String[] { listenerClassName });
     }
+
 }

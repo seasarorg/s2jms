@@ -28,6 +28,7 @@ import javax.jms.Session;
  * @author koichik
  */
 public interface SessionHandler {
+
     /**
      * JMSセッションを処理します。このメソッドがリターンするとJMSセッションはクローズされます。
      * 
@@ -37,4 +38,5 @@ public interface SessionHandler {
      *             JMSセッションの処理中に障害が発生した場合にスローされます
      */
     void handleSession(Session session) throws JMSException;
+
 }

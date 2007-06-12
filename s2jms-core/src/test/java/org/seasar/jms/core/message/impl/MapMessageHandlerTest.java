@@ -22,22 +22,19 @@ import javax.jms.MapMessage;
 
 import org.seasar.framework.unit.EasyMockTestCase;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author koichik
  */
 public class MapMessageHandlerTest extends EasyMockTestCase {
+
     MapMessageHandler target;
+
     MapMessage message;
+
+    @SuppressWarnings("unchecked")
     Enumeration enumeration;
-
-    public MapMessageHandlerTest() {
-    }
-
-    public MapMessageHandlerTest(String name) {
-        super(name);
-    }
 
     @Override
     protected void setUp() throws Exception {
@@ -47,29 +44,29 @@ public class MapMessageHandlerTest extends EasyMockTestCase {
         enumeration = createStrictMock(Enumeration.class);
     }
 
+    /**
+     * @throws Exception
+     */
     public void testGetProperties() throws Exception {
-        new Subsequence() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public void replay() throws Exception {
-                Map<String, Object> map = target.handleMessage(message);
-                assertNotNull("1", map);
-                assertEquals("2", 2, map.size());
-                assertEquals("3", "FOO", map.get("foo"));
-                assertEquals("4", "BAR", map.get("bar"));
-            }
-
-            @Override
-            public void record() throws Exception {
-                expect(message.getMapNames()).andReturn(enumeration);
-                expect(enumeration.hasMoreElements()).andReturn(true);
-                expect(enumeration.nextElement()).andReturn("foo");
-                expect(message.getObject("foo")).andReturn("FOO");
-                expect(enumeration.hasMoreElements()).andReturn(true);
-                expect(enumeration.nextElement()).andReturn("bar");
-                expect(message.getObject("bar")).andReturn("BAR");
-                expect(enumeration.hasMoreElements()).andReturn(false);
-            }
-        }.doTest();
+        Map<String, Object> map = target.handleMessage(message);
+        assertNotNull("1", map);
+        assertEquals("2", 2, map.size());
+        assertEquals("3", "FOO", map.get("foo"));
+        assertEquals("4", "BAR", map.get("bar"));
     }
+
+    /**
+     * @throws Exception
+     */
+    public void recordGetProperties() throws Exception {
+        expect(message.getMapNames()).andReturn(enumeration);
+        expect(enumeration.hasMoreElements()).andReturn(true);
+        expect(enumeration.nextElement()).andReturn("foo");
+        expect(message.getObject("foo")).andReturn("FOO");
+        expect(enumeration.hasMoreElements()).andReturn(true);
+        expect(enumeration.nextElement()).andReturn("bar");
+        expect(message.getObject("bar")).andReturn("BAR");
+        expect(enumeration.hasMoreElements()).andReturn(false);
+    }
+
 }

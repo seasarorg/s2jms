@@ -34,8 +34,8 @@ public class JMSContainerTest extends S2JMSTestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        include("jms-activemq-inbound.dicon");
-        include("queue-cf-test.dicon");
+        include("jms-inbound.dicon");
+        include("jms-outbound-queue.dicon");
     }
 
     public void test() throws Exception {

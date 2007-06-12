@@ -25,17 +25,36 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.jms.container.external.JMSExternalContext;
 import org.seasar.jms.container.external.JMSExternalContextComponentDefRegister;
 
-public class JMSContainerInitializer implements Callable {
+/**
+ * S2JMSコンテナを使用可能にするためにS2コンテナの初期化を行うクラスです。
+ * 
+ * @author koichik
+ */
+public class JMSContainerInitializer implements Callable<S2Container> {
+
+    // instance fields
+    /** S2コンテナを作成するための設定ファイルのパス */
     protected String configPath;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param configPath
+     *            S2コンテナを作成するための設定ファイルのパス
+     */
     public JMSContainerInitializer(final String configPath) {
         this.configPath = configPath;
     }
 
-    public Object call() {
+    public S2Container call() {
         return initialize();
     }
 
+    /**
+     * S2コンテナを初期化します。
+     * 
+     * @return ルートのS2コンテナ
+     */
     public S2Container initialize() {
         if (isAlreadyInitialized()) {
             return SingletonS2ContainerFactory.getContainer();
@@ -53,7 +72,13 @@ public class JMSContainerInitializer implements Callable {
         return SingletonS2ContainerFactory.getContainer();
     }
 
+    /**
+     * すでに初期化されていれば<code>true</code>を返します。
+     * 
+     * @return すでに初期化されていれば<code>true</code>
+     */
     protected boolean isAlreadyInitialized() {
         return SingletonS2ContainerFactory.hasContainer();
     }
+
 }

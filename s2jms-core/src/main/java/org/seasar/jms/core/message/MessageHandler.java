@@ -24,9 +24,14 @@ import javax.jms.Message;
  * 受信したJMSメッセージが{@link MessageHandler}の処理対象となるJMSメッセージ型に代入可能でない場合、そのメッセージは{@link #handleMessage}に渡されません。
  * </p>
  * 
+ * @param <MSGTYPE>
+ *            JMSメッセージの型
+ * @param <PAYLOADTYPE>
+ *            JMSメッセージのペイロードの型
  * @author koichik
  */
 public interface MessageHandler<MSGTYPE extends Message, PAYLOADTYPE> {
+
     /**
      * 処理対象となるJMSメッセージの型を返します。
      * 
@@ -39,7 +44,7 @@ public interface MessageHandler<MSGTYPE extends Message, PAYLOADTYPE> {
      * 
      * @return JMSメッセージのペイロード型
      */
-    Class<PAYLOADTYPE> getPayloadType();
+    Class<? super PAYLOADTYPE> getPayloadType();
 
     /**
      * JMSメッセージを処理してペイロードを返します。
@@ -49,4 +54,5 @@ public interface MessageHandler<MSGTYPE extends Message, PAYLOADTYPE> {
      * @return JMSメッセージのペイロード
      */
     PAYLOADTYPE handleMessage(MSGTYPE message);
+
 }
