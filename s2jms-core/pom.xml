@@ -4,16 +4,22 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
+
+  <!-- The Basics -->
+  <artifactId>s2jms-core</artifactId>
+  <packaging>jar</packaging>
   <parent>
     <groupId>org.seasar.jms</groupId>
     <artifactId>s2jms</artifactId>
     <version>1.0.0-M2-SNAPSHOT</version>
     <relativePath>../s2jms</relativePath>
   </parent>
-  <artifactId>s2jms-core</artifactId>
-  <packaging>jar</packaging>
+
+  <!-- More Project Information -->
   <name>S2JMS-Core</name>
   <url>http://s2jms.sandbox.seasar.org/</url>
+
+  <!-- Dependency Settings -->
   <dependencies>
     <dependency>
       <groupId>velocity</groupId>
