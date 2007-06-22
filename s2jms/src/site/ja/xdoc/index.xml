@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>Top</title>
+	</properties>
+	<body>
+		<section name="ようこそ">
+			<p>
+				S2JMSは，<a href="http://java.sun.com/products/jms/">JMS (Java Message Service)</a> を利用して
+				非同期メッセージを送受信するアプリケーションを構築するためのコンポーネント群を提供するプロダクトです．
+			</p>
+			<p>
+				JMSは，JavaからMOM (Message-Oriented Middleware) を利用するための仕様で，
+				RDBMSに対するJDBCと同じ位置づけとなります．
+				JMSに対応した主なMOMとしては，IBM WebSphere MQ (formerly known MQSeries)，TIBCO Rendezvous，
+				<a href="http://activemq.apache.org/">Apache ActiveMQ</a>等があります．
+			</p>
+			<p>
+				S2JMSにより，非同期メッセージを送信するWebアプリケーションや，
+				非同期メッセージを受信するスタンドアロン・アプリケーションを容易に構築することができます．
+			</p>
+		</section>
+		<section name="ニュース">
+			<dl>
+				<dt>2007/07/07</dt>
+				<dd>
+					S2JMS 1.0.0-M2 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+				</dd>
+				<dt>2007/05/11</dt>
+				<dd>
+					S2JMS 1.0.0-M1 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+				</dd>
+			</dl>
+		</section>
+	</body>
+</document>
