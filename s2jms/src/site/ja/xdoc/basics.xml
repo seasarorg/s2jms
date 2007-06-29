@@ -103,7 +103,9 @@ connectionFactory.close();
 					インバウンド通信 (S2JMS-Container) では，リソースアダプタはS2JCAが提供するスレッド上でメッセージを受信し，
 					アプリケーションに通知します．
 					そのため，インバウンド通信は通常スタンドアロン・アプリケーションで利用します．
-					S2JMS-Containerを利用するスタンドアロン・アプリケーションを起動するためにS2JMS-Serverを利用することができます．
+					Webコンテナ上でインバウンド通信  (S2JMS-Container) の利用は推奨しません．
+					S2JMS-Containerを利用するスタンドアロン・アプリケーションを起動するために，
+					S2JMS-Serverを利用することができます．
 				</p>
 			</subsection>
 		</section>

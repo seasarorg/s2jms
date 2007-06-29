@@ -40,7 +40,7 @@
 			</subsection>
 		</section>
 
-		<section name="">
+		<section name="MessageSender">
 			<p>
 			</p>
 			<subsection name="">
@@ -48,6 +48,8 @@
 				</p>
 				<p>
 				</p>
+<source><![CDATA[
+]]></source>
 				<p>
 				</p>
 				<p>
@@ -58,6 +60,37 @@
 				</p>
 				<p>
 				</p>
+<source><![CDATA[
+]]></source>
+				<p>
+				</p>
+				<p>
+				</p>
+			</subsection>
+		</section>
+
+		<section name="MessageReceiver">
+			<p>
+			</p>
+			<subsection name="">
+				<p>
+				</p>
+				<p>
+				</p>
+<source><![CDATA[
+]]></source>
+				<p>
+				</p>
+				<p>
+				</p>
+			</subsection>
+			<subsection name="">
+				<p>
+				</p>
+				<p>
+				</p>
+<source><![CDATA[
+]]></source>
 				<p>
 				</p>
 				<p>
