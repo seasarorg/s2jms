@@ -1,20 +1,8 @@
-<project name="S2JMS" default="dist" basedir=".">
-	<property name="ver" value="1.0.0-M2-SNAPSHOT"/>
-
+<project name="S2JMS-Server" default="dist" basedir=".">
 	<target name="dist">
-		<zip zipfile="target/S2JMS-Server-${ver}.zip">
-			<zipfileset prefix="s2jms-server" dir=".">
-				<exclude name="**/target/**"/>
-				<exclude name="velocity.log"/>
-			</zipfileset>
-			<zipfileset prefix="s2jms-server/lib" dir="target">
-				<include name="s2jms-server-${ver}.jar"/>
-			</zipfileset>
-			<zipfileset prefix="s2jms-server/doc" dir="../s2jms-www">
-				<exclude name="**/download/**"/>
-				<exclude name=".project"/>
-			</zipfileset>
-		</zip>
+		<ant antfile="../s2jms/build.xml" target="fix-site">
+			<property name="site" value="${basedir}/target/site"/>
+		</ant>
 	</target>
 </project>
 
