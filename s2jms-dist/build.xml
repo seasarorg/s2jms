@@ -1,0 +1,61 @@
+<project name="S2JMS-Core" default="dist" basedir=".">
+	<tstamp>
+		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
+	</tstamp>
+	<property name="zipDir" value="target/site/download/${releaseDate}"/>
+	<property name="site" value="target/site"/>
+
+	<target name="dist">
+		<ant antfile="../s2jms/build.xml" target="fix-site">
+			<property name="site" value="${basedir}/target/site"/>
+		</ant>
+		<mkdir dir="${zipDir}"/>
+		<zip zipfile="${zipDir}/S2JMS-${ver}.zip">
+			<zipfileset prefix="s2jms" dir="../s2jms">
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms/doc" dir="../s2jms/target/site">
+				<exclude name="**/download/**"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-core" dir="../s2jms-core">
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-core/lib" dir="../s2jms-core/target">
+				<include name="s2jms-core-${ver}.jar"/>
+				<include name="s2jms-core-${ver}-sources.jar"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-core/doc" dir="../s2jms-core/target/site">
+				<exclude name="**/download/**"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-container" dir="../s2jms-container">
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-container/lib" dir="../s2jms-container/target">
+				<include name="s2jms-container-${ver}.jar"/>
+				<include name="s2jms-container-${ver}-sources.jar"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-container/doc" dir="../s2jms-container/target/site">
+				<exclude name="**/download/**"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-server" dir="../s2jms-server">
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-server/lib" dir="../s2jms-server/target">
+				<include name="s2jms-server-${ver}.jar"/>
+				<include name="s2jms-server-${ver}-sources.jar"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-server/doc" dir="../s2jms-server/target/site">
+				<exclude name="**/download/**"/>
+			</zipfileset>
+		</zip>
+	</target>
+</project>
+

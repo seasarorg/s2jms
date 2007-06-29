@@ -1,29 +1,28 @@
 <project name="S2JMS" default="dist" basedir=".">
-	<property name="ver" value="1.0.0-M2-SNAPSHOT"/>
+	<tstamp>
+		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
+	</tstamp>
 
 	<target name="dist">
-		<zip zipfile="target/S2JMS-${ver}.zip">
-			<zipfileset prefix="s2jms" dir=".">
-				<exclude name="**/target/**"/>
-				<exclude name="velocity.log"/>
-			</zipfileset>
-			<zipfileset prefix="s2jms/lib" dir="target">
-				<include name="s2jms-${ver}.jar"/>
-				<include name="s2jms-${ver}-sources.jar"/>
-				<include name="s2jms-${ver}-javadoc.jar"/>
-			</zipfileset>
-			<!--
-			<zipfileset prefix="s2jms/resources" dir="src/test/resources">
-				<include name="jms.dicon"/>
-				<include name="j2ee.dicon"/>
-				<include name="log4j.properties"/>
-			</zipfileset>
-			-->
-			<zipfileset prefix="s2jms/doc" dir="../s2jms-www">
-				<exclude name="**/download/**"/>
-				<exclude name=".project"/>
-			</zipfileset>
-		</zip>
+		<antcall target="fix-site">
+			<param name="site" value="${basedir}/target/site"/>
+		</antcall>
+	</target>
+
+	<target name="fix-site">
+		<mkdir dir="${site}/en"/>
+		<move todir="${site}/en">
+			<fileset dir="${site}">
+				<exclude name="apidocs/**"/>
+				<exclude name="en/**"/>
+				<exclude name="ja/**"/>
+				<exclude name="index.html.en"/>
+				<exclude name="index.html.ja"/>
+			</fileset>
+		</move>
+		<move file="${site}/apidocs" todir="${site}/ja" failonerror="false"/>
+		<delete file="${site}/ja/index.html.en"/>
+		<delete file="${site}/ja/index.html.ja"/>
 	</target>
 </project>
 
