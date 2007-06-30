@@ -19,6 +19,56 @@
 			</p>
 		</section>
 
+		<section name="diconファイルの構成">
+			<subsection name="構成要素">
+				<p>
+				S2JMSを使用するための設定は<code>jms.dicon</code>ファイルに記述します．
+				<code>jms.dicon</code>ファイルには，大きく分けて3種類の設定情報を記述します．
+				</p>
+				<ul>
+					<li><p>リソースアダプタ情報</p></li>
+					<li><p>アウトバウンド情報</p></li>
+					<li><p>インバウンド情報</p></li>
+				</ul>
+			</subsection>
+			<subsection name="アウトバウンド通信のみの場合">
+				<p>
+					Webアプリケーションなどでアウトバウンド通信のみ使用する場合は，
+					jms.diconにリソースアダプタ情報とアウトバウンド情報を記述します．
+				</p>
+				<img src="images/outbound-simple.png" width="314" hight="314"/>
+			</subsection>
+			<subsection name="インバウンド通信のみの場合">
+				<p>
+					S2JMS-Containerでインバウンド通信のみ使用する場合は，
+					jms.diconにリソースアダプタ情報とインバウンド情報を記述します．
+				</p>
+				<img src="images/inbound-simple.png" width="314" hight="314"/>
+			</subsection>
+			<subsection name="インバウンド通信とアウトバウンド通信の場合">
+				<p>
+					S2JMS-Containerでインバウンド通信とアウトバウンド通信の両方を使用する場合は，
+					jms.diconにリソースアダプタ情報とインバウンド情報およびアウトバウンド情報を記述します．
+				</p>
+				<img src="images/inbound-outbound.png" width="427" hight="314"/>
+			</subsection>
+			<subsection name="複数のコネクション">
+				<p>
+					一つのリソースアダプタ上で複数の接続 (コネクション) を使用する場合は， diconファイルを分割します．
+					各接続情報は個別のdiconファイルに記述し， それらをjms.diconがインクルードします．
+					リソースアダプタ情報も個別のdiconファイルに記述し，それを各接続情報を記述したdiconファイルがインクルードします．
+				</p>
+				<img src="images/outbound-multi-con.png" width="1070" hight="352"/>
+			</subsection>
+			<subsection name="複数のリソースアダプタ">
+				<p>
+					複数のリソースアダプタを使用する場合も， diconファイルを分割します．
+					各リソースアダプタ情報は個別のdiconファイルに記述し，それを使用する接続情報を記述したdiconファイルがインクルードします．
+				</p>
+				<img src="images/outbound-mult-ra.png" width="1070" hight="730"/>
+			</subsection>
+		</section>
+
 		<section name="リソースアダプタ">
 			<p>
 				リソースアダプタを使用するには，次のコンポーネントのいずれかを使用します．
