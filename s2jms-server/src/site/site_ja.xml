@@ -17,7 +17,7 @@
  |
 -->
 
-<project name="S2JMS">
+<project name="S2JMS-Server">
   <skin>
     <groupId>org.seasar.project</groupId>
     <artifactId>seasar-skin</artifactId>
@@ -32,29 +32,29 @@
       <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
     </links>
     <menu name="About">
-      <item name="ホーム" href="index.html"/>
-      <item name="ライセンス" href="license.html"/>
-      <item name="ダウンロード" href="downloads.html"/>
+      <item name="ホーム" href="../../ja/index.html"/>
+      <item name="ライセンス" href="../../ja/license.html"/>
+      <item name="ダウンロード" href="../../ja/downloads.html"/>
     </menu>
     <menu name="ドキュメント">
-      <item name="インストール" href="install.html"/>
-      <item name="S2JMS入門" href="basics.html"/>
-      <item name="S2JMS-Core" href="core.html"/>
-      <item name="S2JMS-Container" href="container.html"/>
-      <item name="S2JMS-Server" href="server.html"/>
-      <item name="コンフィグレーション" href="config.html"/>
-      <item name="FAQ" href="faq.html"/>
+      <item name="インストール" href="../../ja/install.html"/>
+      <item name="S2JMS入門" href="../../ja/basics.html"/>
+      <item name="S2JMS-Core" href="../../ja/core.html"/>
+      <item name="S2JMS-Container" href="../../ja/container.html"/>
+      <item name="S2JMS-Server" href="../../ja/server.html"/>
+      <item name="コンフィグレーション" href="../../ja/config.html"/>
+      <item name="FAQ" href="../../ja/faq.html"/>
     </menu>
     <menu name="Javadoc">
-      <item name="S2JMS-Core" href="../s2jms-core/ja/apidocs/index.html"/>
-      <item name="S2JMS-Container" href="../s2jms-container/ja/apidocs/index.html"/>
-      <item name="S2JMS-Server" href="../s2jms-server/ja/apidocs/index.html"/>
+      <item name="S2JMS-Core" href="../../s2jms-core/ja/apidocs/index.html"/>
+      <item name="S2JMS-Container" href="../../s2jms-container/ja/apidocs/index.html"/>
+      <item name="S2JMS-Server" href="apidocs/index.html"/>
     </menu>
     <menu name="モジュール">
-      <item name="S2JMS" href="index.html"/>
-      <item name="S2JMS-Core" href="../s2jms-core/ja/index.html"/>
-      <item name="S2JMS-Container" href="../s2jms-container/ja/index.html"/>
-      <item name="S2JMS-Server" href="../s2jms-server/ja/index.html"/>
+      <item name="S2JMS" href="../../ja/index.html"/>
+      <item name="S2JMS-Core" href="../../s2jms-core/ja/index.html"/>
+      <item name="S2JMS-Container" href="../../s2jms-container/ja/index.html"/>
+      <item name="S2JMS-Server" href="index.html"/>
     </menu>
     ${reports}
   </body>

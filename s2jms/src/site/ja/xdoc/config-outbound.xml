@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>コンフィグレーション - アウトバウンド情報</title>
+	</properties>
+	<body>
+		<section name="アウトバウンド情報">
+			<ul>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#"></a></p></li>
+				<li><p><a href="#"></a></p></li>
+				<li><p><a href="#"></a></p></li>
+			</ul>
+
+			<subsection name="概要">
+				<p>
+					アウトバウンド通信を使用するには，次のコンポーネントを使用します．
+				</p>
+				<img src="images/outbound-components.png" width="548" height="378"/>
+				<dl>
+					<dt><code>org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer</code></dt>
+					<dd>アウトバウンド通信で利用されるコネクションを設定するためのコンポーネントです．</dd>
+				</dl>
+				<p>
+					上記コンポーネントのプロパティおよびメソッドを以下に示します．
+				</p>
+				<h4>プロパティ</h4>
+				<table border="1">
+					<tr><th>プロパティ</th><th>説明</th></tr>
+					<tr>
+						<td><code>managedConnectionFactoryClass</code></td>
+						<td>
+							リソースアダプタが提供する，
+							<code>javax.resource.spi.ManagedConnectionFactory</code>の実装クラスを指定します．
+						</td>
+					</tr>
+				</table>
+				<h4>メソッド</h4>
+				<table border="1">
+					<tr><th>メソッド</th><th>説明</th></tr>
+					<tr>
+						<td><code>setProperty(String key, String value)</code></td>
+						<td>
+							リソースアダプタ固有のプロパティを指定します．
+						</td>
+					</tr>
+					<tr>
+						<td><code>createConnectionFactory()</code></td>
+						<td>
+							コネクションファクトリを作成します．
+							コネクションファクトリは，JDBCなら<code>javax.sql.DataSource</code>，
+							JMSなら<code>javax.jms.ConnectionFactory</code>を実装しています．
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="Apache ActiveMQの場合">
+				<p>
+					以下にオープンソースのMOMプロダクト，<a href="http://activemq.apache.org/">Apache ActiveMQ</a>で
+					アウトバウンド通信を使用する例を示します．
+				</p>
+<source><![CDATA[
+    <component name="mcfDeployer"
+            class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
+        <property name="managedConnectionFactoryClass">
+            "org.apache.activemq.ra.ActiveMQManagedConnectionFactory"
+        </property>
+    </component>
+
+    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
+        mcfDeployer.createConnectionFactory()
+    </component>
+]]></source>
+			</subsection>
+
+			<subsection name="IBM WebSphere MQの場合">
+				<p>
+					以下に<a href="https://genericjmsra.dev.java.net/">Generic Resource Adapter for JMS</a>を使用して
+					IBM WebSphere MQ (formerly known MQSeries) で
+					アウトバウンド通信を使用する例を示します．
+				</p>
+<source><![CDATA[
+    <component name="mcfDeployer"
+            class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
+        <property name="managedConnectionFactoryClass">
+            "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
+        </property>
+
+        <!-- キューマネージャ名 -->
+        <initMethod name="setProperty">
+            <arg>"connectionFactoryProperties"</arg>
+            <arg>"QueueManager=QMGR1"</arg>
+        </initMethod>
+    </component>
+
+    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
+        mcfDeployer.createConnectionFactory()
+    </component>
+]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>

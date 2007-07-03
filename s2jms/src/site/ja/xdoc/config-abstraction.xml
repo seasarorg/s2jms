@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>コンフィグレーション</title>
+	</properties>
+	<body>
+		<section name="diconファイルの構成">
+			<ul>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#構成要素">構成要素</a></p></li>
+				<li><p><a href="#アウトバウンド通信のみの場合">アウトバウンド通信のみの場合</a></p></li>
+				<li><p><a href="#インバウンド通信のみの場合">インバウンド通信のみの場合</a></p></li>
+				<li><p><a href="#インバウンド通信とアウトバウンド通信の場合">インバウンド通信とアウトバウンド通信の場合</a></p></li>
+				<li><p><a href="#複数のコネクションを使う場合">複数のコネクションを使う場合</a></p></li>
+				<li><p><a href="#複数のリソースアダプタを使う場合">複数のリソースアダプタを使う場合</a></p></li>
+			</ul>
+
+			<subsection name="概要">
+				<p>
+					S2MSを使用して非同期メッセージを送受信するには，
+					リソースアダプタおよびアウトバウンド／インバウンド通信の詳細を設定する必要があります．
+					これらの設定は<code>jms.dicon</code>ファイルに記述します．
+				</p>
+			</subsection>
+
+			<subsection name="構成要素">
+				<p>
+				<code>jms.dicon</code>ファイルには，大きく分けて3種類の設定情報を記述します．
+				</p>
+				<ul>
+					<li><p><a href="config-ra.html">リソースアダプタ情報</a></p></li>
+					<li><p><a href="config-outbound.html">アウトバウンド情報</a></p></li>
+					<li><p><a href="config-inbound.html">インバウンド情報</a></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="アウトバウンド通信のみの場合">
+				<p>
+					WebアプリケーションなどでS2JMS-Coreを使用してメッセージを送受信する場合は，アウトバウンド通信を使用します．
+					jms.diconに<a href="config-ra.html">リソースアダプタ情報</a>と<a href="config-outbound.html">アウトバウンド情報</a>を記述します．
+				</p>
+				<img src="images/outbound-simple.png" width="125" hight="144"/>
+			</subsection>
+
+			<subsection name="インバウンド通信のみの場合">
+				<p>
+					スタンドアロンアプリケーションでS2JMS-Containerを使用してメッセージを受信する場合は，インバウンド通信を使用します．
+					jms.diconに<a href="config-ra.html">リソースアダプタ情報</a>と<a href="config-inbound.html">インバウンド情報</a>を記述します．
+				</p>
+				<img src="images/inbound-simple.png" width="125" hight="144"/>
+			</subsection>
+
+			<subsection name="インバウンド通信とアウトバウンド通信の場合">
+				<p>
+					S2JMS-Container上のコンポーネントが受信したメッセージを処理すると共にメッセージの送信を行う場合は，
+					インバウンド通信とアウトバウンド通信の両方を使用します．
+					jms.diconに<a href="config-ra.html">リソースアダプタ情報</a>と<a href="config-inbound.html">インバウンド情報</a>および，
+					<a href="config-outbound.html">アウトバウンド情報</a>を記述します．
+				</p>
+				<img src="images/inbound-outbound.png" width="125" hight="201"/>
+			</subsection>
+
+			<subsection name="複数のコネクションを使う場合">
+				<p>
+					一つのリソースアダプタ上で複数の接続 (コネクション) を使用する場合は， diconファイルを分割します．
+					各接続情報は個別のdiconファイルに記述し， それらをjms.diconがインクルードします．
+					<a href="config-ra.html">リソースアダプタ情報</a>も個別のdiconファイルに記述し，それを各接続情報を記述したdiconファイルがインクルードします．
+				</p>
+				<img src="images/outbound-multi-con.png" width="465" hight="182"/>
+				<p>
+					インバウンド通信も同様です．
+				</p>
+			</subsection>
+
+			<subsection name="複数のリソースアダプタを使う場合">
+				<p>
+					複数のリソースアダプタを使用する場合も， diconファイルを分割します．
+					各<a href="config-ra.html">リソースアダプタ情報</a>は個別のdiconファイルに記述し，それを使用する接続情報を記述したdiconファイルがインクルードします．
+				</p>
+				<img src="images/outbound-multi-ra.png" width="465" hight="371"/>
+				<p>
+					インバウンド通信も同様です．
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>コンフィグレーション - リソースアダプタ情報</title>
+	</properties>
+	<body>
+		<section name="リソースアダプタ情報">
+			<ul>
+				<li><p><a href="#リソースアダプタの設定">リソースアダプタの設定</a></p></li>
+				<li><p><a href="#スレッドプールの設定">スレッドプールの設定</a></p></li>
+				<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
+				<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
+			</ul>
+
+			<subsection name="概要">
+				<p>
+					リソースアダプタを使用するための設定には次のコンポーネントを使用します．
+				</p>
+				<ul>
+					<li><p><code>ResourceAdapterDeployer</code></p></li>
+					<li><p><code>BootstrapContext</code></p></li>
+				</ul>
+				<p>
+					<code>ResourceAdapterDeployer</code>はMOMとの接続に使用するリソースアダプタを
+					S2コンテナ内で利用可能にするコンポーネントです．
+					<code>ResourceAdapterDeployer</code>の設定は必須です．
+					詳細は「<a href="#リソースアダプタのデプロイ">リソースアダプタのデプロイ</a>」を参照してください．
+				</p>
+				<p>
+					<code>BootstrapContext</code>はリソースアダプタのためのスレッド等を提供するコンポーネントです．
+					<code>BootstrapContext</code>の設定は任意です．
+					詳細は「<a href="#スレッドプールの設定">スレッドプールの設定</a>」を参照してください．
+				</p>
+			</subsection>
+
+			<subsection name="リソースアダプタの設定">
+				<p>
+					リソースアダプタを使用可能にするため， <code>ResourceAdapterDeployer</code>を使用します．
+					次のコンポーネントのいずれかを使用します．
+				</p>
+				<dl>
+					<dt><code>org.seasar.jca.deploy.impl.RarResourceAdapterDeployer</code></dt>
+					<dd>Rarファイルにパッケージングされているリソースアダプタの場合に使用します．</dd>
+					<dt><code>org.seasar.jca.deploy.impl.FsResourceAdapterDeployer</code></dt>
+					<dd>ファイルシステム上に展開されているリソースアダプタの場合に使用します．</dd>
+					<dt><code>org.seasar.jca.deploy.impl.WmqResourceAdapterDeployer</code></dt>
+					<dd>
+						<a href="https://genericjmsra.dev.java.net/">Generic Resource Adapter for JMS</a>を使用して
+						IBM WebSphere MQ (formerly known MQSeries) と接続する場合に使用します．
+					</dd>
+				</dl>
+				<p>
+					上記コンポーネントのコンストラクタ引数，プロパティおよびメソッドを以下に示します．
+				</p>
+				<h4>コンストラクタ引数</h4>
+				<table border="1">
+					<tr><th>引数</th><th>説明</th></tr>
+					<tr>
+						<td><code>nThreads</code></td>
+						<td>
+							スレッドプールのスレッド数を指定します．
+							詳細は「<a href="#スレッドプールの設定">スレッドプールの設定</a>」を参照してください．
+						</td>
+					</tr>
+				</table>
+				<h4>プロパティ</h4>
+				<table border="1">
+					<tr><th>プロパティ</th><th>説明</th></tr>
+					<tr>
+						<td><code>path</code></td>
+						<td>
+							リソースアダプタのJarファイル
+							(<code>RarResourceAdapterDeployer</code>, <code>WmqResourceAdapterDeployer</code>の場合)
+							またはディレクトリ (<code>FsResourceAdapterDeployer</code>の場合) を指定します．
+							このプロパティは必須です．
+						</td>
+					</tr>
+					<tr>
+						<td><code>tempDir</code></td>
+						<td>
+							リソースアダプタのJarファイルを解凍するディレクトリを指定します
+							(<code>RarResourceAdapterDeployer</code>, <code>WmqResourceAdapterDeployer</code>の場合のみ)．
+							省略時はデフォルトの一時ディレクトリが使用されます．
+							デフォルトの一時ディレクトリは<a href="http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/java/io/File.html"><code>java.io.File</code></a>クラスによって提供されます．
+						</td>
+					</tr>
+				</table>
+				<h4>メソッド</h4>
+				<table border="1">
+					<tr><th>メソッド</th><th>説明</th></tr>
+					<tr>
+						<td><code>setProperty(String key, String value)</code></td>
+						<td>
+							リソースアダプタ固有のプロパティを指定します．
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="スレッドプールの設定">
+				<p>
+					通常は，<code>ResourceAdapterDeployer</code>のコンストラクタ引数で
+					スレッドプールのスレッド数を指定しています． この場合，
+					<code><a href="http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/java/util/concurrent/Executors.html#newFixedThreadPool(int)">Executors#newFixedThreadPool(int nThreads)</a></code>
+					で作成されたスレッドプールが使用されます．
+				</p>
+				<p>
+					異なるスレッドプール実装を使いたい場合は，次のように<code>BootstrapContextImpl</code>を定義し，コンストラクタ引数で
+					<code><a href="http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/java/util/concurrent/Executor.html">Executor</a></code>
+					を実装したコンポーネントを指定します．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jca.lifecycle.BootstrapContextImpl">
+        <arg>
+            <component class="org.seasar.jca.work.WorkManagerImpl">
+                <arg>
+                    @java.util.concurrent.Executors@newCachedThreadPool()
+                </arg>
+            </component>
+        </arg>
+    </component>
+]]></source>
+				<p>
+					スレッドプールのスレッドがどのように使われるかはリソースアダプタの実装に依存します．
+					リソースアダプタに合わせて適切に設定してください．
+					多くの場合，アウトバウンド通信ではスレッドプールはあまり使われていないようです．
+					インバウンド通信では同時に処理できるメッセージの数に影響します．
+					S2JMS-Containerメッセージを順序を維持して処理する場合はスレッド数を1に設定してください．
+				</p>
+			</subsection>
+
+			<subsection name="Apache ActiveMQの場合">
+				<p>
+					以下にオープンソースのMOMプロダクト，<a href="http://activemq.apache.org/">Apache ActiveMQ</a>を使用する例を示します．
+				</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="j2ee.dicon"/>
+
+    <component class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer">
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
+
+        <!-- ActiveMQ ResourceAdapterへのパス -->
+        <property name="path">
+            "ra/activemq-rar-4.1.1.rar"
+        </property>
+
+        <!-- ActiveMQ Broker へのURL -->
+        <initMethod name="setProperty">
+            <arg>"ServerUrl"</arg>
+            <arg>"tcp://localhost:61616?trace=true"</arg>
+        </initMethod>
+    </component>
+</components>
+]]></source>
+			</subsection>
+
+			<subsection name="IBM WebSphere MQの場合">
+				<p>
+					以下に<a href="https://genericjmsra.dev.java.net/">Generic Resource Adapter for JMS</a>を使用して
+					IBM WebSphere MQ (formerly known MQSeries) と接続する例を示します．
+				</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="j2ee.dicon"/>
+
+    <component class="org.seasar.jca.deploy.impl.WmqResourceAdapterDeployer">
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
+
+        <!-- Generic JMS ResourceAdapterへのパス -->
+        <property name="path">
+            "ra/genericra-1.5.rar"
+        </property>
+    </component>
+</components>
+]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>
