@@ -7,35 +7,184 @@
 		<section name="アウトバウンド情報">
 			<ul>
 				<li><p><a href="#概要">概要</a></p></li>
-				<li><p><a href="#"></a></p></li>
-				<li><p><a href="#"></a></p></li>
-				<li><p><a href="#"></a></p></li>
+				<li><p><a href="#接続系">接続系</a></p>
+					<ul>
+						<li><p><a href="#ManagedConnectionFactoryDeployer">ManagedConnectionFactoryDeployer</a></p></li>
+						<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
+						<li><p><a href="#ConnectionFactory">ConnectionFactory</a></p></li>
+						<li><p><a href="#SessionFactory">SessionFactory</a></p></li>
+						<li><p><a href="#DestinationFactory">DestinationFactory</a></p></li>
+						<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
+						<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#送信系">送信系</a></p>
+					<ul>
+						<li><p><a href="#MessageSender">MessageSender</a></p></li>
+						<li><p><a href="#MessageFactory">MessageFactory</a></p></li>
+						<li><p><a href="#SendMessageInterceptor">SendMessageInterceptor</a></p></li>
+						<li><p><a href="#TextProvider">TextProvider</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#受信系">受信系</a></p>
+					<ul>
+						<li><p><a href="#MessageReceiver">MessageReceiver</a></p></li>
+					</ul>
+				</li>
 			</ul>
+		</section>
 
-			<subsection name="概要">
+		<section name="概要">
+			<p>
+				アウトバウンド通信を使用するための主要なコンポーネントを以下に示します．
+			</p>
+			<img src="images/outbound-components.png" width="548" height="378"/>
+			<p>
+				アウトバウンド通信で利用するコンポーネントは，大きく3つに分類されます．
+			</p>
+			<ul>
+				<li><p>接続系</p></li>
+				<li><p>送信系</p></li>
+				<li><p>受信系</p></li>
+			</ul>
+			<p>
+				それぞれのカテゴリごとに，複数のコンポーネントを定義する必要があります．
+			</p>
+
+			<subsection name="接続系">
 				<p>
-					アウトバウンド通信を使用するには，次のコンポーネントを使用します．
+					接続系のコンポーネントは，JMSメッセージを送信する場合も受信する場合も必要となるコンポーネントです．
 				</p>
-				<img src="images/outbound-components.png" width="548" height="378"/>
 				<dl>
-					<dt><code>org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer</code></dt>
-					<dd>アウトバウンド通信で利用されるコネクションを設定するためのコンポーネントです．</dd>
+					<dt><code><a href="#ManagedConnectionFactoryDeployer">ManagedConnectionFactoryDeployer</a></code> (必須)</dt>
+					<dd>
+						リソースアダプタが提供する<a href="http://java.sun.com/javaee/5/docs/api/javax/resource/spi/ManagedConnectionFactory.html"><code>ManagedConnectionFactory</code></a>を
+						S2コンテナ内で利用可能にするコンポーネントです．
+					</dd>
+					<dt><code><a href="#ConnectionFactory">ConnectionFactory</a></code> (必須)</dt>
+					<dd>
+						JMSコネクションを提供するコンポーネントです．
+					</dd>
+					<dt><code><a href="#SessionFactory">SessionFactory</a></code> (必須)</dt>
+					<dd>
+						JMSセッションを提供するコンポーネントです．
+					</dd>
+					<dt><code><a href="#DestinationFactory">DestinationFactory</a></code> (必須)</dt>
+					<dd>
+						JMSメッセージの宛先を提供するコンポーネントです．
+					</dd>
 				</dl>
+			</subsection>
+
+			<subsection name="送信系">
 				<p>
-					上記コンポーネントのプロパティおよびメソッドを以下に示します．
+					送信系のコンポーネントは，JMSメッセージを送信する場合に必要となるコンポーネントです．
 				</p>
-				<h4>プロパティ</h4>
+				<dl>
+					<dt><code><a href="#MessageSender">MessageSender</a></code> (必須)</dt>
+					<dd>
+						JMSメッセージを送信するコンポーネントです．
+					</dd>
+					<dt><code><a href="#MessageFactory">MessageFactory</a></code> (任意)</dt>
+					<dd>
+						送信するJMSメッセージを作成するコンポーネントです．
+					</dd>
+					<dt><code><a href="#TextProvider">TextProvider</a></code> (任意)</dt>
+					<dd>
+						JMSメッセージで送信する文字列を提供するコンポーネントです．
+					</dd>
+					<dt><code><a href="#SendMessageInterceptor">SendMessageInterceptor</a></code> (任意)</dt>
+					<dd>
+						AOPを利用してメソッドの実行終了時にJMSメッセージを送信するコンポーネントです．
+					</dd>
+				</dl>
+			</subsection>
+
+			<subsection name="受信系">
+				<p>
+					受信系のコンポーネントは，JMSメッセージを受信する場合に必要となるコンポーネントです．
+				</p>
+				<dl>
+					<dt><code><a href="#MessageReceiver">MessageReceiver</a></code> (必須)</dt>
+					<dd>
+						JMSメッセージを受信するコンポーネントです．
+					</dd>
+				</dl>
+			</subsection>
+		</section>
+
+		<section name="接続系">
+			<subsection name="ManagedConnectionFactoryDeployer">
+				<p>
+					<code>ManagedConnectionFactoryDeployer</code>は，
+					リソースアダプタが提供する<a href="http://java.sun.com/javaee/5/docs/api/javax/resource/spi/ManagedConnectionFactory.html"><code>ManagedConnectionFactory</code></a>を
+					S2コンテナ内で利用可能にするコンポーネントです．
+				</p>
+				<p>
+					<code>ManagedConnectionFactoryDeployer</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer</code></p></li>
+				</ul>
+				<p>
+					<code>ManagedConnectionFactoryDeployer</code>のプロパティおよびメソッドを以下に示します．
+				</p>
+				<h5>プロパティ</h5>
 				<table border="1">
-					<tr><th>プロパティ</th><th>説明</th></tr>
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
 					<tr>
 						<td><code>managedConnectionFactoryClass</code></td>
+						<td>Yes</td>
 						<td>
 							リソースアダプタが提供する，
-							<code>javax.resource.spi.ManagedConnectionFactory</code>の実装クラスを指定します．
+							<code>javax.resource.spi.ManagedConnectionFactory</code>の実装クラスをFQNで指定します．
 						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>managedConnectionFactoryIndex</code></td>
+						<td>No</td>
+						<td>
+							<code>ra.xml</code>ファイルに記述された何番目の
+							<code>connector/resource-adapter/outbound-resourceadapter/connection-definition</code>
+							をベースにするかを示すインデックスを指定します．
+						</td>
+						<td>0</td>
+					</tr>
+					<tr>
+						<td><code>managedTx</code></td>
+						<td>No</td>
+						<td>
+							コンテナ管理のトランザクションを使用する場合は<code>true</code>を指定します．
+						</td>
+						<td><code>true</code></td>
+					</tr>
+					<tr>
+						<td><code>maxPoolSize</code></td>
+						<td>No</td>
+						<td>
+							コネクションプールの最大値を指定します．
+						</td>
+						<td>10</td>
+					</tr>
+					<tr>
+						<td><code>minPoolSize</code></td>
+						<td>No</td>
+						<td>
+							コネクションプールの最小値を指定します．
+						</td>
+						<td>5</td>
+					</tr>
+					<tr>
+						<td><code>timeout</code></td>
+						<td>No</td>
+						<td>
+							アイドル状態になったコネクションをクローズするまでのタイムアウト時間を秒単位で指定します．
+						</td>
+						<td>600(秒)</td>
 					</tr>
 				</table>
-				<h4>メソッド</h4>
+				<h5>メソッド</h5>
 				<table border="1">
 					<tr><th>メソッド</th><th>説明</th></tr>
 					<tr>
@@ -45,22 +194,312 @@
 						</td>
 					</tr>
 					<tr>
+						<td><code>setProperty(String key, String type, String value)</code></td>
+						<td>
+							型を明示してリソースアダプタ固有のプロパティを指定します．
+						</td>
+					</tr>
+					<tr>
 						<td><code>createConnectionFactory()</code></td>
 						<td>
-							コネクションファクトリを作成します．
-							コネクションファクトリは，JDBCなら<code>javax.sql.DataSource</code>，
-							JMSなら<code>javax.jms.ConnectionFactory</code>を実装しています．
+							<code><a href="#ConnectionFactory">ConnectionFactory</a></code>を作成します．
 						</td>
 					</tr>
 				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component name="mcfDeployer"
+            class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
+        <property name="managedConnectionFactoryClass">
+            "]]><var>リソースアダプタの提供するManegedConnectionFactory実装クラスのFQN</var><![CDATA["
+        </property>
+
+        <initMethod name="setProperty">
+            <arg>"]]><var>リソースアダプタ固有のプロパティ名</var><![CDATA["</arg>
+            <arg>"]]><var>リソースアダプタ固有のプロパティ値</var><![CDATA["</arg>
+        </initMethod>
+        ...
+    </component>
+]]></source>
+			</subsection>
+
+			<subsection name="リソースアダプタ固有のプロパティ">
+				<p>
+					リソースアダプタ固有のプロパティは，使用するリソースアダプタのドキュメントを参照してください．
+					主なプロダクトのドキュメントを以下に示します．
+				</p>
+				<ul>
+					<li><p><a href="http://activemq.apache.org/connection-factory-properties.html">Apache ActiveMQ</a></p></li>
+					<li><p><a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="ConnectionFactory">
+				<p>
+					<code>ConnectionFactory</code>は，JMSコネクションを提供するコンポーネントです．
+				</p>
+				<p>
+					S2JMSでは，<code>ConnectionFactory</code>はリソースアダプタ (<code>ManagedConnectionFactory</code>) が提供する
+					オブジェクトを使用します．
+					このオブジェクトは<code>ManagedConnectionFactoryDeployer</code>の<code>createConnectionFactory()</code>メソッドにより
+					取得したものをコンポーネントとしてdiconファイルに登録します．
+				</p>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
+        mcfDeployer.createConnectionFactory()
+    </component>
+]]></source>
+				<p>
+					<code>mcfDeployer</code>は<code>ManagedConnectionFactoryDeployer</code>のコンポーネント名です．
+				</p>
+			</subsection>
+
+			<subsection name="SessionFactory">
+				<p>
+					<code>SessionFactory</code>は，JMSセッションを提供するコンポーネントです．
+					<code>ConnectionFactory</code>が提供するJMSコネクション上でJMSセッションを作成して提供します．
+				</p>
+				<p>
+					<code>SessionFactory</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.session.impl.SessionFactoryImpl</code></p></li>
+					<li><p><code>org.seasar.jms.container.session.impl.GenericRaSessionFactoryImpl</code></p></li>
+				</ul>
+
+				<h4>SessionFactoryImpl</h4>
+				<p>
+					<code>ConnectionFactory</code>が提供するJMSコネクション上で作成したJMSセッションを提供するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>connectionFactory</code></td>
+						<td>Yes</td>
+						<td>
+							JMSコネクションを提供する<code>ConnectionFactory</code>です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>transacted</code></td>
+						<td>No</td>
+						<td>
+							JMSメッセージをトランザクショナルに受信する場合は<code>true</code>を指定します．
+						</td>
+						<td><code>true</code></td>
+					</tr>
+					<tr>
+						<td><code>acknowledgeMode</code></td>
+						<td>No</td>
+						<td>
+							JMSメッセージを受信した場合の応答モードを指定します．
+						</td>
+						<td><code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Session.html#AUTO_ACKNOWLEDGE">AUTO_ACKNOWLEDGE</a></code></td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+]]></source>
+
+				<h4>GenericRaSessionFactoryImpl</h4>
+				<p>
+					S2JMS-Containerを使用する場合に，インバウンド通信でJMSメッセージを受信したJMSセッションを提供するコンポーネントです．
+					このコンポーネントは，S2JMS-Containerで<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
+					IBM WebSphere MQ (formerly known MQSeries) を組み合わせて，受信したJMSメッセージに対する応答メッセージを
+					同じJMSコネクション (WebSphere MQのキューマネージャ) に送信する場合に使用します．
+				</p>
+				<p>
+					このコンポーネントにはプロパティが無く，<code>ManagedConnectionFactoryDeployer</code>および，
+					<code>ConnectionFactory</code>は必要ありません．
+				</p>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.container.session.impl.GenericRaSessionFactoryImpl"/>
+]]></source>
+			</subsection>
+
+			<subsection name="DestinationFactory">
+				<p>
+					<code>DestinationFactory</code>は，JMSデスティネーション (キューまたはトピック) を提供するコンポーネントです．
+				</p>
+				<p>
+					<code>SessionFactory</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.destination.impl.QueueFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.destination.impl.TopicFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.destination.impl.JndiDestinationFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.destination.impl.SimpleDestinationFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.destination.impl.ReplyToDestinationFactory</code></p></li>
+				</ul>
+
+				<h4>QueueFactory</h4>
+				<p>
+					<code>QueueFactory</code>は，
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Session.html#createQueue(java.lang.String)">Session#createQueue(String name)</a></code>を使用して
+					作成したキューを提供するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>name</code></td>
+						<td>Yes</td>
+						<td>
+							作成するキューの名前です．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+        <property name="name">"QUEUE"</property>
+    </component>
+]]></source>
+
+				<h4>TopicFactory</h4>
+				<p>
+					<code>TopicFactory</code>は，
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Session.html#createTopic(java.lang.String)">Session#createTopic(String name)</a></code>を使用して
+					作成したトピックを提供するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>name</code></td>
+						<td>Yes</td>
+						<td>
+							作成するトピックの名前です．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.destination.impl.TopicFactory">
+        <property name="name">"TOPIC"</property>
+    </component>
+]]></source>
+
+				<h4>JndiDestinationFactory</h4>
+				<p>
+					<code>JndiDestinationFactory</code>は，
+					JNDIからルックアップしたJMSデスティネーション (キューまたはトピック) を提供するコンポーネントです．
+					アプリケーションサーバに構成されたJMSデスティネーションを使用する場合に使用します．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>name</code></td>
+						<td>Yes</td>
+						<td>
+							ルックアップするJMSデスティネーションのJNDI名です．
+						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>env</code></td>
+						<td>No</td>
+						<td>
+							JNDIの<code><a href="http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/javax/naming/InitialContext.html#InitialContext(java.util.Hashtable)">InitialContext</a></code>を
+							作成する際にコンストラクタに渡される環境プロパティです．
+							省略すると環境プロパティを指定せずに<code>InitialContext</code>を作成します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.destination.impl.JndiDestinationFactory">
+        <property name="name">"java:comp/env/jms/Queue"</property>
+    </component>
+]]></source>
+
+				<h4>SimpleDestinationFactory</h4>
+				<p>
+					<code>SimpleDestinationFactory</code>は，
+					コンポーネントとしてdiconに定義されたキューまたはトピックを提供するコンポーネントです．
+					<code>QueueFactory</code>や<code>TopicFactory</code>を使うことができず，
+					ベンダ固有のキューまたはトピック実装クラスをインスタンス化して使う場合に使用します．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>destination</code></td>
+						<td>Yes</td>
+						<td>
+							キューまたはトピックを指定します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.destination.impl.SimpleDestinationFactory">
+        <property name="destination">
+            <component class="]]><var>ベンダ固有のキューまたはトピック実装クラス</var><![CDATA[">
+                ...
+            </component>
+        </property>
+    </component>
+]]></source>
+
+				<h4>ReplyToDestinationFactory</h4>
+				<p>
+					<code>ReplyToDestinationFactory</code>は，
+					受信したJMSメッセージの<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Message.html#getJMSReplyTo()">JMSReplyTo</a></code>ヘッダで
+					指定されたJMSデスティネーション (キューまたはトピック) を提供するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>message</code></td>
+						<td>Yes</td>
+						<td>
+							受信したJMSメッセージを指定します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					このコンポーネントはdiconファイルに定義して使うことは想定していません．
+				</p>
 			</subsection>
 
 			<subsection name="Apache ActiveMQの場合">
 				<p>
-					以下にオープンソースのMOMプロダクト，<a href="http://activemq.apache.org/">Apache ActiveMQ</a>で
+					以下にオープンソースのMOMプロダクト，
+					<a href="http://activemq.apache.org/">Apache ActiveMQ</a>で
 					アウトバウンド通信を使用する例を示します．
 				</p>
 <source><![CDATA[
+    <!-- マネージドコネクションファクトリ -->
     <component name="mcfDeployer"
             class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
         <property name="managedConnectionFactoryClass">
@@ -68,19 +507,30 @@
         </property>
     </component>
 
+    <!-- コネクションファクトリ -->
     <component name="connectionFactory" class="javax.jms.ConnectionFactory">
         mcfDeployer.createConnectionFactory()
+    </component>
+
+    <!-- セッションファクトリ -->
+    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+
+    <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+    <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+        <!-- キュー名を指定します -->
+        <property name="name">"Foo"</property>
     </component>
 ]]></source>
 			</subsection>
 
 			<subsection name="IBM WebSphere MQの場合">
 				<p>
-					以下に<a href="https://genericjmsra.dev.java.net/">Generic Resource Adapter for JMS</a>を使用して
-					IBM WebSphere MQ (formerly known MQSeries) で
+					以下に<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
+					IBM WebSphere MQ (formerly known MQSeries) を組み合わせて
 					アウトバウンド通信を使用する例を示します．
 				</p>
 <source><![CDATA[
+    <!-- マネージドコネクションファクトリ -->
     <component name="mcfDeployer"
             class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
         <property name="managedConnectionFactoryClass">
@@ -94,9 +544,519 @@
         </initMethod>
     </component>
 
+    <!-- コネクションファクトリ -->
     <component name="connectionFactory" class="javax.jms.ConnectionFactory">
         mcfDeployer.createConnectionFactory()
     </component>
+
+    <!-- セッションファクトリ -->
+    <component class="org.seasar.jms.container.SessionFactoryImpl"/>
+
+    <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+    <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+        <!-- キュー名を指定します -->
+        <property name="name">"LQ2"</property>
+    </component>
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="送信系">
+			<subsection name="MessageSender">
+				<p>
+					<code>MessageSender</code>は，JMSメッセージを送信するコンポーネントです．
+				</p>
+				<p>
+					<code>MessageSender</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.impl.MessageSenderImpl</code></p></li>
+				</ul>
+				<p>
+					<code>MessageSender</code>のプロパティおよびメソッドを以下に示します．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>deliveryMode</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージの<a href="http://java.sun.com/javaee/5/docs/api/javax/jms/DeliveryMode.html">配信モード</a>を指定します．
+						</td>
+						<td><code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Message.html#DEFAULT_DELIVERY_MODE">DEFAULT_DELIVERY_MODE</a></code></td>
+					</tr>
+					<tr>
+						<td><code>destinationFactory</code></td>
+						<td>Yes</td>
+						<td>
+							JMSデスティネーション (キューまたはトピック) を提供する<code>DestinationFactory</code>です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>disableMessageID</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージのメッセージIDを無効化する場合は<code>true</code>を指定します．
+						</td>
+						<td><code>false</code></td>
+					</tr>
+					<tr>
+						<td><code>disableMessageTimestamp</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージのを無効化する場合は<code>true</code>を指定します．
+						</td>
+						<td><code>false</code></td>
+					</tr>
+					<tr>
+						<td><code>messageFactory</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージを提供する<code>MessageFactory</code>です．
+							<code>send()</code>メソッドを呼び出す場合にのみ必要です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+						</td>
+						<td>なし</td>
+					</tr>
+					<tr>
+						<td><code>priority</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージの優先度を指定します．
+						</td>
+						<td><code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Message.html#DEFAULT_PRIORITY">DEFAULT_PRIORITY</a></code></td>
+					</tr>
+					<tr>
+						<td><code>sessionFactory</code></td>
+						<td>Yes</td>
+						<td>
+							送信に使用するするJMSセッションを提供する<code>SessionFactory</code>です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>timeToLive</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージの生存時間をミリ秒単位で指定します．
+						</td>
+						<td><code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Message.html#DEFAULT_TIME_TO_LIVE">DEFAULT_TIME_TO_LIVE</a></code></td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
+]]></source>
+			</subsection>
+
+			<subsection name="MessageFactory">
+				<p>
+					<code>MessageFactory</code>は，送信するJMSメッセージを提供するコンポーネントです．
+				</p>
+				<p>
+					<code>MessageFactory</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.message.impl.BytesMessageFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.message.impl.MapMessageFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.message.impl.ObjectMessageFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.message.impl.TextMessageFactory</code></p></li>
+				</ul>
+
+				<h4>BytesMessageFactory</h4>
+				<p>
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/BytesMessage.html">BytesMessage</a></code>を作成するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>bytes</code></td>
+						<td>Yes</td>
+						<td>
+							送信するJMSメッセージのペイロードに設定されるバイト列です．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component instance="prototype"
+            class="org.seasar.jms.core.message.impl.BytesMessageFactory"/>
+        <property name="bytes">
+            someObject.byteDate()
+        </property>
+    </component>
+]]></source>
+
+				<h4>MapMessageFactory</h4>
+				<p>
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/MapMessage.html">MapMessage</a></code>を作成するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>map</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージのペイロードに設定されるマッピングです．
+						</td>
+						<td>なし</td>
+					</tr>
+				</table>
+				<h5>メソッド</h5>
+				<table border="1">
+					<tr><th>メソッド</th><th>説明</th></tr>
+					<tr>
+						<td><code>addValue(String key, Object value)</code></td>
+						<td>
+							送信するJMSメッセージのペイロードに設定されるマッピングを追加します．
+						</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component instance="prototype"
+            class="org.seasar.jms.core.message.impl.MapMessageFactory"/>
+        <property name="map">
+            #{"foo" : foo, "bar" : bar}
+        </property>
+    </component>
+]]></source>
+
+				<h4>ObjectMessageFactory</h4>
+				<p>
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/ObjectMessage.html">ObjectMessage</a></code>を作成するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>object</code></td>
+						<td>Yes</td>
+						<td>
+							送信するJMSメッセージのペイロードに設定されるオブジェクトです．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component instance="prototype"
+            class="org.seasar.jms.core.message.impl.ObjectMessageFactory"/>
+        <property name="object">
+            someObject
+        </property>
+    </component>
+]]></source>
+
+				<h4>TextMessageFactory</h4>
+				<p>
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/TextMessage.html">TextMessage</a></code>を作成するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>text</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージのペイロードに設定される文字列です．
+							<code>textProvider</code>プロパティが設定されない場合，このプロパティは必須です．
+						</td>
+						<td>なし</td>
+					</tr>
+					<tr>
+						<td><code>textProvider</code></td>
+						<td>No</td>
+						<td>
+							送信するJMSメッセージのペイロードに設定される文字列を提供する<code>TextProvider</code>です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+							<code>text</code>プロパティが設定されない場合，このプロパティは必須です．
+						</td>
+						<td>なし</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component instance="prototype"
+            class="org.seasar.jms.core.message.impl.TextMessageFactory"/>
+]]></source>
+			</subsection>
+
+			<subsection name="SendMessageInterceptor">
+				<p>
+					<code>SendMessageInterceptor</code>は，アプリケーションコンポーネントのメソッドが例外をスローすることなく終了した際に，
+					JMSメッセージを送信するコンポーネントです．
+					AOPにより，既存のアプリケーションコンポーネントに手を加えることなく，JMSメッセージを送信することが可能となります．
+				</p>
+				<p>
+					<code>SendMessageInterceptor</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.interceptor.SendMessageInterceptor</code></p></li>
+					<li><p><code>org.seasar.jms.core.interceptor.SendReturnValueInterceptor</code></p></li>
+				</ul>
+
+				<h4>SendMessageInterceptor</h4>
+				<p>
+					<code>MessageSender#send()</code>を呼び出すことによりJMSメッセージを送信するコンポーネントです．
+					使用する<code>MessageSender</code>は<code>messageFactory</code>プロパティが設定されている必要があります．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>messageSenderName</code></td>
+						<td>Yes</td>
+						<td>
+							JMSメッセージを送信する<code>MessageSender</code>のコンポーネント名を指定します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.interceptor.SendMessageInterceptor">
+        <property name="messageSenderName">
+            "fooSender"
+        </property>
+    </component>
+]]></source>
+
+				<h4>SendReturnValueInterceptor</h4>
+				<p>
+					このインターセプタが適用されたメソッドの戻り値をJMSメッセージのペイロードして送信するコンポーネントです．
+					使用する<code>MessageSender</code>は<code>messageFactory</code>プロパティが設定されている必要はありません．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>messageSenderName</code></td>
+						<td>Yes</td>
+						<td>
+							JMSメッセージを送信する<code>MessageSender</code>のコンポーネント名を指定します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<h5>メソッド</h5>
+				<table border="1">
+					<tr><th>メソッド</th><th>説明</th></tr>
+					<tr>
+						<td><code><![CDATA[addMessageFactory(Class<?> returnType, Class<? extends MessageFactory<? extends Message>> messageFactoryClass)]]></code></td>
+						<td>
+							メソッドの戻り値の型に対応したJMSメッセージを作成する<code>MessageFactory</code>を追加します．
+						</td>
+					</tr>
+				</table>
+				<p>
+					デフォルトでは，次の戻り値の型に対応します．
+				</p>
+				<table border="1">
+					<tr><th>メソッドの戻り値の型</th><th>対応する<code>MessageFactory</code></th></tr>
+					<tr>
+						<td><code>java.lang.String</code></td>
+						<td><code>TextMessageFactory</code></td>
+					</tr>
+					<tr>
+						<td><code>byte[]</code></td>
+						<td><code>BytesMessageFactory</code></td>
+					</tr>
+					<tr>
+						<td><code>java.util.Map</code></td>
+						<td><code>MapMessageFactory</code></td>
+					</tr>
+					<tr>
+						<td><code>java.io.Serializable</code></td>
+						<td><code>ObjectMessageFactory</code></td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.interceptor.SendReturnValueInterceptor">
+        <property name="messageSenderName">
+            "fooSender"
+        </property>
+    </component>
+]]></source>
+			</subsection>
+
+			<subsection name="TextProvider">
+				<p>
+					JMSメッセージ (<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/TextMessage.html">TextMessage</a></code>を送信する場合に，
+					ペイロードに設定する文字列を提供するコンポーネントです．
+				</p>
+				<p>
+					<code>TextProvider</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.text.impl.TextHolder</code></p></li>
+					<li><p><code>org.seasar.jms.core.text.impl.VelocityTextFormatter</code></p></li>
+				</ul>
+
+				<h4>TextHolder</h4>
+				<p>
+					インスタンスフィールドに保持した文字列を提供するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>text</code></td>
+						<td>Yes</td>
+						<td>
+							このコンポーネントが提供する文字列を指定します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component instance="prototype"
+            class="org.seasar.jms.core.text.impl.TextHolder">
+        <property name="text">
+            someObject.message
+        </property>
+    </component>
+]]></source>
+
+				<h4>VelocityTextFormatter</h4>
+				<p>
+					Velocityを使用して組み立てた文字列を提供するコンポーネントです．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>templateText</code></td>
+						<td>Yes</td>
+						<td>
+							Velocityで処理するテンプレート文字列を指定します．
+						</td>
+						<td>N/A</td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.text.impl.VelocityTextFormatter">
+        <property name="templateText">
+            "foo:$foo.name bar:$bar.name baz:$baz.name"
+        </property>
+    </component>
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="受信系">
+			<subsection name="MessageReceiver">
+				<p>
+					<code>MessageReceiver</code>は，JMSメッセージを受信するコンポーネントです．
+				</p>
+				<p>
+					<code>MessageReceiver</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.core.impl.MessageReceiverImpl</code></p></li>
+				</ul>
+				<p>
+					<code>MessageReceiver</code>のプロパティおよびメソッドを以下に示します．
+				</p>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>destinationFactory</code></td>
+						<td>Yes</td>
+						<td>
+							JMSデスティネーション (キューまたはトピック) を提供する<code>DestinationFactory</code>です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>durable</code></td>
+						<td>No</td>
+						<td>
+							JMSメッセージをデュラブル(継続的)に受信する場合は<code>true</code>を指定します．
+						</td>
+						<td><code>false</code></td>
+					</tr>
+					<tr>
+						<td><code>messageSelector</code></td>
+						<td>No</td>
+						<td>
+							受信するJMSメッセージを選択するための<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Message.html">JMSメッセージセレクタ</a></code>を指定します．
+						</td>
+						<td><code>null</code></td>
+					</tr>
+					<tr>
+						<td><code>noLocal</code></td>
+						<td>No</td>
+						<td>
+							受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は<code>true</code>を指定します．
+						</td>
+						<td><code>false</code></td>
+					</tr>
+					<tr>
+						<td><code>sessionFactory</code></td>
+						<td>Yes</td>
+						<td>
+							送信に使用するするJMSセッションを提供する<code>SessionFactory</code>です．
+							通常は自動バインディングされるため，明示的に設定する必要はありません．
+						</td>
+						<td>N/A</td>
+					</tr>
+					<tr>
+						<td><code>subscriptionName</code></td>
+						<td>No</td>
+						<td>
+							JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名です．
+							<code>durable</code>プロパティに<code>true</code>を指定した場合は必須です．
+						</td>
+						<td>なし</td>
+					</tr>
+					<tr>
+						<td><code>timeout</code></td>
+						<td>No</td>
+						<td>
+							JMSメッセージを受信するまで待機する時間をミリ秒単位で指定します．
+							正数が指定されると，JMSメッセージを受信するまで指定された時間待機します．
+							0が指定されると待機しません．
+							負数が指定されると無制限に待機します．
+						</td>
+						<td><code>-1</code></td>
+					</tr>
+				</table>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
 ]]></source>
 			</subsection>
 		</section>
