@@ -44,8 +44,8 @@ import java.util.logging.Logger;
  * S2JMS－Serverを起動する際にコマンドライン引数として以下の指定を行うことができます。
  * </p>
  * <dl>
- * <dt><code>--classpath</code> <var>classpaths</var></dt>
- * <dd>追加のクラスパスを指定します。 <var>classpaths</code>はプラットフォームのパス区切り文字を使って複数のパスを指定することができます。
+ * <dt><code>--classpath <var>classpaths</var></code></dt>
+ * <dd>追加のクラスパスを指定します。 <code><var>classpaths</var></code>はプラットフォームのパス区切り文字を使って複数のパスを指定することができます。
  * 追加されたクラスパスは標準のクラスパスより前に設定されます。<br>
  * 指定されたパスがディレクトリの場合、そのディレクトリ直下にJarファイルが含まれていればそれらのJarファイルが全てクラスパスに追加されます。
  * ディレクトリ直下にJarファイルが含まれていなければそのディレクトリがクラスパスに追加されます。
