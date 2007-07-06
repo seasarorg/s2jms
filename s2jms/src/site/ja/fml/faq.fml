@@ -38,6 +38,8 @@
 				S2JMS-Coreってなんですか？
 			</question>
 			<answer>
+				S2JMS-Coreは，アウトバウンド通信を利用してJMSメッセージを送受信するためのコンポーネントを提供するモジュールです．
+				S2JMS-Coreを使用すると，WebアプリケーションやGUIアプリケーションから容易にJMSメッセージを送受信することができます．
 			</answer>
 		</faq>
 		<faq id="general-s2jms-container">
@@ -45,6 +47,9 @@
 				S2JMS-Containerってなんですか？
 			</question>
 			<answer>
+				S2JMS-Containerは，インバウンド通信を利用してJMSメッセージを受信するためのモジュールです．
+				S2JMS-Containerを使用すると，受信したJMSメッセージをPOJOにバインドし，リスナメソッドで処理することができます
+				(Message-Driven POJOs)．
 			</answer>
 		</faq>
 		<faq id="general-s2jms-server">
@@ -52,6 +57,8 @@
 				S2JMS-Serverってなんですか？
 			</question>
 			<answer>
+				S2JMS-Serverは、S2JMS-Containerを利用したアプリケーションをサーバプロセスとして起動するためのモジュールです．
+				S2JMS-Serverは実行可能Jarファイルとして提供されます．
 			</answer>
 		</faq>
 		<faq id="general-outbound">

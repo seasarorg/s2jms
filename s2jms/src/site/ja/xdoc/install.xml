@@ -49,6 +49,13 @@
 					S2JMS-Containerを使用したスタンドアロン・アプリケーションを起動するブートストラップを提供するプロジェクトです．
 				</dd>
 				<dt>
+					<code>s2jms-dist</code>
+				</dt>
+				<dd>
+					S2JMSの配布ファイルを作成するプロジェクトです．
+				</dd>
+				<!--
+				<dt>
 					<code>s2jms-example-teeda</code>
 				</dt>
 				<dd>
@@ -62,6 +69,7 @@
 					S2JMS-Containerを利用した受信アプリケーションのサンプルプロジェクトです．
 					JMS実装としては<a href="http://activemq.apache.org/">Apache ActiveMQ</a>を使用します．
 				</dd>
+				-->
 			</dl>
 		</section>
 		<section name="Eclipseでの利用">
@@ -110,10 +118,12 @@
 					</li>
 					<li>
 						<p>
-							「Projects」で"s2jms"，"s2jms-core"，"s2jms-container"，"s2jms-server",
-							"s2jms-example-teeda","s2jms-example-server"がチェックされていることを確認して
+							「Projects」で"s2jms"，"s2jms-core"，"s2jms-container"，"s2jms-server"，"s2jms-dist"
+							<!--，"s2jms-example-teeda"，"s2jms-example-server"-->がチェックされていることを確認して
 							「Finish」ボタンを押下します．
+							<!--
 							"s2jms-example-teeda"，"s2jms-example-server"は必要なければチェックを外して構いません．
+							-->
 						</p>
 					</li>
 				</ul>

@@ -84,6 +84,7 @@ connectionFactory.close();
 					このように，コネクションの確立やコネクションに対する操作がアプリケーションを主体として行われるのがアウトバウンド通信です．
 					アウトバウンド通信は<a href="core.html">S2JMS-Core</a>によってサポートされます．
 				</p>
+				<img src="images/s2jms-core.png" width="520" hight="397"/>
 				<p>
 					Webコンテナ上のアプリケーションや GUI アプリケーションなどでは，S2JMS-Coreを使用することにより，
 					アウトバウンド通信で非同期メッセージを送受信することができます．
@@ -102,6 +103,7 @@ connectionFactory.close();
 					このように，コネクションの確立やコネクションに対する操作がリソースアダプタを主体として行われるのがインバウンド通信です．
 					インバウンド通信は<a href="container.html">S2JMS-Container</a>によってサポートされます．
 				</p>
+				<img src="images/s2jms-container.png" width="541" hight="125"/>
 				<p>
 					S2JMS-Containerを使用することにより，インバウンド通信で非同期メッセージを受信することができます．
 					S2JMS-Containerでは，リソースアダプタはS2JCAが提供するスレッド上でメッセージを受信し，

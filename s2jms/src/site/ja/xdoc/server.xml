@@ -6,62 +6,54 @@
 	<body>
 		<section name="目次">
 			<ul>
-				<li><p><a href="#概要">概要</a></p>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#コマンドライン">コマンドライン</a></p>
 					<ul>
-						<li><p><a href="#"></a></p></li>
-					</ul>
-				</li>
-				<li><p><a href="#"></a></p>
-					<ul>
-						<li><p><a href="#"></a></p></li>
-						<li><p><a href="#"></a></p></li>
+						<li><p><a href="#コマンドラインオプション">コマンドラインオプション</a></p></li>
 					</ul>
 				</li>
 			</ul>
 		</section>
 
 		<section name="概要">
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-<source><![CDATA[
-]]></source>
-				<p>
-				</p>
-			</subsection>
-
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
+			<p>
+				S2JMS-Serverは、<a href="container.html">S2JMS-Container</a>を利用したアプリケーションを
+				サーバプロセスとして起動するブートストラップで、実行可能Jarファイルとして提供されます。
+			</p>
+			<p>
+				S2JMS-Serverは、自身のJarファイルと同じ位置にあるJarファイルをクラスパスに追加します。
+				このため、S2JMS-Serverを利用するとクラスパスを設定する手間を省き、コマンドラインから
+				簡単にS2JMS-Containerを利用したJMSメッセージ受信アプリケーションを実行することができます。
+			</p>
 		</section>
 
-		<section name="">
+		<section name="コマンドライン">
 			<p>
+				S2JMS－Serverを起動するには、コマンドラインで次のように指定します。
 			</p>
-			<subsection name="">
+<source>
+java -jar s2jms-server-x.y.z.jar [--classpath <var>classpaths</var>] [--dicon <var>diconfile</var>]
+</source>
+
+			<subsection name="コマンドラインオプション">
 				<p>
+					S2JMS－Serverを起動する際にコマンドラインオプションとして以下の指定を行うことができます。
 				</p>
-				<p>
-				</p>
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-				<p>
-				</p>
-				<p>
-				</p>
+				<dl>
+					<dt><code>--classpath <var>classpaths</var></code></dt>
+					<dd>
+					追加のクラスパスを指定します。
+					 <code><var>classpaths</var></code>はプラットフォームのパス区切り文字を使って複数のパスを指定することができます。
+						追加されたクラスパスは標準のクラスパスより前に設定されます。<br/>
+						指定されたパスがディレクトリの場合、そのディレクトリ直下にJarファイルが含まれていればそれらのJarファイルが全てクラスパスに追加されます。
+						ディレクトリ直下にJarファイルが含まれていなければそのディレクトリがクラスパスに追加されます。
+						指定されたパスがファイルの場合はそのファイルがクラスパスに追加されます。
+					</dd>
+					<dt><code>--dicon <var>diconfile</var></code></dt>
+					<dd>
+						ルートとなるdiconファイルを指定します。省略すると<code>app.dicon</code>になります。
+					</dd>
+				</dl>
 			</subsection>
 		</section>
 	</body>

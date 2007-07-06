@@ -6,96 +6,128 @@
 	<body>
 		<section name="目次">
 			<ul>
-				<li><p><a href="#概要">概要</a></p>
-					<ul>
-						<li><p><a href="#"></a></p></li>
-					</ul>
-				</li>
-				<li><p><a href="#"></a></p>
-					<ul>
-						<li><p><a href="#"></a></p></li>
-						<li><p><a href="#"></a></p></li>
-					</ul>
-				</li>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#MessageSender">MessageSender</a></p></li>
+				<li><p><a href="#MessageReceiver">MessageReceiver</a></p></li>
 			</ul>
 		</section>
 
 		<section name="概要">
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-<source><![CDATA[
-]]></source>
-				<p>
-				</p>
-			</subsection>
-
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
+			<p>
+				S2JMS-Coreは，JMSメッセージを容易に送受信するためのコンポーネントを提供します．
+				主なコンポーネントは次の二つです．
+			</p>
+			<dl>
+				<dt>MessageSender</dt>
+				<dd>
+					JMSメッセージを送信する場合に使用するコンポーネントです．
+				</dd>
+				<dt>MessageReceiver</dt>
+				<dd>
+					JMSメッセージを受信する場合に使用するコンポーネントです．
+				</dd>
+			</dl>
 		</section>
 
 		<section name="MessageSender">
 			<p>
+				<code>MessageSender</code>は、JMSメッセージを送信するコンポーネントです。
 			</p>
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-<source><![CDATA[
-]]></source>
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-<source><![CDATA[
-]]></source>
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
+			<p>
+			送信するJMSメッセージを容易に作成するために次のメソッドを使用することができます。
+			</p>
+			<dl>
+				<dt><code>send(byte[] bytes)</code></dt>
+				<dd>
+					引数で指定されたバイト列をペイロードデータとする<code>BytesMessage</code>を作成して送信します。
+				</dd>
+				<dt><code>send(Map&lt;String, Object&gt; map)</code></dt>
+				<dd>
+					引数で指定された<code>Map</code>に含まれるマッピングをペイロードデータとする<code>MapMessage</code>を作成して送信します。
+				</dd>
+				<dt><code>send(Serializable object)</code></dt>
+				<dd>
+					引数で指定されたオブジェクトをペイロードデータとする<code>ObjectMessage</code>を作成して送信します。
+				</dd>
+				<dt><code>send(String text)</code></dt>
+				<dd>
+					引数で指定された文字列をペイロードデータとする<code>TextMessage</code>を作成して送信します。
+				</dd>
+			</dl>
+			<p>
+				JMSメッセージのプロパティを指定するには、次のメソッドを使用します。
+			</p>
+			<ul>
+				<li><p><code>send(byte[] bytes, Map&lt;String,Object&gt; properties)</code></p></li>
+				<li><p><code>send(Map&lt;String,Object&gt; map, Map&lt;String,Object&gt; properties)</code></p></li>
+				<li><p><code>send(Serializable object, Map&lt;String,Object&gt; properties)</code></p></li>
+				<li><p><code>send(String text, Map&lt;String,Object&gt; properties)</code></p></li>
+			</ul>
+			<p>
+				JMSメッセージのヘッダなど、送信するJMSメッセージを詳細に設定するには次のメソッドを使用します。
+			</p>
+			<dl>
+				<dt><code>send(MessageFactory)</code></dt>
+				<dd>
+					引数で指定された<code>MessageFactory</code>が作成したJMSメッセージを送信します。
+				</dd>
+				<dt><code>send()</code></dt>
+				<dd>
+					<code>MessageSender</code>のプロパティに設定された<code>MessageFactory</code>が作成したJMSメッセージを送信します。
+				</dd>
+			</dl>
 		</section>
 
 		<section name="MessageReceiver">
 			<p>
+				<code>MessageReceiver</code>は、JMSメッセージを受信するコンポーネントです。
 			</p>
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-<source><![CDATA[
-]]></source>
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
-			<subsection name="">
-				<p>
-				</p>
-				<p>
-				</p>
-<source><![CDATA[
-]]></source>
-				<p>
-				</p>
-				<p>
-				</p>
-			</subsection>
+			<p>
+				受信したメッセージを容易に処理するために次のメソッドを使用することができます。
+			</p>
+			<dl>
+				<dt><code>receiveBytes()</code></dt>
+				<dd>
+					受信した<code>BytesMessage</code>のペイロードデータであるバイト列を返します。
+				</dd>
+				<dt><code>receiveMap()</code></dt>
+				<dd>
+					受信した<code>MapMessage</code>のペイロードデータに含まれるマッピングを持つ<code>Map</code>を返します。
+				</dd>
+				<dt><code>receiveObject()</code></dt>
+				<dd>
+					受信した<code>ObjectMessage</code>のペイロードデータであるオブジェクトを返します。
+				</dd>
+				<dt><code>receiveText()</code></dt>
+				<dd>
+					受信した<code>TextMessage</code>のペイロードデータである文字列を返します。
+				</dd>
+			</dl>
+			<p>
+				受信したJMSメッセージを独自に処理するには次のメソッドを使用することができます。
+			</p>
+			<dl>
+				<dt><code>receive(MessageHandler messageHandler)</code></dt>
+				<dd>
+					引数で指定する<code>MessageHandler</code>により自由にJMSメッセージを処理することができます。
+					このメソッドは<code>MessageHandler#handleMessage(Message)</code>の戻り値をそのまま返します。
+				</dd>
+			</dl>
+			<p>
+				受信したJMSメッセージをそのまま取得するには次のメソッドを使用することができます。
+			</p>
+			<ul>
+			<li><p><code>receive()</code></p></li>
+			</ul>
+			<p>
+				いずれのメソッドも、
+				JMSメッセージを受信するまで<code>MessageReceiver</code>の<code>timeout</code>プロパティで指定された時間待機します。
+				<code>timeout</code>プロパティに
+				正数が指定されると，JMSメッセージを受信するまで指定された時間待機します (ミリ秒単位)。
+				0が指定されると待機しません。
+				負数が指定されると無制限に待機します。
+				タイムアウトすると、<code>MessageReceiver</code>のメソッドは<code>null</code>を返します。
+			</p>
 		</section>
 	</body>
 </document>

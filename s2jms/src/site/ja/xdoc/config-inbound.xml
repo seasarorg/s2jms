@@ -10,8 +10,8 @@
 				<li><p><a href="#メッセージエンドポイントの設定">メッセージエンドポイントの設定</a></p>
 					<ul>
 						<li><p><a href="#MessageEndpointDeployer">MessageEndpointDeployer</a></p></li>
-						<li><p><a href="#MessageEndpointFactory">MessageEndpointFactory</a></p></li>
 						<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
+						<li><p><a href="#MessageEndpointFactory">MessageEndpointFactory</a></p></li>
 						<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
 						<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
 					</ul>
@@ -76,6 +76,17 @@
 				</table>
 			</subsection>
 
+			<subsection name="リソースアダプタ固有のプロパティ">
+				<p>
+					リソースアダプタ固有のプロパティは，使用するリソースアダプタのドキュメントを参照してください．
+					主なプロダクトのドキュメントを以下に示します．
+				</p>
+				<ul>
+					<li><p><a href="http://activemq.apache.org/activation-spec-properties.html">Apache ActiveMQ</a></p></li>
+					<li><p><a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a></p></li>
+				</ul>
+			</subsection>
+
 			<subsection name="MessageEndpointFactory">
 				<p>
 					<code>MessageEndpointFactory</code>は，
@@ -132,17 +143,6 @@
 						</td>
 					</tr>
 				</table>
-			</subsection>
-
-			<subsection name="リソースアダプタ固有のプロパティ">
-				<p>
-					リソースアダプタ固有のプロパティは，使用するリソースアダプタのドキュメントを参照してください．
-					主なプロダクトのドキュメントを以下に示します．
-				</p>
-				<ul>
-					<li><p><a href="http://activemq.apache.org/activation-spec-properties.html">Apache ActiveMQ</a></p></li>
-					<li><p><a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a></p></li>
-				</ul>
 			</subsection>
 
 			<subsection name="Apache ActiveMQの場合">

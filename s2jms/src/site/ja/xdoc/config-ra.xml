@@ -30,18 +30,14 @@
 			<dl>
 				<dt><code>ResourceAdapterDeployer</code> (必須)</dt>
 				<dd>
-					<p>
-						<code>ResourceAdapterDeployer</code>はMOMとの接続に使用するリソースアダプタを
-						S2コンテナ内で利用可能にするコンポーネントです．
-						詳細は「<a href="#リソースアダプタのデプロイ">リソースアダプタの設定</a>」を参照してください．
-					</p>
+					<code>ResourceAdapterDeployer</code>はMOMとの接続に使用するリソースアダプタを
+					S2コンテナ内で利用可能にするコンポーネントです．
+					詳細は「<a href="#リソースアダプタのデプロイ">リソースアダプタの設定</a>」を参照してください．
 				</dd>
 				<dt><code>BootstrapContext</code> (任意)</dt>
 				<dd>
-					<p>
-						<code>BootstrapContext</code>はリソースアダプタが使用するスレッドプール等を提供するコンポーネントです．
-						詳細は「<a href="#スレッドプールの設定">スレッドプールの設定</a>」を参照してください．
-					</p>
+					<code>BootstrapContext</code>はリソースアダプタが使用するスレッドプール等を提供するコンポーネントです．
+					詳細は「<a href="#スレッドプールの設定">スレッドプールの設定</a>」を参照してください．
 				</dd>
 			</dl>
 		</section>
@@ -220,23 +216,23 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 "http://www.seasar.org/dtd/components24.dtd">
 <components>
-<include path="j2ee.dicon"/>
+    <include path="j2ee.dicon"/>
 
-<component class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer">
-    <!-- スレッドプールのスレッド数 -->
-    <arg>10</arg>
+    <component class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer">
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
 
-    <!-- ActiveMQ ResourceAdapterへのパス -->
-    <property name="path">
-        "ra/activemq-rar-4.1.1.rar"
-    </property>
+        <!-- ActiveMQ ResourceAdapterへのパス -->
+        <property name="path">
+            "ra/activemq-rar-4.1.1.rar"
+        </property>
 
-    <!-- ActiveMQ Broker へのURL -->
-    <initMethod name="setProperty">
-        <arg>"ServerUrl"</arg>
-        <arg>"tcp://localhost:61616?trace=true"</arg>
-    </initMethod>
-</component>
+        <!-- ActiveMQ Broker へのURL -->
+        <initMethod name="setProperty">
+            <arg>"ServerUrl"</arg>
+            <arg>"tcp://localhost:61616?trace=true"</arg>
+        </initMethod>
+    </component>
 </components>
 ]]></source>
 			</subsection>
@@ -251,17 +247,17 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 "http://www.seasar.org/dtd/components24.dtd">
 <components>
-<include path="j2ee.dicon"/>
+    <include path="j2ee.dicon"/>
 
-<component class="org.seasar.jca.deploy.impl.WmqResourceAdapterDeployer">
-    <!-- スレッドプールのスレッド数 -->
-    <arg>10</arg>
+    <component class="org.seasar.jca.deploy.impl.WmqResourceAdapterDeployer">
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
 
-    <!-- Generic JMS ResourceAdapterへのパス -->
-    <property name="path">
-        "ra/genericra-1.5.rar"
-    </property>
-</component>
+        <!-- Generic JMS ResourceAdapterへのパス -->
+        <property name="path">
+            "ra/genericra-1.5.rar"
+        </property>
+    </component>
 </components>
 ]]></source>
 			</subsection>
