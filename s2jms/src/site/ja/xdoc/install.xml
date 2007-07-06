@@ -192,11 +192,9 @@
 					解凍したディレクトリ以下の次のJarファイルをクラスパスに設定してください．
 				</p>
 				<ul>
-					<li>
-						<p><code>s2jms-core/lib/velocity-dep-1.4.jar</code></p>
-						<p><code>s2jms-core/lib/s2jms-core-<var>x.y.z</var>.jar</code></p>
-						<p><code>s2jms-container/lib/s2jms-container-<var>x.y.z</var>.jar</code></p>
-					</li>
+					<li><p><code>s2jms/lib/s2jms-core-<var>x.y.z</var>.jar</code></p></li>
+					<li><p><code>s2jms/lib/s2jms-container-<var>x.y.z</var>.jar</code></p></li>
+					<li><p><code>s2jms-core/lib/velocity-dep-1.4.jar</code></p></li>
 				</ul>
 			</subsection>
 		</section>
