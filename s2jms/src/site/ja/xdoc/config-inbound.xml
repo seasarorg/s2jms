@@ -119,7 +119,7 @@
 							<code>org.seasar.jca.inbound.AbstractMessageEndpointImpl</code>を継承したクラスを指定します．
 						</td>
 						<td>
-							<code>org.seasar.jca.inbound.JMSMessageEndpointImpl</code>
+							<code>JMSMessageEndpointImpl</code>
 						</td>
 					</tr>
 					<tr>
@@ -176,7 +176,9 @@
 				</p>
 <source><![CDATA[
     <component class="org.seasar.jca.deploy.impl.MessageEndpointDeployer">
-        <property name="activationSpecClassName">"com.sun.genericra.inbound.ActivationSpec"</property>
+        <property name="activationSpecClassName">
+            "com.sun.genericra.inbound.ActivationSpec"
+        </property>
         <initMethod name="setProperty">
             <arg>"userName"</arg>
             <arg>"user"</arg>
@@ -252,7 +254,7 @@
 <source><![CDATA[
     <!-- S2JMS-Container の設定 -->
     <component class="org.seasar.jms.container.impl.JMSContainerImpl">
-        <!-- アプリケーション固有のメッセージリスナ・コンポーネントの名前を指定します (複数指定可) -->
+        <!-- アプリケーションのリスナ・コンポーネントの名前を指定します (複数指定可) -->
         <initMethod name="addMessageListener">
             <arg>"echoListener"</arg>
         </initMethod>
