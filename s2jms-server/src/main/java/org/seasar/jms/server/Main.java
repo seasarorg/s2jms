@@ -50,8 +50,9 @@ import java.util.logging.Logger;
  * 指定されたパスがディレクトリの場合、そのディレクトリ直下にJarファイルが含まれていればそれらのJarファイルが全てクラスパスに追加されます。
  * ディレクトリ直下にJarファイルが含まれていなければそのディレクトリがクラスパスに追加されます。
  * 指定されたパスがファイルの場合はそのファイルがクラスパスに追加されます。</dd>
- * <dt><code>--dicon <var>diconfile</var></dt>
+ * <dt><code>--dicon <var>diconfile</var></code></dt>
  * <dd>ルートとなるdiconファイルを指定します。省略すると<code>app.dicon</code>になります。</dd>
+ * </dl>
  * 
  * @author bowez
  */
