@@ -55,6 +55,14 @@
 			<zipfileset prefix="s2jms-server/doc" dir="../s2jms-server/target/site">
 				<exclude name="**/download/**"/>
 			</zipfileset>
+			<zipfileset prefix="s2jms-dist" dir="../s2jms-dist">
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-dist/doc" dir="../s2jms-dist/target/site">
+				<exclude name="**/download/**"/>
+			</zipfileset>
 		</zip>
 	</target>
 </project>
