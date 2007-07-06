@@ -11,7 +11,7 @@
   <parent>
     <groupId>org.seasar.jms</groupId>
     <artifactId>s2jms</artifactId>
-    <version>1.0.0-M2-SNAPSHOT</version>
+    <version>1.0.0-M2</version>
     <relativePath>../s2jms</relativePath>
   </parent>
 
@@ -29,12 +29,4 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>scp://maven.seasar.org/home/groups/maven/maven/maven2</url>
-    </repository>
-  </distributionManagement>
 </project>
