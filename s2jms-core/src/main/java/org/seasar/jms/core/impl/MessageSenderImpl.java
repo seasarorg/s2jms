@@ -26,9 +26,12 @@ import javax.jms.Session;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
+import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.jms.core.MessageSender;
 import org.seasar.jms.core.destination.DestinationFactory;
+import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageFactory;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
 import org.seasar.jms.core.message.impl.MapMessageFactory;
@@ -57,9 +60,22 @@ import org.seasar.jms.core.session.SessionHandler;
  * </ul>
  * 引数またはプロパティに設定する{@link org.seasar.jms.core.message.MessageFactory}により自由にJMSメッセージを作成することができます。
  * </p>
+ * <p>
+ * 送信したメッセージは{@link #getMessage()}メソッドで取得することができます．
+ * 送信したメッセージにJMS実装が設定するJMSヘッダを以下のメソッドで取得することができます．
+ * </p>
+ * <ul>
+ * <li>{@link #getMessageID()}</li>
+ * <li>{@link #getTimestamp()}</li>
+ * <li>{@link #getExpiration()}</li>
+ * </ul>
+ * <p>
+ * このコンポーネントはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
  * 
  * @author koichik
  */
+@Component(instance = InstanceType.PROTOTYPE)
 public class MessageSenderImpl implements MessageSender {
 
     // instance fields
@@ -87,6 +103,9 @@ public class MessageSenderImpl implements MessageSender {
 
     /** 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true} */
     protected boolean disableMessageTimestamp = false;
+
+    /** 送信したJMSメッセージ */
+    protected Message message;
 
     /**
      * インスタンスを構築します。
@@ -127,56 +146,26 @@ public class MessageSenderImpl implements MessageSender {
         this.messageFactory = messageFactory;
     }
 
-    /**
-     * 送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}を設定します。デフォルトは{@link javax.jms.Message#DEFAULT_DELIVERY_MODE JMSメッセージのデフォルト配信モード}に従います。
-     * 
-     * @param deliveryMode
-     *            送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setDeliveryMode(final int deliveryMode) {
         this.deliveryMode = deliveryMode;
     }
 
-    /**
-     * 送信するJMSメッセージの優先度を指定します。デフォルトは{@link javax.jms.Message#DEFAULT_PRIORITY JMSメッセージのデフォルト優先度}に従います。
-     * 
-     * @param priority
-     *            送信するJMSメッセージの優先度
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setPriority(final int priority) {
         this.priority = priority;
     }
 
-    /**
-     * 送信するJMSメッセージの生存時間をミリ秒単位で指定します。デフォルトは{@link javax.jms.Message#DEFAULT_TIME_TO_LIVE JMSメッセージのデフォルト生存時間}に従います。
-     * 
-     * @param timeToLive
-     *            送信するJMSメッセージの生存時間(ミリ秒単位)
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setTimeToLive(final long timeToLive) {
         this.timeToLive = timeToLive;
     }
 
-    /**
-     * 送信するJMSメッセージのメッセージIDを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
-     * 
-     * @param disableMessageID
-     *            送信するJMSメッセージのメッセージIDを無効化する場合は{@code true}、その他の場合は{@code false}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setDisableMessageID(final boolean disableMessageID) {
         this.disableMessageID = disableMessageID;
     }
 
-    /**
-     * 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
-     * 
-     * @param disableMessageTimestamp
-     *            送信するJMSメッセージのタイムスタンプを無効化する場合は{@code true}、その他の場合は{@code false}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setDisableMessageTimestamp(final boolean disableMessageTimestamp) {
         this.disableMessageTimestamp = disableMessageTimestamp;
@@ -231,13 +220,50 @@ public class MessageSenderImpl implements MessageSender {
             public void handleSession(final Session session) throws JMSException {
                 final MessageProducer producer = createMessageProducer(session);
                 try {
-                    final Message message = messageFactory.createMessage(session);
+                    message = messageFactory.createMessage(session);
                     producer.send(message, deliveryMode, priority, timeToLive);
                 } finally {
                     producer.close();
                 }
             }
         });
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public String getMessageID() {
+        if (message == null) {
+            throw new EmptyRuntimeException("message");
+        }
+        try {
+            return message.getJMSMessageID();
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
+    }
+
+    public long getTimestamp() {
+        if (message == null) {
+            throw new EmptyRuntimeException("message");
+        }
+        try {
+            return message.getJMSTimestamp();
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
+    }
+
+    public long getExpiration() {
+        if (message == null) {
+            throw new EmptyRuntimeException("message");
+        }
+        try {
+            return message.getJMSExpiration();
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
     }
 
     /**

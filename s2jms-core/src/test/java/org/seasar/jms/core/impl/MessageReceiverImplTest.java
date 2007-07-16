@@ -32,7 +32,10 @@ import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
 import org.easymock.IArgumentMatcher;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.unit.S2TigerTestCase;
+import org.seasar.framework.unit.annotation.EasyMock;
+import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.session.SessionFactory;
@@ -45,67 +48,63 @@ import static org.easymock.EasyMock.*;
  */
 public class MessageReceiverImplTest extends S2TigerTestCase {
 
-    MessageReceiverImpl target;
+    MessageReceiverImpl target = new MessageReceiverImpl();;
 
-    SessionFactory sf;
+    SessionFactory sf = new SessionFactoryImpl();
 
+    @EasyMock(EasyMockType.STRICT)
     DestinationFactory df;
 
+    @EasyMock(EasyMockType.STRICT)
     Session session;
 
+    @EasyMock(EasyMockType.STRICT)
     Destination destination;
 
+    @EasyMock(EasyMockType.STRICT)
     Topic topic;
 
+    @EasyMock(EasyMockType.STRICT)
     Queue queue;
 
+    @EasyMock(EasyMockType.STRICT)
     MessageConsumer consumer;
 
+    @EasyMock(EasyMockType.STRICT)
     TopicSubscriber subscriber;
 
+    @EasyMock(EasyMockType.STRICT)
     BytesMessage bytesMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     MapMessage mapMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     ObjectMessage objectMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     TextMessage textMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     @SuppressWarnings("unchecked")
     Enumeration enumeration;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        target = new MessageReceiverImpl();
-        sf = new SessionFactoryImpl();
-        df = createStrictMock(DestinationFactory.class);
-        session = createStrictMock(Session.class);
-        destination = createStrictMock(Destination.class);
-        topic = createStrictMock(Topic.class);
-        queue = createStrictMock(Queue.class);
-        consumer = createStrictMock(MessageConsumer.class);
-        subscriber = createStrictMock(TopicSubscriber.class);
-        bytesMessage = createStrictMock(BytesMessage.class);
-        mapMessage = createStrictMock(MapMessage.class);
-        objectMessage = createStrictMock(ObjectMessage.class);
-        textMessage = createStrictMock(TextMessage.class);
-        enumeration = createStrictMock(Enumeration.class);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpReceiveBytes() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-    }
 
     /**
      * @throws Exception
      */
     public void testReceiveBytes() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         assertTrue("1", Arrays.equals(new byte[] { 1, 2, 3 }, target.receiveBytes()));
+        assertSame(bytesMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -118,24 +117,28 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
         expect(bytesMessage.getBodyLength()).andReturn(3L);
         expect(bytesMessage.readBytes(eqBytes(new byte[] { 1, 2, 3 }))).andReturn(3);
         consumer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpReceiveMap() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
+        expect(bytesMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testReceiveMap() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         Map<String, Object> map = target.receiveMap();
         assertNotNull("1", map);
         assertEquals("2", "FOO", map.get("foo"));
         assertEquals("3", "BAR", map.get("bar"));
+        assertSame(mapMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -154,21 +157,25 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
         expect(mapMessage.getObject("bar")).andReturn("BAR");
         expect(enumeration.hasMoreElements()).andReturn(false);
         consumer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpReceiveObject() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
+        expect(mapMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testReceiveObject() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         assertEquals("1", new Integer(-100), target.receiveObject());
+        assertSame(objectMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -180,21 +187,25 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
         expect(consumer.receive()).andReturn(objectMessage);
         expect(objectMessage.getObject()).andReturn(-100);
         consumer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpReceiveText() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
+        expect(objectMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testReceiveText() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         assertEquals("1", "HogeHoge", target.receiveText());
+        assertSame(textMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -206,22 +217,17 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
         expect(consumer.receive()).andReturn(textMessage);
         expect(textMessage.getText()).andReturn("HogeHoge");
         consumer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpReceiveDurable() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-        target.setDurable(true);
-        target.setSubscriptionName("Geho");
+        expect(textMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testReceiveDurable() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+        target.setDurable(true);
+        target.setSubscriptionName("Geho");
         assertEquals("1", "HogeHoge", target.receiveText());
     }
 
@@ -239,17 +245,11 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
     /**
      * @throws Exception
      */
-    public void setUpDurableNoTopic() throws Exception {
+    public void testDurableNoTopic() throws Exception {
         target.setSessionFactory(sf);
         target.setDestinationFactory(df);
         target.setDurable(true);
         target.setSubscriptionName("Geho");
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testDurableNoTopic() throws Exception {
         try {
             target.receiveText();
             fail("1");
@@ -267,16 +267,10 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
     /**
      * @throws Exception
      */
-    public void setUpDurableNoSubscriptionName() throws Exception {
+    public void testDurableNoSubscriptionName() throws Exception {
         target.setSessionFactory(sf);
         target.setDestinationFactory(df);
         target.setDurable(true);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testDurableNoSubscriptionName() throws Exception {
         try {
             target.receiveText();
             fail("1");
@@ -294,16 +288,10 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
     /**
      * @throws Exception
      */
-    public void setUpReceiveNowait() throws Exception {
+    public void testReceiveNowait() throws Exception {
         target.setSessionFactory(sf);
         target.setDestinationFactory(df);
         target.setTimeout(0);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testReceiveNowait() throws Exception {
         assertNull(target.receiveText());
     }
 
@@ -320,16 +308,10 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
     /**
      * @throws Exception
      */
-    public void setUpReceiveSpecificTimeout() throws Exception {
+    public void testReceiveSpecificTimeout() throws Exception {
         target.setSessionFactory(sf);
         target.setDestinationFactory(df);
         target.setTimeout(100);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testReceiveSpecificTimeout() throws Exception {
         assertNull(target.receiveText());
     }
 

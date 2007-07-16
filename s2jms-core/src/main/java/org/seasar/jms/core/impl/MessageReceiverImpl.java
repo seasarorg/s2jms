@@ -28,9 +28,12 @@ import javax.jms.Topic;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
+import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.jms.core.MessageReceiver;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SIllegalStateException;
+import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageHandler;
 import org.seasar.jms.core.message.impl.BytesMessageHandler;
 import org.seasar.jms.core.message.impl.MapMessageHandler;
@@ -66,11 +69,24 @@ import org.seasar.jms.core.session.SessionHandler;
  * </ul>
  * </p>
  * <p>
- * いずれの場合も{@link #setTimeout timeout}プロパティに設定された時間内にメッセージを受信できなかった場合は{@code null}を返します。
+ * いずれの場合もタイムアウトした場合は{@code null}を返します。
+ * </p>
+ * <p>
+ * 受信したメッセージは{@link #getMessage()}メソッドで取得することもできます．
+ * 受信したメッセージのJMSヘッダを以下のメソッドで取得することができます．
+ * </p>
+ * <ul>
+ * <li>{@link #getMessageID()}</li>
+ * <li>{@link #getTimestamp()}</li>
+ * <li>{@link #getExpiration()}</li>
+ * </ul>
+ * <p>
+ * このコンポーネントはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
+ * </p>
  * 
  * @author koichik
  */
-@Component
+@Component(instance = InstanceType.PROTOTYPE)
 public class MessageReceiverImpl implements MessageReceiver {
 
     // instance fields
@@ -94,6 +110,9 @@ public class MessageReceiverImpl implements MessageReceiver {
 
     /** JMSメッセージを受信するまで待機する時間 (ミリ秒単位) */
     protected long timeout = -1;
+
+    /** JMSメッセージ */
+    protected Message message;
 
     /**
      * インスタンスを構築します。
@@ -123,64 +142,26 @@ public class MessageReceiverImpl implements MessageReceiver {
         this.destinationFactory = destinationFactory;
     }
 
-    /**
-     * JMSメッセージを受信するまで待機する時間をミリ秒単位で設定します。
-     * <p>
-     * {@code timeout} < 0 の場合はJMSメッセージを受信するまで無制限に待機します。デフォルトです。<br>
-     * {@code timeout} > 0 場合はその時間だけ待機します。<br>
-     * {@code timeout} == 0 の場合は待機しません。
-     * </p>
-     * 
-     * @param timeout
-     *            JMSメッセージを受信するまで待機する時間 (ミリ秒単位)
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setTimeout(final long timeout) {
         this.timeout = timeout;
     }
 
-    /**
-     * 受信するJMSメッセージを選択するためのメッセージセレクタを指定します。 メッセージセレクタの詳細は{@link javax.jms.Message}を参照してください。
-     * 
-     * @param messageSelector
-     *            受信するJMSメッセージを選択するためのメッセージセレクタ
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setMessageSelector(final String messageSelector) {
         this.messageSelector = messageSelector;
     }
 
-    /**
-     * 受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true}に設定します。 デフォルトは{@code false}です。
-     * JMSデスティネーションがトピックの場合にのみ有効です。
-     * 
-     * @param noLocal
-     *            受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true}、それ以外の場合は{@code false}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setNoLocal(final boolean noLocal) {
         this.noLocal = noLocal;
     }
 
-    /**
-     * JMSメッセージをデュラブル(継続的)に受信する場合は{@code true}に設定します。デフォルトは{@code false}です。
-     * JMSデスティネーションがトピックの場合にのみ有効です。
-     * 
-     * @param durable
-     *            JMSメッセージをデュラブル(継続的)に受信する場合は{@code true}、それ以外の場合は{@code false}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setDurable(final boolean durable) {
         this.durable = durable;
     }
 
-    /**
-     * JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名を設定します。
-     * JMSデスティネーションがトピックで、JMSメッセージをデュラブルに受信する場合にのみ有効です。
-     * 
-     * @param subscriptionName
-     *            JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setSubscriptionName(final String subscriptionName) {
         this.subscriptionName = subscriptionName;
@@ -215,7 +196,44 @@ public class MessageReceiverImpl implements MessageReceiver {
     public Message receive() {
         final SessionHandlerImpl sessionHandler = new SessionHandlerImpl();
         sessionFactory.operateSession(true, sessionHandler);
-        return sessionHandler.getMessage();
+        return message;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public String getMessageID() {
+        if (message == null) {
+            throw new EmptyRuntimeException("message");
+        }
+        try {
+            return message.getJMSMessageID();
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
+    }
+
+    public long getTimestamp() {
+        if (message == null) {
+            throw new EmptyRuntimeException("message");
+        }
+        try {
+            return message.getJMSTimestamp();
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
+    }
+
+    public long getExpiration() {
+        if (message == null) {
+            throw new EmptyRuntimeException("message");
+        }
+        try {
+            return message.getJMSExpiration();
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
     }
 
     /**
@@ -236,10 +254,10 @@ public class MessageReceiverImpl implements MessageReceiver {
         }
 
         if (!(destination instanceof Topic)) {
-            throw new SIllegalStateException("EJMS-CORE1000");
+            throw new SIllegalStateException("EJMS0000");
         }
         if (subscriptionName == null) {
-            throw new SIllegalStateException("EJMS-CORE1001");
+            throw new SIllegalStateException("EJMS0001");
         }
         return session.createDurableSubscriber((Topic) destination, subscriptionName,
                 messageSelector, noLocal);
@@ -252,19 +270,6 @@ public class MessageReceiverImpl implements MessageReceiver {
      * 
      */
     public class SessionHandlerImpl implements SessionHandler {
-
-        // instance fields
-        /** JMSメッセージ */
-        protected Message message;
-
-        /**
-         * 受信したJMSメッセージを返します。
-         * 
-         * @return 受信したJMSメッセージ
-         */
-        public Message getMessage() {
-            return message;
-        }
 
         /**
          * {@link MessageReceiverImpl}の{@link #setTimeout timeout}プロパティの設定に基づいてJMSセッションからJMSメッセージを受信し、インスタンスフィールドに保持します。

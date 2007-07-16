@@ -29,7 +29,10 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.easymock.IArgumentMatcher;
+import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.unit.S2TigerTestCase;
+import org.seasar.framework.unit.annotation.EasyMock;
+import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.session.SessionFactory;
@@ -42,54 +45,51 @@ import static org.easymock.EasyMock.*;
  */
 public class MessageSenderImplTest extends S2TigerTestCase {
 
-    MessageSenderImpl target;
+    MessageSenderImpl target = new MessageSenderImpl();
 
+    @EasyMock(EasyMockType.STRICT)
     SessionFactory sf;
 
+    @EasyMock(EasyMockType.STRICT)
     DestinationFactory df;
 
+    @EasyMock(EasyMockType.STRICT)
     Session session;
 
+    @EasyMock(EasyMockType.STRICT)
     Destination destination;
 
+    @EasyMock(EasyMockType.STRICT)
     MessageProducer producer;
 
+    @EasyMock(EasyMockType.STRICT)
     BytesMessage bytesMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     MapMessage mapMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     ObjectMessage objectMessage;
 
+    @EasyMock(EasyMockType.STRICT)
     TextMessage textMessage;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        target = new MessageSenderImpl();
-        sf = createStrictMock(SessionFactory.class);
-        df = createStrictMock(DestinationFactory.class);
-        session = createStrictMock(Session.class);
-        destination = createStrictMock(Destination.class);
-        producer = createStrictMock(MessageProducer.class);
-        bytesMessage = createStrictMock(BytesMessage.class);
-        mapMessage = createStrictMock(MapMessage.class);
-        objectMessage = createStrictMock(ObjectMessage.class);
-        textMessage = createStrictMock(TextMessage.class);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpSendBytes() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
-    }
 
     /**
      * @throws Exception
      */
     public void testSendBytes() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         target.send(new byte[] { 1, 2, 3 });
+        assertSame(bytesMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -106,24 +106,28 @@ public class MessageSenderImplTest extends S2TigerTestCase {
         producer.send(bytesMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
         producer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpSendMap() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
+        expect(bytesMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testSendMap() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("foo", "FOO");
         map.put("bar", "BAR");
         target.send(map);
+        assertSame(mapMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -141,21 +145,25 @@ public class MessageSenderImplTest extends S2TigerTestCase {
         producer.send(mapMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
         producer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpSendObject() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
+        expect(mapMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testSendObject() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         target.send(666);
+        assertSame(objectMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -172,21 +180,25 @@ public class MessageSenderImplTest extends S2TigerTestCase {
         producer.send(objectMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
         producer.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void setUpSendText() throws Exception {
-        target.setSessionFactory(sf);
-        target.setDestinationFactory(df);
+        expect(objectMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     /**
      * @throws Exception
      */
     public void testSendText() throws Exception {
+        target.setSessionFactory(sf);
+        target.setDestinationFactory(df);
+
+        assertNull(target.getMessage());
+        try {
+            target.getMessageID();
+            fail();
+        } catch (EmptyRuntimeException expected) {
+        }
         target.send("HogeHoge");
+        assertSame(textMessage, target.getMessage());
+        assertEquals("abcdefg", target.getMessageID());
     }
 
     /**
@@ -203,6 +215,7 @@ public class MessageSenderImplTest extends S2TigerTestCase {
         producer.send(textMessage, Message.DEFAULT_DELIVERY_MODE, Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
         producer.close();
+        expect(textMessage.getJMSMessageID()).andReturn("abcdefg");
     }
 
     static SessionHandler handler(final Session session) {

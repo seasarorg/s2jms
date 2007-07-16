@@ -20,6 +20,8 @@ import java.util.Map;
 
 import javax.jms.Message;
 
+import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageFactory;
 
 /**
@@ -36,16 +38,70 @@ import org.seasar.jms.core.message.MessageFactory;
  * </p>
  * <p>
  * 送信するJMSメッセージを詳細に設定するには次のメソッドを使用することができます。
+ * </p>
  * <ul>
  * <li>{@link #send(MessageFactory)}</li>
  * <li>{@link #send()}</li>
  * </ul>
+ * <p>
  * 引数またはコンポーネント実装クラスのプロパティに設定する{@link org.seasar.jms.core.message.MessageFactory}により自由にJMSメッセージを作成することができます。
+ * </p>
+ * <p>
+ * 送信したメッセージは{@link #getMessage()}メソッドで取得することができます．
+ * 送信したメッセージにJMS実装が設定するJMSヘッダを以下のメソッドで取得することができます．
+ * </p>
+ * <ul>
+ * <li>{@link #getMessageID()}</li>
+ * <li>{@link #getTimestamp()}</li>
+ * <li>{@link #getExpiration()}</li>
+ * </ul>
+ * <p>
+ * このコンポーネントはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
  * </p>
  * 
  * @author koichik
  */
 public interface MessageSender {
+
+    /**
+     * 送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}を設定します。デフォルトは{@link javax.jms.Message#DEFAULT_DELIVERY_MODE JMSメッセージのデフォルト配信モード}に従います。
+     * 
+     * @param deliveryMode
+     *            送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}
+     */
+    void setDeliveryMode(final int deliveryMode);
+
+    /**
+     * 送信するJMSメッセージの優先度を指定します。デフォルトは{@link javax.jms.Message#DEFAULT_PRIORITY JMSメッセージのデフォルト優先度}に従います。
+     * 
+     * @param priority
+     *            送信するJMSメッセージの優先度
+     */
+    void setPriority(final int priority);
+
+    /**
+     * 送信するJMSメッセージの生存時間をミリ秒単位で指定します。デフォルトは{@link javax.jms.Message#DEFAULT_TIME_TO_LIVE JMSメッセージのデフォルト生存時間}に従います。
+     * 
+     * @param timeToLive
+     *            送信するJMSメッセージの生存時間(ミリ秒単位)
+     */
+    void setTimeToLive(final long timeToLive);
+
+    /**
+     * 送信するJMSメッセージのメッセージIDを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
+     * 
+     * @param disableMessageID
+     *            送信するJMSメッセージのメッセージIDを無効化する場合は{@code true}、その他の場合は{@code false}
+     */
+    void setDisableMessageID(final boolean disableMessageID);
+
+    /**
+     * 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
+     * 
+     * @param disableMessageTimestamp
+     *            送信するJMSメッセージのタイムスタンプを無効化する場合は{@code true}、その他の場合は{@code false}
+     */
+    void setDisableMessageTimestamp(final boolean disableMessageTimestamp);
 
     /**
      * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
@@ -134,4 +190,51 @@ public interface MessageSender {
      *            メッセージファクトリ
      */
     <MSGTYPE extends Message> void send(MessageFactory<MSGTYPE> messageFactory);
+
+    /**
+     * 送信したJMSメッセージを返します。
+     * <p>
+     * JMSメッセージが送信されていない場合は<code>null</code>を返します．
+     * </p>
+     * 
+     * @return 送信したJMSメッセージ
+     */
+    Message getMessage();
+
+    /**
+     * 送信したJMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID}
+     * ヘッダの値を返します。
+     * 
+     * @return 送信したJMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID}ヘッダの値
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     * @throws EmptyRuntimeException
+     *             JMSメッセージが送信されていない場合
+     */
+    String getMessageID();
+
+    /**
+     * 送信したJMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp}
+     * ヘッダの値を返します。
+     * 
+     * @return 送信したJMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp}ヘッダの値
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     * @throws EmptyRuntimeException
+     *             JMSメッセージが送信されていない場合
+     */
+    long getTimestamp();
+
+    /**
+     * 送信したJMSメッセージの{@link javax.jms.Message#getJMSExpiration expiration}
+     * ヘッダの値を返します。
+     * 
+     * @return 送信したJMSメッセージの{@link javax.jms.Message#getJMSExpiration expiration}ヘッダの値
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     * @throws EmptyRuntimeException
+     *             JMSメッセージが送信されていない場合
+     */
+    long getExpiration();
+
 }

@@ -20,6 +20,8 @@ import java.util.Map;
 
 import javax.jms.Message;
 
+import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageHandler;
 
 /**
@@ -49,12 +51,72 @@ import org.seasar.jms.core.message.MessageHandler;
  * </ul>
  * </p>
  * <p>
- * いずれの場合もタイムアウトとした場合は{@code null}を返します。
+ * いずれの場合もタイムアウトした場合は{@code null}を返します。
+ * </p>
+ * <p>
+ * 受信したメッセージは{@link #getMessage()}メソッドで取得することもできます．
+ * 受信したメッセージのJMSヘッダを以下のメソッドで取得することができます．
+ * </p>
+ * <ul>
+ * <li>{@link #getMessageID()}</li>
+ * <li>{@link #getTimestamp()}</li>
+ * <li>{@link #getExpiration()}</li>
+ * </ul>
+ * <p>
+ * このコンポーネントはインスタンスモードPROTOTYPEで使われることを想定しており、スレッドセーフではありません。
  * </p>
  * 
  * @author koichik
  */
 public interface MessageReceiver {
+
+    /**
+     * JMSメッセージを受信するまで待機する時間をミリ秒単位で設定します。
+     * <p>
+     * {@code timeout} < 0 の場合はJMSメッセージを受信するまで無制限に待機します。デフォルトです。<br>
+     * {@code timeout} > 0 場合はその時間だけ待機します。<br>
+     * {@code timeout} == 0 の場合は待機しません。
+     * </p>
+     * 
+     * @param timeout
+     *            JMSメッセージを受信するまで待機する時間 (ミリ秒単位)
+     */
+    void setTimeout(final long timeout);
+
+    /**
+     * 受信するJMSメッセージを選択するためのメッセージセレクタを指定します。 メッセージセレクタの詳細は{@link javax.jms.Message}を参照してください。
+     * 
+     * @param messageSelector
+     *            受信するJMSメッセージを選択するためのメッセージセレクタ
+     */
+    void setMessageSelector(final String messageSelector);
+
+    /**
+     * 受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true}に設定します。 デフォルトは{@code false}です。
+     * JMSデスティネーションがトピックの場合にのみ有効です。
+     * 
+     * @param noLocal
+     *            受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true}、それ以外の場合は{@code false}
+     */
+    void setNoLocal(final boolean noLocal);
+
+    /**
+     * JMSメッセージをデュラブル(継続的)に受信する場合は{@code true}に設定します。デフォルトは{@code false}です。
+     * JMSデスティネーションがトピックの場合にのみ有効です。
+     * 
+     * @param durable
+     *            JMSメッセージをデュラブル(継続的)に受信する場合は{@code true}、それ以外の場合は{@code false}
+     */
+    void setDurable(final boolean durable);
+
+    /**
+     * JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名を設定します。
+     * JMSデスティネーションがトピックで、JMSメッセージをデュラブルに受信する場合にのみ有効です。
+     * 
+     * @param subscriptionName
+     *            JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名
+     */
+    void setSubscriptionName(final String subscriptionName);
 
     /**
      * JMSの{@link javax.jms.BytesMessage}を受信してペイロード(メッセージボディ)をバイト配列として返します。
@@ -111,4 +173,49 @@ public interface MessageReceiver {
      * @return 受信したJMSメッセージです。タイムアウトとした場合は{@code null}を返します。
      */
     Message receive();
+
+    /**
+     * 受信したJMSメッセージを返します。
+     * <p>
+     * JMSメッセージを受信していない場合は<code>null</code>を返します．
+     * </p>
+     * 
+     * @return 受信したJMSメッセージ
+     */
+    Message getMessage();
+
+    /**
+     * JMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID} ヘッダの値を返します。
+     * 
+     * @return JMSメッセージの{@link javax.jms.Message#getJMSMessageID messageID}ヘッダの値
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     * @throws EmptyRuntimeException
+     *             JMSメッセージを受信していない場合
+     */
+    String getMessageID();
+
+    /**
+     * JMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp} ヘッダの値を返します。
+     * 
+     * @return JMSメッセージの{@link javax.jms.Message#getJMSTimestamp timestamp}ヘッダの値
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     * @throws EmptyRuntimeException
+     *             JMSメッセージを受信していない場合
+     */
+    long getTimestamp();
+
+    /**
+     * JMSメッセージの{@link javax.jms.Message#getJMSExpiration expiration}
+     * ヘッダの値を返します。
+     * 
+     * @return JMSメッセージの{@link javax.jms.Message#getJMSExpiration expiration}ヘッダの値
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     * @throws EmptyRuntimeException
+     *             JMSメッセージを受信していない場合
+     */
+    long getExpiration();
+
 }
