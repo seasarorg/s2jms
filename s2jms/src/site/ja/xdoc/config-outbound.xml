@@ -651,8 +651,12 @@
 					diconファイルへの記述は以下のようになります．
 				</p>
 <source><![CDATA[
-    <component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageSenderImpl"/>
 ]]></source>
+				<p>
+					<code>MessageSender</code>はスレッドセーフではないため，インスタンス属性は<code>protytpe</code>にします．
+				</p>
 			</subsection>
 
 			<subsection name="MessageFactory">
@@ -1056,8 +1060,12 @@
 					diconファイルへの記述は以下のようになります．
 				</p>
 <source><![CDATA[
-    <component class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
 ]]></source>
+				<p>
+					<code>MessageReceiver</code>はスレッドセーフではないため，インスタンス属性は<code>protytpe</code>にします．
+				</p>
 			</subsection>
 		</section>
 	</body>
