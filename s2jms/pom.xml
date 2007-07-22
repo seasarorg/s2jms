@@ -8,7 +8,7 @@
   <!-- More Project Information -->
   <groupId>org.seasar.jms</groupId>
   <artifactId>s2jms</artifactId>
-  <version>1.0.0-Alpha-SNAPSHOT</version>
+  <version>1.0.0-RC1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>../s2jms-core</module>
@@ -230,7 +230,7 @@
     <dependency>
       <groupId>org.seasar.jca</groupId>
       <artifactId>s2jca</artifactId>
-      <version>1.0.0-Alpha-SNAPSHOT</version>
+      <version>1.0.0-RC1-SNAPSHOT</version>
       <type>jar</type>
     </dependency>
     <dependency>
