@@ -80,6 +80,17 @@
 				EJB (Enterprise JavaBeans) のMDB (Message-Driven Bean) はインバウンド通信を利用した例の一つです．
 			</answer>
 		</faq>
+		<faq id="general-outbound-recv">
+			<question>
+				アウトバウンド通信は送信，インバウンド通信は受信で使うってこと？
+			</question>
+			<answer>
+				いいえ．<br/>
+				外向き・内向きというのはコネクションに対する制御の向きのことで，メッセージの向きを意味するわけではありません．
+				アウトバウンド通信ではメッセージを送信することも受信することもできます．
+				ただし，インバウンド通信は受信にのみ利用されます．
+			</answer>
+		</faq>
 		<!--
 		<faq id="general-">
 			<question>
