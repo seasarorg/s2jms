@@ -16,6 +16,7 @@
 package org.seasar.jms.core.destination.impl;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.jms.Destination;
 import javax.jms.Session;
@@ -28,6 +29,7 @@ import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 
 /**
@@ -57,7 +59,7 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      * 
      */
     public JndiDestinationFactory() {
-        env = new Hashtable<String, Object>();
+        env = CollectionsUtil.newHashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, JndiContextFactory.class.getName());
     }
 
@@ -69,8 +71,8 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      * @param name
      *            ルックアップするJMSデスティネーションの名前
      */
-    public JndiDestinationFactory(final Hashtable<String, Object> env, final String name) {
-        this.env = env;
+    public JndiDestinationFactory(final Map<String, Object> env, final String name) {
+        this.env = CollectionsUtil.newHashtable(env);
         this.name = name;
     }
 
@@ -80,7 +82,7 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      * @return 初期コンテキストの作成に使用される環境
      */
     @SuppressWarnings("unchecked")
-    public Hashtable getEnv() {
+    public Map getEnv() {
         return this.env;
     }
 
@@ -94,8 +96,8 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      *            初期コンテキストの作成に使用される環境
      */
     @Binding(bindingType = BindingType.MAY)
-    public void setEnv(final Hashtable<String, Object> env) {
-        this.env = env;
+    public void setEnv(final Map<String, Object> env) {
+        this.env = CollectionsUtil.newHashtable(env);
     }
 
     /**
