@@ -17,67 +17,70 @@ package org.seasar.jms.core.message.impl;
 
 import java.util.Arrays;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.seasar.framework.unit.EasyMockTestCase;
+import org.seasar.framework.unit.annotation.EasyMock;
+import org.seasar.framework.unit.annotation.EasyMockType;
 
 /**
  * @author koichik
  */
 public class AbstractMessageFactoryTest extends EasyMockTestCase {
 
-    MessageFactory target;
+    MessageFactory target = new MessageFactory();
 
+    @EasyMock(EasyMockType.STRICT)
     Session session;
 
+    @EasyMock(EasyMockType.STRICT)
+    Destination destination;
+
+    @EasyMock
     TextMessage message;
 
-    int count;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        target = new MessageFactory();
-        session = createStrictMock(Session.class);
-        message = createStrictMock(TextMessage.class);
-        count = 0;
-    }
+    int count = 0;
 
     /**
      * @throws Exception
      */
-    public void testCorrelationID() throws Exception {
-        assertNull("1", target.getCorrelationID());
-        assertNull("2", target.getCorrelationIDAsBytes());
+    public void testHeader() throws Exception {
+        assertNull(target.correlationID);
+        assertNull(target.correlationIDAsBytes);
+        assertNull(target.replyTo);
 
         target.setCorrelationID("hoge");
-        assertEquals("3", "hoge", target.getCorrelationID());
-        assertNull("4", target.getCorrelationIDAsBytes());
+        assertEquals("hoge", target.correlationID);
+        assertNull(target.correlationIDAsBytes);
 
         target.setCorrelationIDAsBytes(new byte[] { 1, 2, 3 });
-        assertNull("3", target.getCorrelationID());
-        assertTrue("4", Arrays.equals(new byte[] { 1, 2, 3 }, target.correlationIDAsBytes));
+        assertNull(target.correlationID);
+        assertTrue(Arrays.equals(new byte[] { 1, 2, 3 }, target.correlationIDAsBytes));
+
+        target.setReplyTo(destination);
+        assertSame(destination, target.replyTo);
     }
 
     /**
      * @throws Exception
      */
     public void testProperty() throws Exception {
-        assertNull("1", target.getProperty("foo"));
-        assertNull("2", target.getProperty("bar"));
-        assertNull("3", target.getProperty("baz"));
+        assertNull(target.properties.get("foo"));
+        assertNull(target.properties.get("bar"));
+        assertNull(target.properties.get("baz"));
 
         target.addProperty("foo", "FOO");
-        assertEquals("4", "FOO", target.getProperty("foo"));
-        assertNull("5", target.getProperty("bar"));
-        assertNull("6", target.getProperty("baz"));
+        assertEquals("FOO", target.properties.get("foo"));
+        assertNull(target.properties.get("bar"));
+        assertNull(target.properties.get("baz"));
 
         target.addProperty("bar", "BAR");
-        assertEquals("7", "FOO", target.getProperty("foo"));
-        assertEquals("8", "BAR", target.getProperty("bar"));
-        assertNull("9", target.getProperty("baz"));
+        assertEquals("FOO", target.properties.get("foo"));
+        assertEquals("BAR", target.properties.get("bar"));
+        assertNull(target.properties.get("baz"));
     }
 
     /**
@@ -85,6 +88,7 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
      */
     public void testCreateMessage() throws Exception {
         target.setCorrelationID("id");
+        target.setReplyTo(destination);
         target.addProperty("foo", "FOO");
         assertSame("1", message, target.createMessage(session));
         assertEquals("2", 1, count);
@@ -95,6 +99,7 @@ public class AbstractMessageFactoryTest extends EasyMockTestCase {
      */
     public void recordCreateMessage() throws Exception {
         message.setJMSCorrelationID("id");
+        message.setJMSReplyTo(destination);
         message.setObjectProperty("foo", "FOO");
     }
 

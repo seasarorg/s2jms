@@ -18,6 +18,7 @@ package org.seasar.jms.core;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.jms.Destination;
 import javax.jms.Message;
 
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -104,22 +105,70 @@ public interface MessageSender {
     void setDisableMessageTimestamp(final boolean disableMessageTimestamp);
 
     /**
-     * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
+     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID(String) correlationID}を文字列で設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationID(String)}でヘッダに設定されます。
+     * </p>
      * 
-     * @param bytes
-     *            送信するバイト配列
+     * @param correlationID
+     *            JMSメッセージのヘッダに設定される
+     *            {@link javax.jms.Message#setJMSCorrelationID(String) correlationID}
      */
-    void send(byte[] bytes);
+    void setCorrelationID(final String correlationID);
+
+    /**
+     * {@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[]) correlationID}をバイト列で設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[])}でヘッダに設定されます。
+     * </p>
+     * 
+     * @param correlationIDAsBytes
+     *            JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[]) correlationID}
+     */
+    void setCorrelationIDAsBytes(final byte[] correlationIDAsBytes);
+
+    /**
+     * {@link javax.jms.Message#setJMSReplyTo(Destination) replyTo}をバイト列で設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSReplyTo(Destination)}でヘッダに設定されます。
+     * </p>
+     * 
+     * @param replyTo
+     *            JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSReplyTo(Destination) replyTo}
+     */
+    void setReplyTo(Destination replyTo);
+
+    /**
+     * 指定された名前を持つプロパティ値を設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setObjectProperty}でプロパティに設定されます。
+     * </p>
+     * 
+     * @param name
+     *            プロパティ名
+     * @param value
+     *            プロパティ値
+     */
+    void addProperty(final String name, final Object value);
+
+    /**
+     * 指定された{@link Map}に含まれるマッピングを全てプロパティとして設定します。
+     * <p>
+     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setObjectProperty}でプロパティに設定されます。
+     * </p>
+     * 
+     * @param properties
+     *            プロパティ
+     */
+    void addProperties(final Map<String, Object> properties);
 
     /**
      * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
      * 
      * @param bytes
      *            送信するバイト配列
-     * @param properties
-     *            JMSメッセージのプロパティ
      */
-    void send(byte[] bytes, Map<String, Object> properties);
+    void send(byte[] bytes);
 
     /**
      * 文字列を{@link javax.jms.TextMessage}のペイロードに設定して送信します。
@@ -130,16 +179,6 @@ public interface MessageSender {
     void send(String text);
 
     /**
-     * 文字列を{@link javax.jms.TextMessage}のペイロードに設定して送信します。
-     * 
-     * @param text
-     *            送信する文字列
-     * @param properties
-     *            JMSメッセージのプロパティ
-     */
-    void send(String text, Map<String, Object> properties);
-
-    /**
      * {@link java.io.Serializable}オブジェクトを{@link javax.jms.ObjectMessage}のペイロードに設定して送信します。
      * 
      * @param object
@@ -148,32 +187,12 @@ public interface MessageSender {
     void send(Serializable object);
 
     /**
-     * {@link java.io.Serializable}オブジェクトを{@link javax.jms.ObjectMessage}のペイロードに設定して送信します。
-     * 
-     * @param object
-     *            送信するオブジェクト
-     * @param properties
-     *            JMSメッセージのプロパティ
-     */
-    void send(Serializable object, Map<String, Object> properties);
-
-    /**
      * {@link java.util.Map}を{@link javax.jms.MapMessage}のペイロードに設定して送信します。
      * 
      * @param map
      *            送信するマップ
      */
     void send(Map<String, Object> map);
-
-    /**
-     * {@link java.util.Map}を{@link javax.jms.MapMessage}のペイロードに設定して送信します。
-     * 
-     * @param map
-     *            送信するマップ
-     * @param properties
-     *            JMSメッセージのプロパティ
-     */
-    void send(Map<String, Object> map, Map<String, Object> properties);
 
     /**
      * 実装クラスのプロパティに設定された{@link MessageFactory}が作成したJMSメッセージを送信します。

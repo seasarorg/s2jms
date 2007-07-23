@@ -29,6 +29,8 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InstanceType;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.jms.core.MessageSender;
 import org.seasar.jms.core.destination.DestinationFactory;
 import org.seasar.jms.core.exception.SJMSRuntimeException;
@@ -104,6 +106,18 @@ public class MessageSenderImpl implements MessageSender {
     /** 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true} */
     protected boolean disableMessageTimestamp = false;
 
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID(String) correlationID} */
+    protected String correlationID;
+
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[]) correlationID} */
+    protected byte[] correlationIDAsBytes;
+
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSReplyTo(Destination) replyTo} */
+    protected Destination replyTo;
+
+    /** JMSメッセージのプロパティに設定される{@link java.util.Map} */
+    protected final Map<String, Object> properties = CollectionsUtil.newHashMap();
+
     /** 送信したJMSメッセージ */
     protected Message message;
 
@@ -171,41 +185,47 @@ public class MessageSenderImpl implements MessageSender {
         this.disableMessageTimestamp = disableMessageTimestamp;
     }
 
-    public void send(final byte[] bytes) {
-        send(new BytesMessageFactory(bytes));
+    @Binding(bindingType = BindingType.MAY)
+    public void setCorrelationID(final String correlationID) {
+        this.correlationID = correlationID;
+        this.correlationIDAsBytes = null;
     }
 
-    public void send(final byte[] bytes, final Map<String, Object> properties) {
-        send(new BytesMessageFactory(bytes, properties));
+    @Binding(bindingType = BindingType.MAY)
+    public void setCorrelationIDAsBytes(final byte[] correlationIDAsBytes) {
+        this.correlationIDAsBytes = correlationIDAsBytes;
+        this.correlationID = null;
+    }
+
+    @Binding(bindingType = BindingType.MAY)
+    public void setReplyTo(Destination replyTo) {
+        this.replyTo = replyTo;
+    }
+
+    public void addProperty(final String name, final Object value) {
+        properties.put(name, value);
+    }
+
+    public void addProperties(final Map<String, Object> properties) {
+        this.properties.putAll(properties);
+    }
+
+    public void send(final byte[] bytes) {
+        send(new BytesMessageFactory(bytes));
     }
 
     public void send(final String text) {
         send(new TextMessageFactory(text));
     }
 
-    public void send(final String text, final Map<String, Object> properties) {
-        send(new TextMessageFactory(text, properties));
-    }
-
     public void send(final Serializable object) {
         send(new ObjectMessageFactory(object));
-    }
-
-    public void send(final Serializable object, final Map<String, Object> properties) {
-        send(new ObjectMessageFactory(object, properties));
     }
 
     public void send(final Map<String, Object> map) {
         send(new MapMessageFactory(map));
     }
 
-    public void send(final Map<String, Object> map, final Map<String, Object> properties) {
-        send(new MapMessageFactory(map, properties));
-    }
-
-    /**
-     * プロパティに設定された{@link MessageFactory}が作成したJMSメッセージを送信します。
-     */
     public void send() {
         if (messageFactory == null) {
             throw new EmptyRuntimeException("messageFactory");
@@ -215,6 +235,16 @@ public class MessageSenderImpl implements MessageSender {
 
     @SuppressWarnings("unchecked")
     public void send(final MessageFactory messageFactory) {
+        if (!StringUtil.isEmpty(correlationID)) {
+            messageFactory.setCorrelationID(correlationID);
+        } else if (correlationIDAsBytes != null) {
+            messageFactory.setCorrelationIDAsBytes(correlationIDAsBytes);
+        }
+        if (replyTo != null) {
+            messageFactory.setReplyTo(replyTo);
+        }
+        messageFactory.addProperties(properties);
+
         sessionFactory.operateSession(false, new SessionHandler() {
 
             public void handleSession(final Session session) throws JMSException {

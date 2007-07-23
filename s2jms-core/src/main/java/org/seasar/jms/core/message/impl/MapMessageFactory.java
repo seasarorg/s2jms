@@ -63,19 +63,6 @@ public class MapMessageFactory extends AbstractMessageFactory<MapMessage> {
     }
 
     /**
-     * インスタンスを構築します。
-     * 
-     * @param map
-     *            JMSメッセージのペイロードに設定される{@link java.util.Map}
-     * @param properties
-     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
-     */
-    public MapMessageFactory(final Map<String, Object> map, final Map<String, Object> properties) {
-        super(properties);
-        this.map = map;
-    }
-
-    /**
      * JMSメッセージのペイロードに設定される{@link java.util.Map}を返します。
      * 
      * @return JMSメッセージのペイロードに設定される{@link java.util.Map}

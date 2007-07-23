@@ -17,6 +17,7 @@ package org.seasar.jms.core.message.impl;
 
 import java.util.Map;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
@@ -46,11 +47,14 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
         MessageFactory<MSGTYPE> {
 
     // instance fields
-    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID() correlationID} */
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID(String) correlationID} */
     protected String correlationID;
 
-    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes() correlationID} */
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[]) correlationID} */
     protected byte[] correlationIDAsBytes;
+
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSReplyTo(Destination) replyTo} */
+    protected Destination replyTo;
 
     /** JMSメッセージのプロパティに設定される{@link java.util.Map} */
     protected final Map<String, Object> properties = CollectionsUtil.newHashMap();
@@ -62,102 +66,31 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
     public AbstractMessageFactory() {
     }
 
-    /**
-     * インスタンスを構築します。
-     * 
-     * @param properties
-     *            JMSメッセージのプロパティに設定される{@link java.util.Map}
-     */
-    public AbstractMessageFactory(final Map<String, Object> properties) {
-        this.properties.putAll(properties);
-    }
-
-    /**
-     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID correlationID}を文字列で返します。
-     * 
-     * @return JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID correlationID}
-     */
-    public String getCorrelationID() {
-        return correlationID;
-    }
-
-    /**
-     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID correlationID}を文字列で設定します。
-     * <p>
-     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationID}でヘッダに設定されます。
-     * </p>
-     * 
-     * @param correlationID
-     *            JMSメッセージのヘッダに設定される
-     *            {@link javax.jms.Message#setJMSCorrelationID correlationID}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setCorrelationID(final String correlationID) {
         this.correlationID = correlationID;
         this.correlationIDAsBytes = null;
     }
 
-    /**
-     * JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}をバイト列で返します。
-     * 
-     * @return JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}
-     */
-    public byte[] getCorrelationIDAsBytes() {
-        return correlationIDAsBytes;
-    }
-
-    /**
-     * {@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}をバイト列で設定します。
-     * <p>
-     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setJMSCorrelationIDAsBytes}でヘッダに設定されます。
-     * </p>
-     * 
-     * @param correlationIDAsBytes
-     *            JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes correlationID}
-     */
     @Binding(bindingType = BindingType.MAY)
     public void setCorrelationIDAsBytes(final byte[] correlationIDAsBytes) {
         this.correlationIDAsBytes = correlationIDAsBytes;
         this.correlationID = null;
     }
 
-    /**
-     * 指定された名前を持つプロパティ値を返します。
-     * 
-     * @param name
-     *            プロパティ名
-     * @return プロパティ名に対応するプロパティ値
-     */
-    public Object getProperty(final String name) {
-        return properties.get(name);
+    @Binding(bindingType = BindingType.MAY)
+    public void setReplyTo(Destination replyTo) {
+        this.replyTo = replyTo;
     }
 
-    /**
-     * 指定された名前を持つプロパティ値を設定します。
-     * <p>
-     * 設定された値は作成されたJMSメッセージの{@link javax.jms.Message#setObjectProperty}でプロパティに設定されます。
-     * </p>
-     * 
-     * @param name
-     *            プロパティ名
-     * @param value
-     *            プロパティ値
-     */
     public void addProperty(final String name, final Object value) {
         properties.put(name, value);
     }
 
-    /**
-     * JMSセッションからJMSメッセージを作成して返します。
-     * <p>
-     * 作成されたJMSメッセージのヘッダおよびプロパティはこのコンポーネントからコピーされます。
-     * JMSメッセージのペイロードはサブクラスによって実装される{@link #setupPayload}で設定されます。
-     * </p>
-     * 
-     * @param session
-     *            JMSセッション
-     * @return JMSメッセージ
-     */
+    public void addProperties(final Map<String, Object> properties) {
+        this.properties.putAll(properties);
+    }
+
     public MSGTYPE createMessage(final Session session) {
         try {
             final MSGTYPE message = createMessageInstance(session);
