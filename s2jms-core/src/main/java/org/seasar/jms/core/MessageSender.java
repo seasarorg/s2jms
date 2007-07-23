@@ -70,7 +70,7 @@ public interface MessageSender {
      * @param deliveryMode
      *            送信するJMSメッセージの{@link javax.jms.DeliveryMode 配信モード}
      */
-    void setDeliveryMode(final int deliveryMode);
+    void setDeliveryMode(int deliveryMode);
 
     /**
      * 送信するJMSメッセージの優先度を指定します。デフォルトは{@link javax.jms.Message#DEFAULT_PRIORITY JMSメッセージのデフォルト優先度}に従います。
@@ -78,7 +78,7 @@ public interface MessageSender {
      * @param priority
      *            送信するJMSメッセージの優先度
      */
-    void setPriority(final int priority);
+    void setPriority(int priority);
 
     /**
      * 送信するJMSメッセージの生存時間をミリ秒単位で指定します。デフォルトは{@link javax.jms.Message#DEFAULT_TIME_TO_LIVE JMSメッセージのデフォルト生存時間}に従います。
@@ -86,7 +86,7 @@ public interface MessageSender {
      * @param timeToLive
      *            送信するJMSメッセージの生存時間(ミリ秒単位)
      */
-    void setTimeToLive(final long timeToLive);
+    void setTimeToLive(long timeToLive);
 
     /**
      * 送信するJMSメッセージのメッセージIDを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
@@ -94,7 +94,7 @@ public interface MessageSender {
      * @param disableMessageID
      *            送信するJMSメッセージのメッセージIDを無効化する場合は{@code true}、その他の場合は{@code false}
      */
-    void setDisableMessageID(final boolean disableMessageID);
+    void setDisableMessageID(boolean disableMessageID);
 
     /**
      * 送信するJMSメッセージのタイムスタンプを無効化する場合に{@code true}を設定します。デフォルトは{@code false}です。
@@ -102,7 +102,7 @@ public interface MessageSender {
      * @param disableMessageTimestamp
      *            送信するJMSメッセージのタイムスタンプを無効化する場合は{@code true}、その他の場合は{@code false}
      */
-    void setDisableMessageTimestamp(final boolean disableMessageTimestamp);
+    void setDisableMessageTimestamp(boolean disableMessageTimestamp);
 
     /**
      * JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID(String) correlationID}を文字列で設定します。
@@ -114,7 +114,7 @@ public interface MessageSender {
      *            JMSメッセージのヘッダに設定される
      *            {@link javax.jms.Message#setJMSCorrelationID(String) correlationID}
      */
-    void setCorrelationID(final String correlationID);
+    void setCorrelationID(String correlationID);
 
     /**
      * {@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[]) correlationID}をバイト列で設定します。
@@ -125,7 +125,7 @@ public interface MessageSender {
      * @param correlationIDAsBytes
      *            JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationIDAsBytes(byte[]) correlationID}
      */
-    void setCorrelationIDAsBytes(final byte[] correlationIDAsBytes);
+    void setCorrelationIDAsBytes(byte[] correlationIDAsBytes);
 
     /**
      * {@link javax.jms.Message#setJMSReplyTo(Destination) replyTo}をバイト列で設定します。
@@ -149,7 +149,7 @@ public interface MessageSender {
      * @param value
      *            プロパティ値
      */
-    void addProperty(final String name, final Object value);
+    void addProperty(String name, Object value);
 
     /**
      * 指定された{@link Map}に含まれるマッピングを全てプロパティとして設定します。
@@ -160,7 +160,7 @@ public interface MessageSender {
      * @param properties
      *            プロパティ
      */
-    void addProperties(final Map<String, Object> properties);
+    void addProperties(Map<String, Object> properties);
 
     /**
      * バイト配列を{@link javax.jms.BytesMessage}のペイロードに設定して送信します。
