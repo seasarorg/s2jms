@@ -13,6 +13,7 @@
 						<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
 						<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
 						<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
+						<li><p><a href="#JBoss Messagingの場合">JBoss Messagingの場合</a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#スレッドプールの設定">スレッドプールの設定</a></p>
@@ -257,6 +258,57 @@
         <property name="path">
             "ra/genericra-1.5.rar"
         </property>
+    </component>
+</components>
+]]></source>
+			</subsection>
+
+			<subsection name="JBoss Messagingの場合">
+				<p>
+					以下に<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
+					JBoss Messaging を組み合わせて使用する例を示します．
+				</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+    "http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="j2ee.dicon"/>
+
+    <!-- リソースアダプタ -->
+    <component
+        class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer"
+    >
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
+
+        <!-- Generic ResourceAdapter へのパス -->
+        <property name="path">
+            "ra/genericra-1.5.rar"
+        </property>
+
+        <!-- JBoss Messaging を JNDI 経由で利用します -->
+        <initMethod name="setProperty">
+            <arg>"ProviderIntegrationMode"</arg>
+            <arg>"jndi"</arg>
+        </initMethod>
+
+        <!-- XA を使用します -->
+        <initMethod name="setProperty">
+            <arg>"SupportsXA"</arg>
+            <arg>"true"</arg>
+        </initMethod>
+
+        <initMethod name="setProperty">
+            <arg>"RMPolicy"</arg>
+            <arg>"OnePerPhysicalConnection"</arg>
+        </initMethod>
+
+        <!-- JNDI の設定です (JBoss APサーバの位置にあわせて URL を変更してください) -->
+        <initMethod name="setProperty">
+            <arg>"JndiProperties"</arg>
+            <arg>"java.naming.provider.url=jnp://localhost:1099,java.naming.factory.initial=org.jnp.interfaces.NamingContextFactory,java.naming.factory.url.pkgs=org.jboss.naming:org.jnp.interfaces"</arg>
+        </initMethod>
     </component>
 </components>
 ]]></source>

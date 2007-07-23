@@ -16,6 +16,7 @@
 						<li><p><a href="#DestinationFactory">DestinationFactory</a></p></li>
 						<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
 						<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
+						<li><p><a href="#JBoss Messagingの場合">JBoss Messagingの場合</a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#送信系">送信系</a></p>
@@ -340,7 +341,9 @@
 				</p>
 				<ul>
 					<li><p><code>org.seasar.jms.core.destination.impl.QueueFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.destination.impl.TemporaryQueueFactory</code></p></li>
 					<li><p><code>org.seasar.jms.core.destination.impl.TopicFactory</code></p></li>
+					<li><p><code>org.seasar.jms.core.destination.impl.TemporaryTopicFactory</code></p></li>
 					<li><p><code>org.seasar.jms.core.destination.impl.JndiDestinationFactory</code></p></li>
 					<li><p><code>org.seasar.jms.core.destination.impl.SimpleDestinationFactory</code></p></li>
 					<li><p><code>org.seasar.jms.core.destination.impl.ReplyToDestinationFactory</code></p></li>
@@ -373,6 +376,19 @@
     </component>
 ]]></source>
 
+				<h4>TemporaryQueueFactory</h4>
+				<p>
+					<code>TemporaryQueueFactory</code>は，
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Session.html#createTemporaryQueue()">Session#createTemporaryQueue()</a></code>を使用して
+					作成したテンポラリキューを提供するコンポーネントです．
+				</p>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.destination.impl.TemporaryQueueFactory"/>
+]]></source>
+
 				<h4>TopicFactory</h4>
 				<p>
 					<code>TopicFactory</code>は，
@@ -398,6 +414,19 @@
     <component class="org.seasar.jms.core.destination.impl.TopicFactory">
         <property name="name">"TOPIC"</property>
     </component>
+]]></source>
+
+				<h4>TemporaryTopicFactory</h4>
+				<p>
+					<code>TemporaryTopicFactory</code>は，
+					<code><a href="http://java.sun.com/javaee/5/docs/api/javax/jms/Session.html#createTemporaryTopic()">Session#createTemporaryTopic()</a></code>を使用して
+					作成したテンポラリトピックを提供するコンポーネントです．
+				</p>
+				<p>
+					diconファイルへの記述は以下のようになります．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.core.destination.impl.TemporaryTopicFactory"/>
 ]]></source>
 
 				<h4>JndiDestinationFactory</h4>
@@ -556,6 +585,45 @@
     <component class="org.seasar.jms.core.destination.impl.QueueFactory">
         <!-- キュー名を指定します -->
         <property name="name">"LQ2"</property>
+    </component>
+]]></source>
+			</subsection>
+
+			<subsection name="JBoss Messagingの場合">
+				<p>
+					以下に<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
+					JBoss Messaging を組み合わせてアウトバウンド通信を使用する例を示します．
+				</p>
+<source><![CDATA[
+    <!-- マネージドコネクションファクトリ -->
+    <component name="mcfDeployer"
+        class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
+        <property name="managedConnectionFactoryClass">
+            "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
+        </property>
+        
+        <initMethod name="setProperty">
+            <arg>"ConnectionFactoryJndiName"</arg>
+            <arg>"/ConnectionFactory"</arg>
+        </initMethod>
+    </component>
+
+    <!-- コネクションファクトリ -->
+    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
+        mcfDeployer.createConnectionFactory()
+    </component>
+
+    <!-- セッションファクトリ -->
+    <component class="org.seasar.jms.container.SessionFactoryImpl"/>
+
+    <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+    <component class="org.seasar.jms.core.destination.impl.JndiDestinationFactory">
+        <property name="name">"queue/EventBean"</property>
+        <property name="env">
+            #{"java.naming.provider.url" : "jnp://localhost:1099",
+                "java.naming.factory.initial" : "org.jnp.interfaces.NamingContextFactory",
+                "java.naming.factory.url.pkgs" : "org.jboss.naming:org.jnp.interfaces"}
+        </property>
     </component>
 ]]></source>
 			</subsection>
