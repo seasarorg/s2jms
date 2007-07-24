@@ -56,7 +56,7 @@ import org.seasar.jms.core.session.SessionHandler;
  */
 public class GenericRaSessionFactoryImpl implements SessionFactory {
 
-    public void operateSession(final boolean startConnection, final SessionHandler handler) {
+    public void operateSession(final SessionHandler handler) {
         final Object work = WorkWrapper.getCurrentWork();
         final BeanDesc workDesc = BeanDescFactory.getBeanDesc(work.getClass());
         final Field jmsResourceField = workDesc.getField("jmsResource");

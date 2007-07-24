@@ -96,7 +96,7 @@ public class MessageSenderImplTest extends S2TigerTestCase {
      * @throws Exception
      */
     public void recordSendBytes() throws Exception {
-        sf.operateSession(eq(false), handler(session));
+        sf.operateSession(handler(session));
         expect(df.getDestination(session)).andReturn(destination);
         expect(session.createProducer(destination)).andReturn(producer);
         producer.setDisableMessageID(false);
@@ -134,7 +134,7 @@ public class MessageSenderImplTest extends S2TigerTestCase {
      * @throws Exception
      */
     public void recordSendMap() throws Exception {
-        sf.operateSession(eq(false), handler(session));
+        sf.operateSession(handler(session));
         expect(df.getDestination(session)).andReturn(destination);
         expect(session.createProducer(destination)).andReturn(producer);
         producer.setDisableMessageID(false);
@@ -170,7 +170,7 @@ public class MessageSenderImplTest extends S2TigerTestCase {
      * @throws Exception
      */
     public void recordSendObject() throws Exception {
-        sf.operateSession(eq(false), handler(session));
+        sf.operateSession(handler(session));
         expect(df.getDestination(session)).andReturn(destination);
         expect(session.createProducer(destination)).andReturn(producer);
         producer.setDisableMessageID(false);
@@ -205,7 +205,7 @@ public class MessageSenderImplTest extends S2TigerTestCase {
      * @throws Exception
      */
     public void recordSendText() throws Exception {
-        sf.operateSession(eq(false), handler(session));
+        sf.operateSession(handler(session));
         expect(df.getDestination(session)).andReturn(destination);
         expect(session.createProducer(destination)).andReturn(producer);
         producer.setDisableMessageID(false);

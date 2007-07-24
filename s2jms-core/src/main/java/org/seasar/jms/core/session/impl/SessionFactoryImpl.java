@@ -89,18 +89,16 @@ public class SessionFactoryImpl implements SessionFactory {
      * 作成したJMSコネクションが{@link #processConnection}メソッドで処理された後、JMSコネクションはクローズされます。
      * </p>
      * 
-     * @param startConnection
-     *            JMSセッションを作成する前に{@link javax.jms.Connection#start()}を呼び出す必要がある場合は{@code true}、それ以外の場合は{@code false}
      * @param handler
      *            JMSセッションを処理するハンドラ
      * @throws SJMSRuntimeException
      *             {@link javax.jms.JMSException}が発生した場合にスローされます
      */
-    public void operateSession(final boolean startConnection, final SessionHandler handler) {
+    public void operateSession(final SessionHandler handler) {
         try {
             final Connection connection = connectionFactory.createConnection();
             try {
-                processConnection(startConnection, handler, connection);
+                processConnection(handler, connection);
             } finally {
                 connection.close();
             }
@@ -112,13 +110,9 @@ public class SessionFactoryImpl implements SessionFactory {
     /**
      * JMSコネクションからJMSセッションを作成します。
      * <p>
-     * 作成したJMSセッションが{@link org.seasar.jms.core.session.SessionHandler#handleSession}メソッドで処理された後、JMSセッションはクローズされます。<br>
-     * 引数{@code startConnection}に{@code true}が指定された場合は、JMSセッションを作成する前に{@link javax.jms.Connection#start()}が、
-     * JMSセッションがクローズされた後に{@link javax.jms.Connection#stop}が呼び出されます。
+     * 作成したJMSセッションが{@link org.seasar.jms.core.session.SessionHandler#handleSession}メソッドで処理された後、JMSセッションをクローズします。
      * </p>
      * 
-     * @param startConnection
-     *            JMSセッションを作成する前に{@link javax.jms.Connection#start()}を呼び出す必要がある場合は{@code true}、それ以外の場合は{@code false}
      * @param handler
      *            JMSセッションを処理するハンドラ
      * @param connection
@@ -126,22 +120,14 @@ public class SessionFactoryImpl implements SessionFactory {
      * @throws JMSException
      *             JMS実装で例外が発生した場合にスローされます
      */
-    protected void processConnection(final boolean startConnection, final SessionHandler handler,
-            final Connection connection) throws JMSException {
-        if (startConnection) {
-            connection.start();
-        }
+    protected void processConnection(final SessionHandler handler, final Connection connection)
+            throws JMSException {
+        connection.start();
+        final Session session = connection.createSession(transacted, acknowledgeMode);
         try {
-            final Session session = connection.createSession(transacted, acknowledgeMode);
-            try {
-                handler.handleSession(session);
-            } finally {
-                session.close();
-            }
+            handler.handleSession(session);
         } finally {
-            if (startConnection) {
-                connection.stop();
-            }
+            session.close();
         }
     }
 

@@ -245,7 +245,7 @@ public class MessageSenderImpl implements MessageSender {
         }
         messageFactory.addProperties(properties);
 
-        sessionFactory.operateSession(false, new SessionHandler() {
+        sessionFactory.operateSession(new SessionHandler() {
 
             public void handleSession(final Session session) throws JMSException {
                 final MessageProducer producer = createMessageProducer(session);

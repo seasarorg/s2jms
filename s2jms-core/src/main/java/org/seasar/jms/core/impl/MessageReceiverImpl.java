@@ -195,7 +195,7 @@ public class MessageReceiverImpl implements MessageReceiver {
 
     public Message receive() {
         final SessionHandlerImpl sessionHandler = new SessionHandlerImpl();
-        sessionFactory.operateSession(true, sessionHandler);
+        sessionFactory.operateSession(sessionHandler);
         return message;
     }
 

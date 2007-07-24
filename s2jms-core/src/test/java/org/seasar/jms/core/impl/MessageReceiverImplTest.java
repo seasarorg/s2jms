@@ -346,9 +346,8 @@ public class MessageReceiverImplTest extends S2TigerTestCase {
 
     class SessionFactoryImpl implements SessionFactory {
 
-        public void operateSession(boolean startConnection, SessionHandler handler) {
+        public void operateSession(SessionHandler handler) {
             try {
-                assertTrue("startConnection", startConnection);
                 handler.handleSession(session);
             } catch (JMSException e) {
                 throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);

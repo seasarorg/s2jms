@@ -28,16 +28,10 @@ public interface SessionFactory {
 
     /**
      * JMSセッションを作成し、{@link SessionHandler#handleSession}を呼び出した後JMSセッションをクローズします。
-     * <p>
-     * 引数{@code startConnection}に{@code true}が指定された場合は、JMSセッションを作成する前に{@link javax.jms.Connection#start()}が、
-     * JMSセッションがクローズされた後に{@link javax.jms.Connection#stop}が呼び出されます。
-     * </p>
      * 
-     * @param startConnection
-     *            JMSセッションを作成する前に{@link javax.jms.Connection#start()}を呼び出す必要がある場合は{@code true}、それ以外の場合は{@code false}
      * @param handler
      *            JMSセッションを処理するハンドラ
      */
-    void operateSession(boolean startConnection, SessionHandler handler);
+    void operateSession(SessionHandler handler);
 
 }

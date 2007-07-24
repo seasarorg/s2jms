@@ -52,79 +52,38 @@ public class SessionFactoryImplTest extends EasyMockTestCase {
     /**
      * @throws Exception
      */
-    public void testTransactedWithStart() throws Exception {
+    public void testTransacted() throws Exception {
         target.setConnectionFactory(cf);
-        target.operateSession(true, handler);
+        target.operateSession(handler);
     }
 
     /**
      * @throws Exception
      */
-    public void recordTransactedWithStart() throws Exception {
+    public void recordTransacted() throws Exception {
         expect(cf.createConnection()).andReturn(con);
         con.start();
         expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
         handler.handleSession(session);
         session.close();
-        con.stop();
         con.close();
     }
 
     /**
      * @throws Exception
      */
-    public void testTransactedWithoutStart() throws Exception {
-        target.setConnectionFactory(cf);
-        target.operateSession(false, handler);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void recordTransactedWithoutStart() throws Exception {
-        expect(cf.createConnection()).andReturn(con);
-        expect(con.createSession(true, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-        handler.handleSession(session);
-        session.close();
-        con.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testNotTransactedWithStart() throws Exception {
+    public void testNotTransacted() throws Exception {
         target.setConnectionFactory(cf);
         target.setTransacted(false);
-        target.operateSession(true, handler);
+        target.operateSession(handler);
     }
 
     /**
      * @throws Exception
      */
-    public void recordNotTransactedWithStart() throws Exception {
+    public void recordNotTransacted() throws Exception {
         expect(cf.createConnection()).andReturn(con);
         con.start();
-        expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
-        handler.handleSession(session);
-        session.close();
-        con.stop();
-        con.close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testNotTransactedWithoutStart() throws Exception {
-        target.setConnectionFactory(cf);
-        target.setTransacted(false);
-        target.operateSession(false, handler);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void recordNotTransactedWithoutStart() throws Exception {
-        expect(cf.createConnection()).andReturn(con);
         expect(con.createSession(false, Session.AUTO_ACKNOWLEDGE)).andReturn(session);
         handler.handleSession(session);
         session.close();
