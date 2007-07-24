@@ -137,6 +137,9 @@ public abstract class AbstractMessageFactory<MSGTYPE extends Message> implements
         } else if (correlationIDAsBytes != null) {
             message.setJMSCorrelationIDAsBytes(correlationIDAsBytes);
         }
+        if (replyTo != null) {
+            message.setJMSReplyTo(replyTo);
+        }
     }
 
     /**
