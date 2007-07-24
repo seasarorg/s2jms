@@ -233,7 +233,7 @@
 				</p>
 				<ul>
 					<li><p><a href="http://activemq.apache.org/connection-factory-properties.html">Apache ActiveMQ</a></p></li>
-					<li><p><a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a></p></li>
+					<li><p><a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の「ManagedConnectionFactory Properties」</p></li>
 				</ul>
 			</subsection>
 
