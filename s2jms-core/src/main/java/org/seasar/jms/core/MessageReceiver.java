@@ -80,16 +80,18 @@ public interface MessageReceiver {
      * 
      * @param timeout
      *            JMSメッセージを受信するまで待機する時間 (ミリ秒単位)
+     * @return このインスタンス自身
      */
-    void setTimeout(long timeout);
+    MessageReceiver setTimeout(long timeout);
 
     /**
      * 受信するJMSメッセージを選択するためのメッセージセレクタを指定します。 メッセージセレクタの詳細は{@link javax.jms.Message}を参照してください。
      * 
      * @param messageSelector
      *            受信するJMSメッセージを選択するためのメッセージセレクタ
+     * @return このインスタンス自身
      */
-    void setMessageSelector(String messageSelector);
+    MessageReceiver setMessageSelector(String messageSelector);
 
     /**
      * 受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true}に設定します。 デフォルトは{@code false}です。
@@ -97,8 +99,9 @@ public interface MessageReceiver {
      * 
      * @param noLocal
      *            受信するJMSコネクションから送信されたJMSメッセージを受信しない場合は{@code true}、それ以外の場合は{@code false}
+     * @return このインスタンス自身
      */
-    void setNoLocal(boolean noLocal);
+    MessageReceiver setNoLocal(boolean noLocal);
 
     /**
      * JMSメッセージをデュラブル(継続的)に受信する場合は{@code true}に設定します。デフォルトは{@code false}です。
@@ -106,8 +109,9 @@ public interface MessageReceiver {
      * 
      * @param durable
      *            JMSメッセージをデュラブル(継続的)に受信する場合は{@code true}、それ以外の場合は{@code false}
+     * @return このインスタンス自身
      */
-    void setDurable(boolean durable);
+    MessageReceiver setDurable(boolean durable);
 
     /**
      * JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名を設定します。
@@ -115,8 +119,9 @@ public interface MessageReceiver {
      * 
      * @param subscriptionName
      *            JMSメッセージをデュラブル(継続的)に受信する場合のサブスクリプション名
+     * @return このインスタンス自身
      */
-    void setSubscriptionName(String subscriptionName);
+    MessageReceiver setSubscriptionName(String subscriptionName);
 
     /**
      * JMSの{@link javax.jms.BytesMessage}を受信してペイロード(メッセージボディ)をバイト配列として返します。
