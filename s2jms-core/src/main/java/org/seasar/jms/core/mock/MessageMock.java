@@ -33,7 +33,7 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 public class MessageMock implements Message {
 
     // instance fields
-    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID() correlationID} */
+    /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#setJMSCorrelationID(String) correlationID} */
     protected String JMSCorrelationID;
 
     /** JMSメッセージのヘッダに設定される{@link javax.jms.Message#getJMSCorrelationIDAsBytes() correlationID} */

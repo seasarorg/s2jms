@@ -91,8 +91,7 @@ public interface MessageFactory<MSGTYPE extends Message> {
     /**
      * JMSセッションからJMSメッセージを作成して返します。
      * <p>
-     * 作成されたJMSメッセージのヘッダおよびプロパティはこのコンポーネントからコピーされます。
-     * JMSメッセージのペイロードはサブクラスによって実装される{@link #setupPayload}で設定されます。
+     * 作成されたJMSメッセージのヘッダおよびプロパティはこのコンポーネントからコピーされます。 JMSメッセージのペイロードは実装クラスの{@code setupPayload()}メソッドで設定されます。
      * </p>
      * 
      * @param session

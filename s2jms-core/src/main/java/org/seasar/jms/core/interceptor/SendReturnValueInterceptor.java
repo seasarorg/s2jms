@@ -26,6 +26,7 @@ import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
+import org.seasar.jms.core.MessageSender;
 import org.seasar.jms.core.message.MessageFactory;
 import org.seasar.jms.core.message.impl.BytesMessageFactory;
 import org.seasar.jms.core.message.impl.MapMessageFactory;
@@ -35,45 +36,43 @@ import org.seasar.jms.core.message.impl.TextMessageFactory;
 /**
  * ターゲットメソッドの戻り値をJMSメッセージとして送信するインターセプタです。
  * <p>
- * ターゲットメソッドが例外をスローすることなく終了した場合、{@link org.seasar.jms.core.MessageSender}を使用してJMSメッセージを送信します。
+ * ターゲットメソッドが例外をスローすることなく終了した場合、{@link MessageSender}を使用してJMSメッセージを送信します。
  * </p>
  * <p>
- * 送信するJMSメッセージは{@link #addMessageFactory}によって登録された{@link org.seasar.jms.core.message.MessageFactory}によって作成されます。
- * {@link org.seasar.jms.message.core.MessageFactory}はターゲットメソッドの戻り値型に対応付けることができます。
- * デフォルトでは次の{@link org.seasar.jms.core.message.MessageFactory}が登録されています。
+ * 送信するJMSメッセージは{@link #addMessageFactory}によって登録された{@link MessageFactory}によって作成されます。
+ * {@link MessageFactory}はターゲットメソッドの戻り値型に対応付けることができます。 デフォルトでは次の{@link MessageFactory}が登録されています。
  * </p>
  * <table border="1">
  * <tr>
  * <th>戻り値の型</th>
- * <th>{@link org.seasar.jms.message.core.MessageFactory}</th>
+ * <th>{@link MessageFactory}の実装クラス</th>
  * </tr>
  * <tr>
  * <td>{@link java.lang.String}</td>
- * <td>{@link org.seasar.jms.core.message.impl.TextMessageFactory}</td>
+ * <td>{@link TextMessageFactory}</td>
  * </tr>
  * <tr>
  * <td>{@code byte[]}</td>
- * <td>{@link org.seasar.jms.core.message.impl.BytesMessageFactory}</td>
+ * <td>{@link BytesMessageFactory}</td>
  * </tr>
  * <tr>
  * <td>{@link java.util.Map}</td>
- * <td>{@link org.seasar.jms.core.message.impl.MapMessageFactory}</td>
+ * <td>{@link MapMessageFactory}</td>
  * </tr>
  * <tr>
  * <td>{@link java.io.Serializable}</td>
- * <td>{@link org.seasar.jms.core.message.impl.ObjectMessageFactory}</td>
+ * <td>{@link ObjectMessageFactory}</td>
  * </tr>
  * </table>
  * <p>
- * どの{@link org.seasar.jms.core.message.MessageFactory}が使用されるかは登録される順序に依存します。<br>
- * ターゲットメソッドの戻り値を代入可能な戻り値型に対応付けられている{@link org.seasar.jms.core.message.MessageFactory}を
+ * どの{@link MessageFactory}が使用されるかは登録される順序に依存します。<br>
+ * ターゲットメソッドの戻り値を代入可能な戻り値型に対応付けられている{@link MessageFactory}を
  * 登録順に探し、最初に見つかったものが選択されます。
  * </p>
  * <p>
  * デフォルトで登録されているマッピングの場合、ターゲットメソッドが{@link java.lang.String}を返すと
- * {@link org.seasar.jms.core.message.impl.TextMessageFactory}と
- * {@link org.seasar.jms.core.message.impl.ObjectMessageFactory}のどちらでもJMSメッセージを作成できますが、
- * 先に登録されている{@link org.seasar.jms.core.message.TextMessageFactory}が選択されます。
+ * {@link TextMessageFactory}と{@link ObjectMessageFactory}のどちらでもJMSメッセージを作成できますが、
+ * 先に登録されている{@link TextMessageFactory}が選択されます。
  * </p>
  * 
  * @author koichik
@@ -97,7 +96,7 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
     }
 
     /**
-     * 登録されている{@link org.seasar.jms.core.message.MessageFactory}をクリアします。
+     * 登録されている{@link MessageFactory}をクリアします。
      * 
      */
     public void clearFactories() {
@@ -135,17 +134,17 @@ public class SendReturnValueInterceptor extends AbstractSendMessageInterceptor {
     }
 
     /**
-     * ターゲットメソッドの戻り値型に対応する{@link org.seasar.jms.core.message.MessageFactory}を作成して返します。
+     * ターゲットメソッドの戻り値型に対応する{@link MessageFactory}を作成して返します。
      * <p>
-     * ターゲットメソッドの戻り値を代入可能な戻り値型に対応付けられている{@link org.seasar.jms.core.message.MessageFactory}を
-     * 登録順に探し、最初に見つかった{@link org.seasar.jms.core.message.MessageFactory}をインスタンス化します。
+     * ターゲットメソッドの戻り値を代入可能な戻り値型に対応付けられている{@link MessageFactory}を
+     * 登録順に探し、最初に見つかった{@link MessageFactory}をインスタンス化します。
      * </p>
      * 
      * @param returnValue
      *            ターゲットメソッドの戻り値
-     * @return ターゲットメソッドの戻り値型に対応する{@link org.seasar.jms.core.message.MessageFactory}
+     * @return ターゲットメソッドの戻り値型に対応する{@link MessageFactory}
      * @throws SIllegalStateException
-     *             ターゲットメソッドの戻り値型に対応する{@link org.seasar.jms.core.message.MessageFactory}が見つからない場合にスローされます
+     *             ターゲットメソッドの戻り値型に対応する{@link MessageFactory}が見つからない場合にスローされます
      */
     protected MessageFactory<?> createMessageFactory(final Object returnValue) {
         final Class<?> returnType = returnValue.getClass();

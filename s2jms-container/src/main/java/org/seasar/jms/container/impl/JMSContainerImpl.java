@@ -43,7 +43,7 @@ import org.seasar.jms.core.util.MessageHandlerUtil;
  * S2JMS-Containerの実装クラスです。
  * <p>
  * S2JMS-ContainerはJCAのメッセージエンドポイントとして受信したJMSメッセージを受け取り、
- * 登録されているメッセージリスナーコンポーネントのリスナーメソッドを呼び出します。 メッセージリスナーコンポーネントはそのコンポーネント名を{@link addMessageListener}メソッドで登録します。
+ * 登録されているメッセージリスナーコンポーネントのリスナーメソッドを呼び出します。 メッセージリスナーコンポーネントはそのコンポーネント名を{@link #addMessageListener(String)}メソッドで登録します。
  * S2JMS-Containerはメッセージを受信するたびにS2コンテナからメッセージリスナーコンポーネントを名前でルックアップします。
  * その際に、S2JMS-Containerは受信したメッセージをS2コンテナの外部コンテキストのリクエストオブジェクトとして登録するため、
  * メッセージリスナーコンポーネントのインスタンス属性を <code>request</code> または <code>prototype</code>
@@ -124,8 +124,6 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
     /**
      * メッセージリスナーコンポーネントのリスナーメソッドを呼び出します。
      * 
-     * @param messageListener
-     *            メッセージリスナーコンポーネント
      * @param message
      *            JMSメッセージ
      * @throws Exception

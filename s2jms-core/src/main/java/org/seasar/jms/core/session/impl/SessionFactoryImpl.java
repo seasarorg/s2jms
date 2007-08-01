@@ -83,10 +83,10 @@ public class SessionFactoryImpl implements SessionFactory {
     }
 
     /**
-     * {@link setConnectionFactory connectionFactory}プロパティに設定された{@link javax.jms.ConnectionFactory}を使用して
-     * JMSコネクションを作成します。
+     * {@link #setConnectionFactory(ConnectionFactory) connectionFactory}プロパティに設定された
+     * {@link javax.jms.ConnectionFactory}を使用してJMSコネクションを作成します。
      * <p>
-     * 作成したJMSコネクションが{@link #processConnection}メソッドで処理された後、JMSコネクションはクローズされます。
+     * 作成したJMSコネクションが{@link #processConnection(SessionHandler, Connection)}メソッドで処理された後、JMSコネクションはクローズされます。
      * </p>
      * 
      * @param handler

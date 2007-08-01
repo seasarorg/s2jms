@@ -28,7 +28,7 @@ import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
- * {@link java.jms.Message}のヘッダー情報にアクセスするためのユーティリティ。
+ * {@link javax.jms.Message}のヘッダー情報にアクセスするためのユーティリティ。
  * 
  * @author koichik
  */

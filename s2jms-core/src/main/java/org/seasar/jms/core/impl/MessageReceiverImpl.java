@@ -248,7 +248,8 @@ public class MessageReceiverImpl implements MessageReceiver {
      *            JMSセッション
      * @return プロパティの設定に基づいて作成した{@link javax.jms.MessageConsumer}
      * @throws javax.jms.IllegalStateException
-     *             {@link setDurable durable}プロパティが{@code true}に設定されている場合で、JMSデスティネーションがトピックでないかサブスクリプション名が設定されていない場合にスローされます。
+     *             {@link #setDurable(boolean) durable}プロパティが{@code true}に設定されている場合で、
+     *             JMSデスティネーションがトピックでないかサブスクリプション名が設定されていない場合にスローされます。
      * @throws javax.jms.JMSException
      *             JMS実装からスローされた例外をそのままスローします
      */
@@ -269,7 +270,7 @@ public class MessageReceiverImpl implements MessageReceiver {
     }
 
     /**
-     * JMSセッションからJMSメッセージを受信するための{@link SesshonHandler}実装クラスです。
+     * JMSセッションからJMSメッセージを受信するための{@link SessionHandler}実装クラスです。
      * 
      * @author koichik
      * 

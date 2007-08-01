@@ -134,7 +134,7 @@ public class JndiDestinationFactory extends AbstractDestinationFactory {
      *            JMSセッション
      * @return JMSデスティネーション {@code null}が返されることはありません
      * @throws SJMSRuntimeException
-     *             JNDIの操作で例外が発生した場合や{@link setName name}プロパティに設定された名前が
+     *             JNDIの操作で例外が発生した場合や{@link #setName(String) name}プロパティに設定された名前が
      *             見つからなかった場合にスローされます
      */
     @Override
