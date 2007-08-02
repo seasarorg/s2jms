@@ -566,10 +566,13 @@
             "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
         </property>
 
-        <!-- キューマネージャ名 -->
+        <!-- キューマネージャとの接続情報 -->
         <initMethod name="setProperty">
             <arg>"connectionFactoryProperties"</arg>
             <arg>"QueueManager=QMGR1"</arg>
+            <!-- より詳細な情報を設定する場合は以下のように設定します
+            <arg>"HostName=host,QueueManager=QMGR1,Port=1234,TransportType=1"</arg>
+            -->
         </initMethod>
     </component>
 
@@ -579,7 +582,7 @@
     </component>
 
     <!-- セッションファクトリ -->
-    <component class="org.seasar.jms.container.SessionFactoryImpl"/>
+    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
 
     <!-- デスティネーション (キューまたはトピック) ファクトリ -->
     <component class="org.seasar.jms.core.destination.impl.QueueFactory">
