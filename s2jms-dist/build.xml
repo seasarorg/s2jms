@@ -5,11 +5,38 @@
 	<property name="zipDir" value="target/site/download/${releaseDate}"/>
 	<property name="site" value="target/site"/>
 
+	<target name="copy-example">
+		<property name="toDir1" value="../s2jms-server-example/lib"/>
+		<copy todir="${toDir1}" file="../s2jca/target/s2jca-${s2jca.ver}.jar"/>
+		<copy todir="${toDir1}" file="../s2jms-core/target/s2jms-core-${ver}.jar"/>
+		<copy todir="${toDir1}" file="../s2jms-container/target/s2jms-container-${ver}.jar"/>
+		<copy todir="${toDir1}" file="../s2jms-server/target/s2jms-server-${ver}.jar"/>
+
+		<property name="toDir2" value="../s2jms-server-example/lib/sources"/>
+		<copy todir="${toDir2}" file="../s2jca/target/s2jca-${s2jca.ver}-sources.jar"/>
+		<copy todir="${toDir2}" file="../s2jms-core/target/s2jms-core-${ver}-sources.jar"/>
+		<copy todir="${toDir2}" file="../s2jms-container/target/s2jms-container-${ver}-sources.jar"/>
+		<copy todir="${toDir2}" file="../s2jms-server/target/s2jms-server-${ver}-sources.jar"/>
+
+		<property name="toDir3" value="../s2jms-teeda-example/src/main/webapp/WEB-INF/lib"/>
+		<copy todir="${toDir3}" file="../s2jca/target/s2jca-${s2jca.ver}.jar"/>
+		<copy todir="${toDir3}" file="../s2jms-core/target/s2jms-core-${ver}.jar"/>
+
+		<property name="toDir4" value="../s2jms-teeda-example/src/main/webapp/WEB-INF/lib/sources"/>
+		<copy todir="${toDir4}" file="../s2jca/target/s2jca-${s2jca.ver}-sources.jar"/>
+		<copy todir="${toDir4}" file="../s2jms-core/target/s2jms-core-${ver}-sources.jar"/>
+	</target>
+
 	<target name="dist">
 		<ant antfile="../s2jms/build.xml" target="fix-site">
 			<property name="site" value="${basedir}/target/site"/>
 		</ant>
 		<mkdir dir="${zipDir}"/>
+		<antcall target="zip"/>
+		<antcall target="zip-example"/>
+	</target>
+
+	<target name="zip">
 		<zip zipfile="${zipDir}/S2JMS-${ver}.zip">
 			<zipfileset prefix="s2jms" dir="../s2jms">
 				<exclude name="**/build/**"/>
@@ -61,6 +88,23 @@
 			<zipfileset prefix="s2jms-dist" dir="../s2jms-dist">
 				<exclude name="**/build/**"/>
 				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="zip-example">
+		<zip zipfile="${zipDir}/S2JMS-Examples-${ver}.zip">
+			<zipfileset prefix="s2jms-server-example" dir="../s2jms-server-example">
+				<exclude name="**/activemq-data/**"/>
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="velocity.log"/>
+			</zipfileset>
+			<zipfileset prefix="s2jms-teeda-example" dir="../s2jms-teeda-example">
+				<exclude name="src/main/webapp/WEB-INF/classes/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="**/work**"/>
 				<exclude name="velocity.log"/>
 			</zipfileset>
 		</zip>
