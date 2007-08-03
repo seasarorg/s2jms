@@ -1,0 +1,4 @@
+#Wed Jul 18 17:15:59 JST 2007
+baseDir=/s2jms-teeda-example/src/main/webapp/WEB-INF/classes/data
+eclipse.preferences.version=1
+initDB=/s2jms-teeda-example/src/main/resources/data
