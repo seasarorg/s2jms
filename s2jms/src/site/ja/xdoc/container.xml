@@ -7,88 +7,98 @@
 		<section name="目次">
 			<ul>
 				<li><p><a href="#概要">概要</a></p></li>
-				<li><p><a href="#S2JMS-Containerの提供する機能">S2JMS-Containerの提供する機能</a></p></li>
-				<ul>
-			  	    <li><p><a href="#JMSメッセージヘッダのバインド">JMSメッセージヘッダのバインド</a></p></li>
-			  	    <li><p><a href="#JMSメッセージプロパティのバインド">JMSメッセージプロパティのバインド</a></p></li>
-			  	    <li><p><a href="#JMSメッセージペイロードデータのバインド">JMSメッセージペイロードデータのバインド</a></p></li>
-			  	    <li><p><a href="#リスナメソッド">リスナメソッド</a></p></li>
-				</ul>
+				<li><p><a href="#メッセージのバインド">メッセージのバインド</a></p>
+					<ul>
+				  	    <li><p><a href="#JMSメッセージヘッダのバインド">JMSメッセージヘッダのバインド</a></p></li>
+				  	    <li><p><a href="#JMSメッセージプロパティのバインド">JMSメッセージプロパティのバインド</a></p></li>
+				  	    <li><p><a href="#JMSメッセージペイロードデータのバインド">JMSメッセージペイロードデータのバインド</a></p></li>
+					</ul>
+				</li>
+		  	    <li><p><a href="#リスナ・メソッド">リスナ・メソッド</a></p></li>
+				<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
 			</ul>
 		</section>
 
 		<section name="概要">
 			<p>
-				S2JMS-Containerは、POJOがJMSのAPIを意識することなく、
-				非同期通信によるメッセージを受信できるようにするためのコンポーネントです。
+				S2JMS-Containerは，POJO (Plain Old Java Object) がJMSのAPIを意識することなく，
+				非同期通信によるメッセージを受信できるようにするためのコンポーネントです．
 			</p>
 			<p>
-				通常、JMSによるインバウンドメッセージ受信アプリケーション (EJBのMessage-Driven Beanなど)
-				を作成するには、以下の手順を踏みます。
+				通常，JMSによるインバウンドメッセージ受信アプリケーション (EJBのMessage-Driven Beanなど)
+				を作成するには，以下の手順を踏みます．
 			</p>
 			<ol>
-			  <li><p><code>javax.jms.MessageListener</code>インターフェースを実装したクラスを作成する。</p></li>
-			  <li><p><code>onMessage(javax.jms.Message)</code> メソッドを作成する。</p></li>
-			 	<li><p><code>onMessage(javax.jms.Message)</code> メソッドの中で、受信した <code>javax.jms.Message</code> を処理する。</p></li>
+				<li><p><code>javax.jms.MessageListener</code>インターフェースを実装したクラスを作成する．</p></li>
+				<li><p><code>onMessage(javax.jms.Message)</code>メソッドを作成する．</p></li>
+			 	<li><p><code>onMessage(javax.jms.Message)</code>メソッドの中で，受信した<code>javax.jms.Message</code>を処理する．</p></li>
 			</ol>
 			<p>
-				しかし、この場合作成したクラスはJMSのAPIに依存することになってしまいます。
+				しかし，この場合作成したクラスはJMSのAPIに依存することになってしまいます．
 			</p>
 			<p>
-				S2JMS-Containerを利用することで、JMSのAPIに依存しない受信アプリケーション (Message-Driven POJOs)
-				を作ることができ、特に既存の資産をJMS受信アプリケーションに変換する際に威力を発揮します。
+				S2JMS-Containerを利用することで，JMSのAPIに依存しない受信コンポーネント (Message-Driven POJOs)
+				を作ることができ，特に既存の資産をJMS受信アプリケーションに流用することが容易となります
+				(このメッセージ受信コンポーネントを，「リスナ・コンポーネント」と呼びます)．
+			</p>
+			<p>
+				S2JMS-Containerは，インバウンド通信によりJMSメッセージを受信すると，
+				JMSメッセージのヘッダやプロパティ，ペイロードをリスナ・コンポーネントにバインドしてメッセージを処理するメソッドを呼び出します
+				(このメソッドを，「リスナ・メソッド」と呼びます)．
+				このため，リスナ・コンポーネントは<code>javax.jms.MessageListener</code>インターフェースを実装したり，
+				JMSメッセージを直接扱ったりすることなく，メッセージを処理することができます．
 			</p>
 		</section>
 
-		<section name="S2JMS-Containerの提供する機能">
+		<section name="メッセージのバインド">
 			<p>
-				S2JMS-Containerは、以下の機能を提供します。
+				S2JMS-Containerを使用すると，受信したJMSメッセージのヘッダ，プロパティ，およびペイロードを，
+				リスナ・コンポーネントにバインドすることができます．
 			</p>
-			<ol>
-				<li><p>メッセージリスナ・コンポーネントへJMSメッセージのバインド</p></li>
-				<li><p>メッセージリスナ・コンポーネントの呼び出し</p></li>
-				<li><p>非Webコンテナ環境でSeasar2におけるrequestスコープの提供</p></li>
-			</ol>
 
 			<subsection name="JMSメッセージヘッダのバインド">
 				<p>
-					メッセージリスナ・コンポーネントに対して、受信したJMSメッセージのヘッダをバインドします。
+					リスナ・コンポーネントに対して，受信したJMSメッセージのヘッダをバインドします．
 				</p>
 
 				<p>
-					バインドしたいフィールドまたはsetterメソッドに <code>@JMSHeader</code> アノテーションを記述することで、
-					該当するメッセージヘッダがバインドされます。
+					バインドしたいフィールドまたはsetterメソッドに <code>@JMSHeader</code> アノテーションを記述することで，
+					該当するメッセージヘッダがバインドされます．
 				</p>
 			
 				<p>
-					以下のように、<code>@JMSHeader</code>アノテーションのみを記述した場合、
-					フィールド名に一致するメッセージヘッダがバインドされます。
-					この場合、フィールド名は「<code>correlationID</code>」 (「JMS」というプレフィックスをつけない)
-					または「<code>JMSCorrelationID</code>」 (「JMS」というプレフィックスをつける) のどちらでも有効です。
+					以下のように，<code>@JMSHeader</code>アノテーションのみを記述した場合，
+					フィールド名に一致するメッセージヘッダがバインドされます．
+					この場合，フィールド名は"<code>correlationID</code>" ("<code>JMS</code>"というプレフィックスをつけない)
+					または"<code>JMSCorrelationID</code>" ("<code>JMS</code>"というプレフィックスをつける) のどちらでも有効です．
+				</p>
+				<p>
+					以下の例では，<code>correlationID</code>フィールドに，
+					<code>JMSCorrelationID</code>ヘッダの値がバインドされます．
 				</p>
 <source><![CDATA[
     @JMSHeader
     String correlationID;
 ]]></source>
 				<p>
-					以下のように、<code>name</code>メンバを利用してヘッダ名称を記述することもできます。
-					この場合、フィールド名には関係なく<code>name</code>メンバで指定されたヘッダ名が使用されます。
-					この場合もヘッダ名称には「JMS」プレフィックスをつけてもつけなくても構いません。
+					以下のように，<code>name</code>メンバを利用してヘッダ名称を記述することもできます．
+					この場合，フィールド名には関係なく<code>name</code>メンバで指定されたヘッダ名が使用されます．
+					この場合もヘッダ名称には「JMS」プレフィックスをつけてもつけなくても構いません．
 				</p>
 <source><![CDATA[
     @JMSHeader(name = "deliveryMode")
     int mode;
 ]]></source>
 				<p>
-					<code>@JMSHeader</code>アノテーションには、
-					S2Containerの<code>bindingType</code>メンバも指定することができます。
+					<code>@JMSHeader</code>アノテーションには，
+					S2Containerの<code>bindingType</code>メンバも指定することができます．
 				</p>
 <source><![CDATA[
     @JMSHeader(bindingType = BindingType.MUST)
     String JMSMessageID;
 ]]></source>
 				<p>
-					<code>bindingType</code>については、以下の表を参照してください。
+					<code>bindingType</code>については，以下の表を参照してください．
 				</p>
 				<table width="100%" border="1">
 					<tr align="center">
@@ -97,25 +107,27 @@
 					</tr>
 					<tr>
 						<td><code>MUST</code></td>
-						<td>バインドに失敗した場合､例外が発生します。
+						<td>バインドに失敗した場合､例外が発生します．
 					</td>
 					</tr>
 					<tr>
 						<td><code>SHOULD</code> (デフォルト)</td>
-						<td>バインドに失敗した場合､警告を通知します。</td>
+						<td>バインドに失敗した場合､警告を通知します．</td>
 					</tr>
 					<tr>
 						<td><code>MAY</code></td>
-						<td>バインドに失敗した場合、何もおきません。</td>
+						<td>バインドに失敗した場合，何もおきません．</td>
 					</tr>
 					<tr>
 						<td><code>NONE</code></td>
-						<td>バインドを行いません。</td>
+						<td>バインドを行いません．</td>
 					</tr>
 				</table>
 				<p>
-					setterメソッドに対しても<code>@JMSHeader</code>アノテーションを記述することができます。
-					<code>name</code>メンバを省略した場合、メソッド名から「<code>set</code>」を除いた部分がヘッダ名称として扱われます。
+					setterメソッドに対しても<code>@JMSHeader</code>アノテーションを記述することができます．
+					<code>name</code>メンバを省略した場合，
+					メソッド名から先頭の"<code>set</code>"を取り除いた名前がヘッダ名となります．
+					この場合もヘッダ名称には「JMS」プレフィックスをつけてもつけなくても構いません．
 				</p>
 <source><![CDATA[
     int priority;
@@ -129,12 +141,12 @@
 
 			<subsection name="JMSメッセージプロパティのバインド">
 				<p>
-					ヘッダと同様にメッセージのプロパティもバインドすることができます。
+					ヘッダと同様にメッセージのプロパティもバインドすることができます．
 				</p>
 				<p>
-					以下のように、フィールドやsetterに<code>@JMSProperty</code>アノテーションのみを記述した場合、
-					フィールド名に一致するメッセージプロパティがバインドされます。
-					この場合、「foo」という名前のプロパティがバインドされます。
+					以下のように，フィールドやsetterに<code>@JMSProperty</code>アノテーションのみを記述した場合，
+					フィールド名に一致するメッセージプロパティがバインドされます．
+					この場合，「foo」という名前のプロパティがバインドされます．
 				</p>
 <source><![CDATA[
   @JMSProperty
@@ -147,7 +159,7 @@
   }
 ]]></source>
 				<p>
-					また、以下のように<code>name</code>メンバを利用してプロパティ名を明示することもできます。
+					また，以下のように<code>name</code>メンバを利用してプロパティ名を明示することもできます．
 				</p>
 <source><![CDATA[
   @JMSProperty(name = "baz")
@@ -156,20 +168,26 @@
   }
 ]]></source>
 				<p>
-					<code>@JMSProperty</code>アノテーションにも、<code>@JMSHeader</code>アノテーションと同様に、
-					<code>bindingType</code>メンバによるバインディングの制御を指定することができます。
+					<code>@JMSProperty</code>アノテーションにも，<code>@JMSHeader</code>アノテーションと同様に，
+					<code>bindingType</code>メンバによるバインディングの制御を指定することができます．
+				</p>
+				<p>
+					setterメソッドに対しても<code>@JMSPriority</code>アノテーションを記述することができます．
+					<code>name</code>メンバを省略した場合，
+					メソッド名から先頭の"<code>set</code>"を取り除いて先頭を小文字にした名前がプロパティ名となります
+					("<code>set</code>"を取り除いた名前の先頭2文字がどちらも大文字の場合は先頭を小文字にしません)．
 				</p>
 			</subsection>
 
 			<subsection name="JMSメッセージペイロードデータのバインド">
 				<p>
-					ヘッダと同様にメッセージの本体 (ペイロードデータ) もバインドすることができます。
+					ヘッダと同様にメッセージの本体 (ペイロードデータ) もバインドすることができます．
 				</p>
 				<p>
-					<code>MapMessage</code>を除いて、
-					以下のようにフィールドやsetterに<code>@JMSPayload</code>アノテーションのみを記述した場合、
-					フィールド名に一致するメッセージプロパティがバインドされます。
-					この場合、<code>TextMessage</code>のペイロードデータがバインドされます。
+					<code>MapMessage</code>を除いて，
+					以下のようにフィールドやsetterに<code>@JMSPayload</code>アノテーションのみを記述した場合，
+					フィールド名に一致するメッセージプロパティがバインドされます．
+					この場合，<code>TextMessage</code>のペイロードデータがバインドされます．
 				</p>
 <source><![CDATA[
   @JMSPayload
@@ -182,11 +200,11 @@
   }
 ]]></source>
 				<p>
-					<code>MapMessage</code>の場合、
-					以下のようにフィールドやsetterに<code>@JMSPayload</code>アノテーションのみを記述した場合、
-					ペイロードデータからフィールド名に一致するマッピングの値がバインドされます。
-					この場合、<code>MapMessage</code>のペイロードデータから、
-					<code>foo</code>というキーにマッピングされている値がバインドされます。
+					<code>MapMessage</code>の場合，
+					以下のようにフィールドやsetterに<code>@JMSPayload</code>アノテーションのみを記述した場合，
+					ペイロードデータからフィールド名に一致するマッピングの値がバインドされます．
+					この場合，<code>MapMessage</code>のペイロードデータから，
+					<code>foo</code>というキーにマッピングされている値がバインドされます．
 				</p>
 <source><![CDATA[
   @JMSPayload
@@ -199,7 +217,7 @@
   }
 ]]></source>
 				<p>
-					また、以下のように<code>name</code>メンバを利用してキーを明示することもできます。
+					また，以下のように<code>name</code>メンバを利用してキーを明示することもできます．
 				</p>
 <source><![CDATA[
   @JMSPayload(name = "baz")
@@ -208,8 +226,8 @@
   }
 ]]></source>
 				<p>
-					ただし、フィールドまたはプロパティの型が<code>Map</code>の場合は、
-					<code>MapMessage</code>のペイロードが持つ全てのマッピングを含んだ<code>Map</code>がバインドされます。
+					ただし，フィールドまたはプロパティの型が<code>Map</code>の場合は，
+					<code>MapMessage</code>のペイロードが持つ全てのマッピングを含んだ<code>Map</code>がバインドされます．
 				</p>
 <source><![CDATA[
   @JMSPayload
@@ -218,27 +236,28 @@
   }
 ]]></source>
 				<p>
-					<code>@JMSPayload</code>アノテーションにも、<code>@JMSHeader</code>アノテーションと同様に、
-					<code>bindingType</code>メンバによるバインディングの制御を指定することができます。
+					<code>@JMSPayload</code>アノテーションにも，<code>@JMSHeader</code>アノテーションと同様に，
+					<code>bindingType</code>メンバによるバインディングの制御を指定することができます．
 				</p>
 			</subsection>
+		</section>
 
-			<subsection name="リスナメソッド">
-				<p>
-					受信したメッセージがバインドされた後に呼び出されるのがリスナメソッドです。
-				</p>
-				<p>
-					リスナメソッドは、デフォルトではメソッド名が<code>onMessage</code>のメソッドです。
-				</p>
+		<section name="リスナ・メソッド">
+			<p>
+				受信したメッセージがバインドされた後に呼び出されるのがリスナ・メソッドです．
+			</p>
+			<p>
+				リスナ・メソッドは，デフォルトではメソッド名が<code>onMessage</code>のメソッドです．
+			</p>
 <source><![CDATA[
   void onMessage() {
     ...
   }
 ]]></source>
-				<p>
-					引数を一つ持つこともできます。
-					引数の型はメッセージのペイロードデータ型か、<code>javax.jms.Message</code>です。
-				</p>
+			<p>
+				引数を一つ持つこともできます．
+				引数の型はメッセージのペイロードデータ型か，<code>javax.jms.Message</code>です．
+			</p>
 <source><![CDATA[
   void onMessage(String text) {
     ...
@@ -249,26 +268,49 @@
     ...
   }
 ]]></source>
-				<p>
-					また、以下のように<code>@OnMessage</code>アノテーションで任意の名前のメソッドをリスナメソッドにすることができます。
-				</p>
+			<p>
+				また，以下のように<code>@OnMessage</code>アノテーションで任意の名前のメソッドをリスナ・メソッドにすることができます．
+			</p>
 <source><![CDATA[
   @OnMessage
-  void some() {
+  void foo() {
     ...
   }
 ]]></source>
 <source><![CDATA[
   @OnMessage
-  void some(Map payload) {
+  void bar(Map payload) {
     ...
   }
 ]]></source>
-				<p>
-					いずれも、戻り値の型は任意です。
-					S2JMS-Containerが戻り値を利用することはありません。
-				</p>
-			</subsection>
+			<p>
+				いずれも，戻り値の型は任意です．
+				S2JMS-Containerが戻り値を利用することはありません．
+			</p>
+		</section>
+
+		<section name="リクエスト～リプライ">
+			<p>
+				要求メッセージを受信した後に応答メッセージを送信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
+			</p>
+<source><![CDATA[
+public class RequestReplyListener {
+    @Binding(bindingType = BindingType.MUST)
+    protected MessageSender sender;
+
+    @JMSHeader
+    protected String messageID;
+
+    @JMSPayload
+    protected String requestMessage;
+
+    public void onMessage() {
+        String replyMessage = ...;
+        sender.setCorrelationID(messageID);
+        sender.send(replyMessage);
+    }
+}
+]]></source>
 		</section>
 	</body>
 </document>

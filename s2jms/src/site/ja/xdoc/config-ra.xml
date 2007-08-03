@@ -61,6 +61,9 @@
 				<p>
 					Rarファイルにパッケージングされているリソースアダプタを使用可能にするためのコンポーネントです．
 				</p>
+				<p>
+					Rarファイル内にパッケージされているJarファイルと，Rarファイルと同じディレクトリにあるJarファイルがクラスパスに追加されます．
+				</p>
 				<h5>コンストラクタ引数</h5>
 				<table border="1">
 					<tr><th>引数</th><th>説明</th></tr>
@@ -149,6 +152,10 @@
 				<p>
 					<a href="https://genericjmsra.dev.java.net/">Generic Resource Adapter for JMS</a>と
 					IBM WebSphere MQ (formerly known MQSeries) を組み合わせて使用するためのコンポーネントです．
+				</p>
+				<p>
+					Rarファイル内にパッケージされているJarファイルと，Rarファイルと同じディレクトリにあるJarファイルがクラスパスに追加されます．
+					IBM WebSphere MQのJarファイルはGeneric Resource Adapter for JMSのRarファイルと同じディレクトリに配置してください．
 				</p>
 				<h5>コンストラクタ引数</h5>
 				<table border="1">

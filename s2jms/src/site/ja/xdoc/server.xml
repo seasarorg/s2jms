@@ -6,10 +6,19 @@
 	<body>
 		<section name="目次">
 			<ul>
-				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#概要">概要</a></p>
+					<ul>
+						<li><p><a href="#クラスパス">クラスパス</a></p></li>
+					</ul>
+				</li>
 				<li><p><a href="#コマンドライン">コマンドライン</a></p>
 					<ul>
 						<li><p><a href="#コマンドラインオプション">コマンドラインオプション</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#実行環境">実行環境</a></p>
+					<ul>
+						<li><p><a href="#ディレクトリ構成">ディレクトリ構成</a></p></li>
 					</ul>
 				</li>
 			</ul>
@@ -17,19 +26,24 @@
 
 		<section name="概要">
 			<p>
-				S2JMS-Serverは、<a href="container.html">S2JMS-Container</a>を利用したアプリケーションを
-				サーバプロセスとして起動するブートストラップで、実行可能Jarファイルとして提供されます。
+				S2JMS-Serverは，<a href="container.html">S2JMS-Container</a>を利用したアプリケーションを
+				サーバプロセスとして起動するブートストラップで，実行可能Jarファイルとして提供されます．
 			</p>
-			<p>
-				S2JMS-Serverは、自身のJarファイルと同じ位置にあるJarファイルをクラスパスに追加します。
-				このため、S2JMS-Serverを利用するとクラスパスを設定する手間を省き、コマンドラインから
-				簡単にS2JMS-Containerを利用したJMSメッセージ受信アプリケーションを実行することができます。
-			</p>
+
+			<subsection name="クラスパス">
+				<p>
+					S2JMS-Serverは，自身のJarファイル (<code>s2jms-server-x.y.z.jar</code>)
+					と同じ位置にあるJarファイルをクラスパスに追加します．
+					(これをデフォルトクラスパスと呼びます)．
+					このため，S2JMS-Serverを利用するとクラスパスを設定する手間を省くことができ，コマンドラインから
+					簡単にS2JMS-Containerを利用したJMSメッセージ受信アプリケーションを実行することができます．
+				</p>
+			</subsection>
 		</section>
 
 		<section name="コマンドライン">
 			<p>
-				S2JMS－Serverを起動するには、コマンドラインで次のように指定します。
+				S2JMS－Serverを起動するには，コマンドラインで次のように指定します．
 			</p>
 <source>
 java -jar s2jms-server-x.y.z.jar [--classpath <var>classpaths</var>] [--dicon <var>diconfile</var>]
@@ -37,23 +51,58 @@ java -jar s2jms-server-x.y.z.jar [--classpath <var>classpaths</var>] [--dicon <v
 
 			<subsection name="コマンドラインオプション">
 				<p>
-					S2JMS－Serverを起動する際にコマンドラインオプションとして以下の指定を行うことができます。
+					S2JMS－Serverを起動する際にコマンドラインオプションとして以下の指定を行うことができます．
 				</p>
 				<dl>
 					<dt><code>--classpath <var>classpaths</var></code></dt>
 					<dd>
-					追加のクラスパスを指定します。
-					 <code><var>classpaths</var></code>はプラットフォームのパス区切り文字を使って複数のパスを指定することができます。
-						追加されたクラスパスは標準のクラスパスより前に設定されます。<br/>
-						指定されたパスがディレクトリの場合、そのディレクトリ直下にJarファイルが含まれていればそれらのJarファイルが全てクラスパスに追加されます。
-						ディレクトリ直下にJarファイルが含まれていなければそのディレクトリがクラスパスに追加されます。
-						指定されたパスがファイルの場合はそのファイルがクラスパスに追加されます。
+					追加のクラスパスを指定します．
+					 <code><var>classpaths</var></code>はプラットフォームのパス区切り文字を使って複数のパスを指定することができます．
+						追加されたクラスパスはデフォルトクラスパスより前に設定されます．<br/>
+						指定されたパスがディレクトリの場合，そのディレクトリ直下にJarファイルが含まれていればそれらのJarファイルが全てクラスパスに追加されます．
+						ディレクトリ直下にJarファイルが含まれていなければそのディレクトリがクラスパスに追加されます．
+						指定されたパスがファイルの場合はそのファイルがクラスパスに追加されます．
 					</dd>
 					<dt><code>--dicon <var>diconfile</var></code></dt>
 					<dd>
-						ルートとなるdiconファイルを指定します。省略すると<code>app.dicon</code>になります。
+						ルートとなるdiconファイルを指定します．省略すると<code>app.dicon</code>になります．
 					</dd>
 				</dl>
+			</subsection>
+		</section>
+
+		<section name="実行環境">
+			<subsection name="ディレクトリ構成">
+				<p>
+					S2JMS-Serverで起動するアプリケーションのディレクトリ構成は次のようにします．
+				</p>
+<source>
+<var>アプリケーションルート</var>
+ +- classes
+ |   +- <var>アプリケーションの.classファイル及びリソースファイル</var>
+ +- config
+ |   +- <var>diconファイル等のリソースファイル</var>
+ +- lib
+ |   +- s2-framework-x.y.z.jar
+ |   +- s2-extension-x.y.z.jar
+ |   +- s2-tiger-x.y.z.jar
+ |   +- s2jca-x.y.z.jar
+ |   +- s2jms-core-x.y.z.jar
+ |   +- s2jms-container-x.y.z.jar
+ |   +- s2jms-server-x.y.z.jar
+ |   +- <var>その他Seasar2およびアプリケーションの依存するJarファイル</var>
+ +- ra
+     +- <var>リソースアダプタのRarファイル</var>
+     +- <var>リソースアダプタが依存するJarファイル</var>
+</source>
+				<p>
+					この場合の起動コマンドは次のようになります
+					(Windowsで，<code>config</code>ディレクトリまたは<code>classes</code>ディレクトリに<code>app.dicon</code>ファイルがあり，
+					<var>アプリケーションルート</var>がカレントディレクトリの場合)．
+				</p>
+<source>
+java -jar lib\s2jms-server-x.y.z.jar --classpath config;classes
+</source>
 			</subsection>
 		</section>
 	</body>

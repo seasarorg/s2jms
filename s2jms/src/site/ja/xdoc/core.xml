@@ -9,24 +9,30 @@
 				<li><p><a href="#概要">概要</a></p></li>
 				<li><p><a href="#MessageSender">MessageSender</a></p></li>
 				<li><p><a href="#MessageReceiver">MessageReceiver</a></p></li>
+				<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
 			</ul>
 		</section>
 
 		<section name="概要">
 			<p>
 				S2JMS-Coreは，JMSメッセージを容易に送受信するためのコンポーネントを提供します．
-				主なコンポーネントは次の二つです．
+				主なコンポーネントのインタフェースは次の二つです．
 			</p>
 			<dl>
 				<dt>MessageSender</dt>
 				<dd>
-					JMSメッセージを送信する場合に使用するコンポーネントです．
+					JMSメッセージを送信する場合に使用するコンポーネントのインタフェースです．
 				</dd>
 				<dt>MessageReceiver</dt>
 				<dd>
-					JMSメッセージを受信する場合に使用するコンポーネントです．
+					JMSメッセージを受信する場合に使用するコンポーネントのインタフェースです．
 				</dd>
 			</dl>
+			<p>
+				いずれもdiconファイルに定義し，アプリケーションはS2コンテナからDIされたコンポーネントを使用します．
+				diconファイルへの定義については，
+				「<a href="config.html">コンフィグレーション</a>」－「<a href="config-outbound.html">アウトバウンド通信</a>」を参照してください．
+			</p>
 		</section>
 
 		<section name="MessageSender">
@@ -38,51 +44,66 @@
 			</p>
 			<ul>
 				<li><p>
-					<code>send(byte[] bytes)</code>
+					<code>void send(byte[] bytes)</code>
 					<div>
 						引数で指定されたバイト列をペイロードデータとする<code>BytesMessage</code>を作成して送信します。
 					</div>
 				</p></li>
 				<li><p>
-					<code>send(Map&lt;String, Object&gt; map)</code>
+					<code>void send(Map&lt;String, Object&gt; map)</code>
 					<div>
 						引数で指定された<code>Map</code>に含まれるマッピングをペイロードデータとする<code>MapMessage</code>を作成して送信します。
 					</div>
 				</p></li>
 				<li><p>
-					<code>send(Serializable object)</code>
+					<code>void send(Serializable object)</code>
 					<div>
 						引数で指定されたオブジェクトをペイロードデータとする<code>ObjectMessage</code>を作成して送信します。
 					</div>
 				</p></li>
 				<li><p>
-					<code>send(String text)</code>
+					<code>void send(String text)</code>
 					<div>
 						引数で指定された文字列をペイロードデータとする<code>TextMessage</code>を作成して送信します。
 					</div>
 				</p></li>
 			</ul>
 			<p>
+				例えば，<code>TextMessage</code>を送信する場合は次のようになります．
+			</p>
+<source><![CDATA[
+    String text = ...;
+    sender.send(text);
+]]></source>
+			<p>
 				作成されるJMSメッセージのヘッダを指定するには、次のメソッドを使用します。
 			</p>
 			<ul>
-				<li><p><code>setCorrelationID(final String correlationID)</code></p></li>
-				<li><p><code>setCorrelationIDAsBytes(final byte[] correlationIDAsBytes)</code></p></li>
-				<li><p><code>setReplyTo(Destination replyTo)</code></p></li>
+				<li><p><code>MessageSender setCorrelationID(final String correlationID)</code></p></li>
+				<li><p><code>MessageSender setCorrelationIDAsBytes(final byte[] correlationIDAsBytes)</code></p></li>
+				<li><p><code>MessageSender setReplyTo(Destination replyTo)</code></p></li>
 			</ul>
 			<p>
 				作成されるJMSメッセージのプロパティを指定するには、次のメソッドを使用します。
 			</p>
 			<ul>
-				<li><p><code>addProperty(String name, Object value)</code></p></li>
-				<li><p><code>addProperties(Map&lt;String, Object&gt; properties)</code></p></li>
+				<li><p><code>MessageSender addProperty(String name, Object value)</code></p></li>
+				<li><p><code>MessageSender addProperties(Map&lt;String, Object&gt; properties)</code></p></li>
 			</ul>
+			<p>
+				例えば，次のようになります．
+			</p>
+<source><![CDATA[
+    sender.setCorrelationID(correlationID);
+    sender.addProperty("reply", true);
+    sender.send(text);
+]]></source>
 			<p>
 				送信するJMSメッセージをより詳細に設定するには次のメソッドを使用します。
 			</p>
 			<ul>
 				<li><p>
-					<code>send(MessageFactory)</code>
+					<code>&lt;MSGTYPE extends Message&gt; send(MessageFactory)</code>
 					<div>
 						引数で指定された<code>MessageFactory</code>が作成したJMSメッセージを送信します。
 					</div>
@@ -98,16 +119,30 @@
 				送信されたJMSメッセージを取得するには、次のメソッドを使用します。
 			</p>
 			<ul>
-				<li><p><code>getMessage()</code></p></li>
+				<li><p><code>Message getMessage()</code></p></li>
 			</ul>
+			<p>
+				例えば，次のようになります．
+			</p>
+<source><![CDATA[
+    sender.send(text);
+    Message sentMessage = sender.getMessage();
+]]></source>
 			<p>
 				送信されたJMSメッセージのヘッダを取得するには、次のメソッドを使用します。
 			</p>
 			<ul>
-				<li><p><code>getMessageID()</code></p></li>
-				<li><p><code>getTimestamp()</code></p></li>
-				<li><p><code>getExpiration()</code></p></li>
+				<li><p><code>String getMessageID()</code></p></li>
+				<li><p><code>long getTimestamp()</code></p></li>
+				<li><p><code>long getExpiration()</code></p></li>
 			</ul>
+			<p>
+				例えば，次のようになります．
+			</p>
+<source><![CDATA[
+    sender.send(text);
+    String messageID = sender.getMessageID();
+]]></source>
 		</section>
 
 		<section name="MessageReceiver">
@@ -119,36 +154,42 @@
 			</p>
 			<ul>
 				<li><p>
-					<code>receiveBytes()</code>
+					<code>byte[] receiveBytes()</code>
 					<div>
 						受信した<code>BytesMessage</code>のペイロードデータであるバイト列を返します。
 					</div>
 				</p></li>
 				<li><p>
-					<code>receiveMap()</code>
+					<code>Map&lt;String, Object&gt; receiveMap()</code>
 					<div>
 						受信した<code>MapMessage</code>のペイロードデータに含まれるマッピングを持つ<code>Map</code>を返します。
 					</div>
 				</p></li>
 				<li><p>
-					<code>receiveObject()</code>
+					<code>Object receiveObject()</code>
 					<div>
 						受信した<code>ObjectMessage</code>のペイロードデータであるオブジェクトを返します。
 					</div>
 				</p></li>
 				<li><p>
-					<code>receiveText()</code>
+					<code>String receiveText()</code>
 					<div>
 						受信した<code>TextMessage</code>のペイロードデータである文字列を返します。
 					</div>
 				</p></li>
 			</ul>
 			<p>
+				例えば，<code>TextMessage</code>を受信する場合は次のようになります．
+			</p>
+<source><![CDATA[
+    String text = receiver.receiveText();
+]]></source>
+			<p>
 				受信したJMSメッセージを独自に処理するには次のメソッドを使用することができます。
 			</p>
 			<ul>
 				<li><p>
-					<code>receive(MessageHandler messageHandler)</code>
+					<code>&lt;MSGTYPE extends Message, T&gt; T receive(MessageHandler&lt;MSGTYPE, T&gt; messageHandler)</code>
 					<div>
 						引数で指定する<code>MessageHandler</code>により自由にJMSメッセージを処理することができます。
 						このメソッドは<code>MessageHandler#handleMessage(Message)</code>の戻り値をそのまま返します。
@@ -159,14 +200,14 @@
 				受信したJMSメッセージをそのまま取得するには次のメソッドを使用することができます。
 			</p>
 			<ul>
-				<li><p><code>receive()</code></p></li>
+				<li><p><code>Message receive()</code></p></li>
 			</ul>
 			<p>
-				受信可能なJMSメッセージがまだない場合の動作は次のメソッドで設定します．
+				受信可能なJMSメッセージがまだ到着していない場合の動作は次のメソッドで設定します．
 			</p>
 			<ul>
 				<li><p>
-					<code>setTimeout(long timeout)</code>
+					<code>MessageReceiver setTimeout(long timeout)</code>
 					<div>
 						<code>timeout</code>に指定する値は次のようになります．
 						<dl>
@@ -180,7 +221,7 @@
 							</dd>
 							<dt>負の数</dt>
 							<dd>
-								JMSメッセージを受信するまで無制限に待機します。
+								JMSメッセージを受信するまで無期限に待機します。
 							</dd>
 						</dl>
 					</div>
@@ -190,23 +231,40 @@
 				受信するJMSメッセージを選択するために次のメソッドを使用することができます。
 			</p>
 			<ul>
-				<li><p><code>setMessageSelector(String messageSelector)</code></p></li>
+				<li><p><code>MessageReceiver setMessageSelector(String messageSelector)</code></p></li>
 			</ul>
 			<p>
 				受信したJMSメッセージを取得するには、次のメソッドを使用します。
 				<code>receiveText()</code>等を呼び出した後でもJMSメッセージを取得することができます．
 			</p>
 			<ul>
-				<li><p><code>getMessage()</code></p></li>
+				<li><p><code>void getMessage()</code></p></li>
 			</ul>
 			<p>
 				受信したJMSメッセージのヘッダを取得するには、次のメソッドを使用します。
 			</p>
 			<ul>
-				<li><p><code>getMessageID()</code></p></li>
-				<li><p><code>getTimestamp()</code></p></li>
-				<li><p><code>getExpiration()</code></p></li>
+				<li><p><code>void getMessageID()</code></p></li>
+				<li><p><code>void getTimestamp()</code></p></li>
+				<li><p><code>void getExpiration()</code></p></li>
 			</ul>
+		</section>
+
+		<section name="リクエスト～リプライ">
+			<p>
+				要求メッセージを送信した後に応答メッセージを受信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
+			</p>
+<source><![CDATA[
+        String requestMessage = ...;
+        sender.send(requestMessage);
+        String messageID = sender.getMessageID();
+        receiver.setMessageSelector("JMSCorrelationID = '" + messageID + "'");
+        String replyMessage = receiver.receiveText();
+]]></source>
+			<p>
+				要求メッセージを受信して応答メッセージを作成するアプリケーションでは，
+				応答メッセージの<code>JMSCorrelationID</code>ヘッダに要求メッセージの<code>JMSMessageID</code>ヘッダの値を設定します．
+			</p>
 		</section>
 	</body>
 </document>

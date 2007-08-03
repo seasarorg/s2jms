@@ -22,13 +22,17 @@
 		</section>
 		<section name="ニュース">
 			<dl>
+				<dt>2007/08/08</dt>
+				<dd>
+					S2JMS 1.0.0-RC1をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+				</dd>
 				<dt>2007/07/07</dt>
 				<dd>
-					S2JMS 1.0.0-M2 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+					S2JMS 1.0.0-M2をリリースしました． (<a href="downloads.html">ダウンロード</a>)
 				</dd>
 				<dt>2006/05/11</dt>
 				<dd>
-					S2JMS 1.0.0-M1 をリリースしました． (<a href="downloads.html">ダウンロード</a>)
+					S2JMS 1.0.0-M1をリリースしました． (<a href="downloads.html">ダウンロード</a>)
 				</dd>
 			</dl>
 		</section>

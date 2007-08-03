@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>S2JMS入門</title>
+		<title>S2JMSとは</title>
 	</properties>
 	<body>
 		<section name="目次">
@@ -12,7 +12,7 @@
 						<li><p><a href="#S2JMS">S2JMS</a></p></li>
 					</ul>
 				</li>
-				<li><p><a href="#アウトバウンド通信とインバウンド通信">アウトバウンド通信とインバウンド通信</a></p>
+				<li><p><a href="#S2JMSのプログラミング・モデル">S2JMSのプログラミング・モデル</a></p>
 					<ul>
 						<li><p><a href="#アウトバウンド通信">アウトバウンド通信</a></p></li>
 						<li><p><a href="#インバウンド通信">インバウンド通信</a></p></li>
@@ -24,9 +24,9 @@
 		<section name="概要">
 			<subsection name="JMS">
 				<p>
-					JMSは，JavaからMOM (Message-Oriented Middleware) を利用するための仕様で，
-					RDBMSに対するJDBCと同じ位置づけとなります．
-					JMSに対応した主なMOMとしては，IBM WebSphere MQ (formerly known MQSeries)，TIBCO Rendezvous，
+					JMSは，JavaからMOM (Message-Oriented Middleware) を使用して非同期メッセージを送受信するための仕様です．
+					ちょうど，RDBMSに対するJDBCと同等の位置づけとなります．
+					JMSに対応した主なMOMとしては，IBM WebSphere MQ (formerly known MQSeries)や，
 					<a href="http://activemq.apache.org/">Apache ActiveMQ</a>等があります．
 				</p>
 				<p>
@@ -46,7 +46,7 @@ connection.close();
 connectionFactory.close();
 ]]></source>
 				<p>
-					JDBCを直接使用する場合と同様，とても面倒です．
+					JDBCを直接使用する場合と同様，単調で面倒です．
 					S2JMSを使用すると，このように面倒なコードを書く手間を省くことができます．
 				</p>
 			</subsection>
@@ -63,14 +63,25 @@ connectionFactory.close();
 			</subsection>
 		</section>
 
-		<section name="アウトバウンド通信とインバウンド通信">
+		<section name="S2JMSのプログラミング・モデル">
 			<p>
-				JCA (J2EE Connector Architecture) 仕様では，
-				MOMとの間の通信をアウトバウンド通信とインバウンド通信という2つのモデルに分類しています．
+				S2JMSは，2つの異なったプログラミング・モデルを提供します．
 			</p>
-			<subsection name="アウトバウンド通信">
+			<ul>
+				<li><p>アウトバウンド・アプリケーション</p></li>
+				<li><p>インバウンド・アプリケーション</p></li>
+			</ul>
+			<p>
+				これらのプログラミング・モデルは，JCA (J2EE Connector Architecture) 仕様で定められている通信モデル，
+				アウトバウンド通信とインバウンド通信にそれぞれ対応しています．
+			</p>
+			<subsection name="アウトバウンド・アプリケーション">
 				<p>
-					 アウトバウンド通信 (outbound communication) とは，アプリケーション側が主体となって通信を行う形態のモデルです．
+					アウトバウンド・アプリケーションは，アウトバウンド通信 (outbound communication)
+					を使用して非同期メッセージを送受信するアプリケーションです．
+				</p>
+				<p>
+					 アウトバウンド通信とは，アプリケーション側が主体となって通信を行う形態のモデルです．
 					 MOMへの接続は，アプリケーションの要求によって確立されます．
 					 アプリケーションが<code>javax.jms.ConnectionFactory#getConnection()</code>呼び出すことで，
 					 リソースアダプタがMOMへの接続を確立します．
@@ -89,11 +100,18 @@ connectionFactory.close();
 					Webコンテナ上のアプリケーションや GUI アプリケーションなどでは，S2JMS-Coreを使用することにより，
 					アウトバウンド通信で非同期メッセージを送受信することができます．
 				</p>
+				<p>
+					アウトバウンド・アプリケーションの詳細は「<a href="core.html">S2JMS-Core</a>」を参照してください．
+				</p>
 			</subsection>
 
-			<subsection name="インバウンド通信">
+			<subsection name="インバウンド・アプリケーション">
 				<p>
-					インバウンド通信 (inbound communication) とは，リソースアダプタ (MOM) 側が主体となって通信を行う形態のモデルです．
+					インバウンド・アプリケーションは，インバウンド通信 (inbound communication)
+					を使用して非同期メッセージを受信するアプリケーションです．
+				</p>
+				<p>
+					インバウンド通信とは，リソースアダプタ (MOM) 側が主体となって通信を行う形態のモデルです．
 					MOMとの接続はリソースアダプタによって確立されます．
 				</p>
 				<p>
@@ -106,12 +124,20 @@ connectionFactory.close();
 				<img src="images/s2jms-container.png" width="541" hight="125"/>
 				<p>
 					S2JMS-Containerを使用することにより，インバウンド通信で非同期メッセージを受信することができます．
-					S2JMS-Containerでは，リソースアダプタはS2JCAが提供するスレッド上でメッセージを受信し，
+					S2JMS-Containerを使用すると，リソースアダプタはS2JCAが提供するスレッド上でメッセージを受信し，
 					アプリケーションに通知します．
 					そのため，インバウンド通信は通常スタンドアロン・アプリケーションで利用します．
-					Webコンテナ上でインバウンド通信の利用は推奨しません．
+					Webコンテナ上でインバウンド通信を使用することは推奨しません．
 					S2JMS-Containerを利用するスタンドアロン・アプリケーションを起動するために，
 					<a href="server.html">S2JMS-Server</a>を利用することができます．
+				</p>
+				<p>
+					インバウンド通信では非同期メッセージの受信のみ行うことができます．
+					非同期メッセージを受信するには，アウトバウンド通信を使用します．
+					この場合，インバウンド・アプリケーションは同時にアウトバウンド・アプリケーションとなります．
+				</p>
+				<p>
+					インバウンド・アプリケーションの詳細は「<a href="container.html">S2JMS-Container</a>」を参照してください．
 				</p>
 			</subsection>
 		</section>
