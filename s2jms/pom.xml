@@ -16,6 +16,9 @@
     <module>../s2jms-server</module>
     <module>../s2jms-dist</module>
   </modules>
+  <properties>
+    <s2jca.version>${version}</s2jca.version>
+  </properties>
 
   <!-- More Project Information -->
   <name>S2JMS</name>
@@ -201,6 +204,7 @@
               <tasks>
                 <ant antfile="build.xml" target="dist">
                   <property name="ver" value="${version}"/>
+                  <property name="s2jca.ver" value="${s2jca.version}"/>
                 </ant>
               </tasks>
             </configuration>
@@ -230,7 +234,7 @@
     <dependency>
       <groupId>org.seasar.jca</groupId>
       <artifactId>s2jca</artifactId>
-      <version>1.0.0-RC1-SNAPSHOT</version>
+      <version>${s2jca.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
