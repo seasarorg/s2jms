@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry output="build/test-classes" kind="src" path="src/test/java"/>
+	<classpathentry output="build/test-classes" kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/geronimo-annotation_1.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-j2ee_1.4_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-ejb_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-interceptor_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-jpa_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-jta_1.1_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.4.ga.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="lib/ognl-2.6.9-patch-20070624.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.0-FINAL.jar"/>
+	<classpathentry kind="lib" path="lib/portlet-api-1.0.jar"/>
+	<classpathentry sourcepath="lib/sources/s2-framework-2.4.16-sources.jar" kind="lib" path="lib/s2-framework-2.4.16.jar"/>
+	<classpathentry sourcepath="lib/sources/s2-extension-2.4.16-sources.jar" kind="lib" path="lib/s2-extension-2.4.16.jar"/>
+	<classpathentry sourcepath="lib/sources/s2-tiger-2.4.16-sources.jar" kind="lib" path="lib/s2-tiger-2.4.16.jar"/>
+	<classpathentry sourcepath="lib/sources/s2jca-1.0.0-RC1-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jca-1.0.0-RC1-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="lib/sources/s2jms-core-1.0.0-RC1-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jms-core-1.0.0-RC1-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="lib/sources/s2jms-container-1.0.0-RC1-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jms-container-1.0.0-RC1-SNAPSHOT.jar"/>
+	<classpathentry sourcepath="lib/sources/s2jms-server-1.0.0-RC1-SNAPSHOT-sources.jar" kind="lib" path="lib/s2jms-server-1.0.0-RC1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.2.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-addons-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/easymock-2.2.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
