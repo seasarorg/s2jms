@@ -15,6 +15,8 @@
  */
 package org.seasar.jms.example.server.listener;
 
+import java.util.Map;
+
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.log.Logger;
@@ -38,6 +40,9 @@ public class EchoListener {
     protected String messageID;
 
     @JMSProperty
+    protected Map<String, Object> properties;
+
+    @JMSProperty
     protected boolean needReply;
 
     @JMSPayload
@@ -48,7 +53,9 @@ public class EchoListener {
 
     @OnMessage
     public void echo() {
-        logger.info("received message : " + text);
+        logger.info("message id : " + messageID);
+        logger.info("properties : " + properties);
+        logger.info("message : " + text);
         if (needReply) {
             messageSender.setCorrelationID(messageID);
             messageSender.send("★★★ " + text + " ★★★");

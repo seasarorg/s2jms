@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.Message;
 
@@ -37,6 +38,7 @@ import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.binder.Binder;
 import org.seasar.jms.container.binder.impl.JMSHeaderBinder;
 import org.seasar.jms.container.binder.impl.JMSPayloadBinder;
+import org.seasar.jms.container.binder.impl.JMSPropertiesBinder;
 import org.seasar.jms.container.binder.impl.JMSPropertyBinder;
 import org.seasar.jms.container.exception.IllegalMessageListenerException;
 import org.seasar.jms.container.exception.MessageListenerNotFoundException;
@@ -158,7 +160,11 @@ public class MessageListenerSupport {
                 if (bindingType != BindingType.NONE) {
                     final String name = StringUtil.isEmpty(property.name()) ? field.getName()
                             : property.name();
-                    binders.add(new JMSPropertyBinder(name, bindingType, field));
+                    if (field.getType() == Map.class) {
+                        binders.add(new JMSPropertiesBinder(name, bindingType, field));
+                    } else {
+                        binders.add(new JMSPropertyBinder(name, bindingType, field));
+                    }
                 }
                 continue;
             }
@@ -207,7 +213,11 @@ public class MessageListenerSupport {
                 if (bindingType != BindingType.NONE) {
                     final String name = StringUtil.isEmpty(property.name()) ? propertyDesc
                             .getPropertyName() : property.name();
-                    binders.add(new JMSPropertyBinder(name, bindingType, propertyDesc));
+                    if (propertyDesc.getPropertyType() == Map.class) {
+                        binders.add(new JMSPropertiesBinder(name, bindingType, propertyDesc));
+                    } else {
+                        binders.add(new JMSPropertyBinder(name, bindingType, propertyDesc));
+                    }
                 }
                 continue;
             }

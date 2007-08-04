@@ -15,8 +15,13 @@
  */
 package org.seasar.jms.core.util;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.jms.JMSException;
 import javax.jms.Message;
 
+import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageHandler;
 
 /**
@@ -25,6 +30,27 @@ import org.seasar.jms.core.message.MessageHandler;
  * @author koichik
  */
 public class MessageHandlerUtil extends JMSHeaderSupport {
+
+    /**
+     * JMSメッセージのプロパティを{@link java.util.Map}で返します。
+     * 
+     * @param message
+     *            JMSメッセージ
+     * @return JMSメッセージのプロパティ
+     * @throws SJMSRuntimeException
+     *             JMS実装で例外が発生した場合にスローされます
+     */
+    public static Map<String, Object> getProperties(final Message message) {
+        try {
+            final Map<String, Object> map = new LinkedHashMap<String, Object>();
+            for (final String name : new IterableAdapter(message.getPropertyNames())) {
+                map.put(name, message.getObjectProperty(name));
+            }
+            return map;
+        } catch (final JMSException e) {
+            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
+        }
+    }
 
     /**
      * JMSメッセージのペイロードを返します。

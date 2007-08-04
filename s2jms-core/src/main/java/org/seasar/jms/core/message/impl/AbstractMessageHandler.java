@@ -15,7 +15,6 @@
  */
 package org.seasar.jms.core.message.impl;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.jms.Destination;
@@ -24,7 +23,7 @@ import javax.jms.Message;
 
 import org.seasar.jms.core.exception.SJMSRuntimeException;
 import org.seasar.jms.core.message.MessageHandler;
-import org.seasar.jms.core.util.IterableAdapter;
+import org.seasar.jms.core.util.MessageHandlerUtil;
 
 /**
  * 受信したJMSメッセージを処理するコンポーネントの抽象クラスです。
@@ -283,15 +282,7 @@ public abstract class AbstractMessageHandler<MSGTYPE extends Message, PAYLOADTYP
      *             JMS実装で例外が発生した場合にスローされます
      */
     public Map<String, Object> getProperties() {
-        try {
-            final Map<String, Object> map = new LinkedHashMap<String, Object>();
-            for (final String name : new IterableAdapter(message.getPropertyNames())) {
-                map.put(name, message.getObjectProperty(name));
-            }
-            return map;
-        } catch (final JMSException e) {
-            throw new SJMSRuntimeException("EJMS0001", new Object[] { e }, e);
-        }
+        return MessageHandlerUtil.getProperties(message);
     }
 
 }

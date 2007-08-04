@@ -9,9 +9,9 @@
 				<li><p><a href="#概要">概要</a></p></li>
 				<li><p><a href="#メッセージのバインド">メッセージのバインド</a></p>
 					<ul>
-				  	    <li><p><a href="#JMSメッセージヘッダのバインド">JMSメッセージヘッダのバインド</a></p></li>
-				  	    <li><p><a href="#JMSメッセージプロパティのバインド">JMSメッセージプロパティのバインド</a></p></li>
-				  	    <li><p><a href="#JMSメッセージペイロードデータのバインド">JMSメッセージペイロードデータのバインド</a></p></li>
+				  	    <li><p><a href="#メッセージヘッダのバインド">メッセージヘッダのバインド</a></p></li>
+				  	    <li><p><a href="#メッセージプロパティのバインド">メッセージプロパティのバインド</a></p></li>
+				  	    <li><p><a href="#メッセージペイロードデータのバインド">メッセージペイロードデータのバインド</a></p></li>
 					</ul>
 				</li>
 		  	    <li><p><a href="#リスナ・メソッド">リスナ・メソッド</a></p></li>
@@ -56,18 +56,18 @@
 				リスナ・コンポーネントにバインドすることができます．
 			</p>
 
-			<subsection name="JMSメッセージヘッダのバインド">
+			<subsection name="メッセージヘッダのバインド">
 				<p>
-					リスナ・コンポーネントに対して，受信したJMSメッセージのヘッダをバインドします．
+					リスナ・コンポーネントに対して，受信したメッセージのヘッダをバインドします．
 				</p>
 
 				<p>
-					バインドしたいフィールドまたはsetterメソッドに <code>@JMSHeader</code> アノテーションを記述することで，
+					バインドしたいフィールドまたはsetterメソッドに <code>@JMSHeader</code> アノテーションを指定することで，
 					該当するメッセージヘッダがバインドされます．
 				</p>
 			
 				<p>
-					以下のように，<code>@JMSHeader</code>アノテーションのみを記述した場合，
+					以下のように，<code>@JMSHeader</code>アノテーションのみを指定した場合，
 					フィールド名に一致するメッセージヘッダがバインドされます．
 					この場合，フィールド名は"<code>correlationID</code>" ("<code>JMS</code>"というプレフィックスをつけない)
 					または"<code>JMSCorrelationID</code>" ("<code>JMS</code>"というプレフィックスをつける) のどちらでも有効です．
@@ -78,16 +78,16 @@
 				</p>
 <source><![CDATA[
     @JMSHeader
-    String correlationID;
+    private String correlationID;
 ]]></source>
 				<p>
-					以下のように，<code>name</code>メンバを利用してヘッダ名称を記述することもできます．
+					以下のように，<code>name</code>メンバを利用してヘッダ名称を指定することもできます．
 					この場合，フィールド名には関係なく<code>name</code>メンバで指定されたヘッダ名が使用されます．
 					この場合もヘッダ名称には「JMS」プレフィックスをつけてもつけなくても構いません．
 				</p>
 <source><![CDATA[
     @JMSHeader(name = "deliveryMode")
-    int mode;
+    private int mode;
 ]]></source>
 				<p>
 					<code>@JMSHeader</code>アノテーションには，
@@ -95,7 +95,7 @@
 				</p>
 <source><![CDATA[
     @JMSHeader(bindingType = BindingType.MUST)
-    String JMSMessageID;
+    private String JMSMessageID;
 ]]></source>
 				<p>
 					<code>bindingType</code>については，以下の表を参照してください．
@@ -124,13 +124,13 @@
 					</tr>
 				</table>
 				<p>
-					setterメソッドに対しても<code>@JMSHeader</code>アノテーションを記述することができます．
+					setterメソッドに対しても<code>@JMSHeader</code>アノテーションを指定することができます．
 					<code>name</code>メンバを省略した場合，
 					メソッド名から先頭の"<code>set</code>"を取り除いた名前がヘッダ名となります．
 					この場合もヘッダ名称には「JMS」プレフィックスをつけてもつけなくても構いません．
 				</p>
 <source><![CDATA[
-    int priority;
+    private int priority;
     
     @JMSHeader(name = "JMSPriority", bindingType = BindingType.MUST)
     public void setPriority(int priority) {
@@ -139,18 +139,18 @@
 ]]></source>
 			</subsection>
 
-			<subsection name="JMSメッセージプロパティのバインド">
+			<subsection name="メッセージプロパティのバインド">
 				<p>
 					ヘッダと同様にメッセージのプロパティもバインドすることができます．
 				</p>
 				<p>
-					以下のように，フィールドやsetterに<code>@JMSProperty</code>アノテーションのみを記述した場合，
+					以下のように，フィールドやsetterメソッドに<code>@JMSProperty</code>アノテーションのみを指定した場合，
 					フィールド名に一致するメッセージプロパティがバインドされます．
-					この場合，「foo」という名前のプロパティがバインドされます．
+					この例の場合，「foo」という名前のプロパティがバインドされます．
 				</p>
 <source><![CDATA[
   @JMSProperty
-  int foo;
+  private int foo;
 ]]></source>
 <source><![CDATA[
   @JMSProperty
@@ -168,30 +168,40 @@
   }
 ]]></source>
 				<p>
+					<code>@JMSProperty</code>アノテーションの付けられたフィールドまたはプロパティの型が
+					<code>java.util.Map</code>の場合は，
+					全てのメッセージプロパティの名前とその値のマッピングを持つ<code>Map&lt;String, Object&gt;</code>が
+					バインドされます．
+				</p>
+<source><![CDATA[
+  @JMSProperty
+  private Map<String, Object> properties;
+]]></source>
+				<p>
 					<code>@JMSProperty</code>アノテーションにも，<code>@JMSHeader</code>アノテーションと同様に，
 					<code>bindingType</code>メンバによるバインディングの制御を指定することができます．
 				</p>
 				<p>
-					setterメソッドに対しても<code>@JMSPriority</code>アノテーションを記述することができます．
+					setterメソッドに対しても<code>@JMSProperty</code>アノテーションを指定することができます．
 					<code>name</code>メンバを省略した場合，
 					メソッド名から先頭の"<code>set</code>"を取り除いて先頭を小文字にした名前がプロパティ名となります
 					("<code>set</code>"を取り除いた名前の先頭2文字がどちらも大文字の場合は先頭を小文字にしません)．
 				</p>
 			</subsection>
 
-			<subsection name="JMSメッセージペイロードデータのバインド">
+			<subsection name="メッセージペイロードデータのバインド">
 				<p>
 					ヘッダと同様にメッセージの本体 (ペイロードデータ) もバインドすることができます．
 				</p>
 				<p>
 					<code>MapMessage</code>を除いて，
-					以下のようにフィールドやsetterに<code>@JMSPayload</code>アノテーションのみを記述した場合，
-					フィールド名に一致するメッセージプロパティがバインドされます．
-					この場合，<code>TextMessage</code>のペイロードデータがバインドされます．
+					以下のようにフィールドやsetterメソッドに<code>@JMSPayload</code>アノテーションのみを指定した場合，
+					メッセージのペイロードデータがバインドされます．
+					この例の場合，<code>TextMessage</code>のペイロードデータである文字列がバインドされます．
 				</p>
 <source><![CDATA[
   @JMSPayload
-  String text;
+  private String text;
 ]]></source>
 <source><![CDATA[
   @JMSPayload
@@ -201,14 +211,14 @@
 ]]></source>
 				<p>
 					<code>MapMessage</code>の場合，
-					以下のようにフィールドやsetterに<code>@JMSPayload</code>アノテーションのみを記述した場合，
+					以下のようにフィールドやsetterメソッドに<code>@JMSPayload</code>アノテーションのみを指定した場合，
 					ペイロードデータからフィールド名に一致するマッピングの値がバインドされます．
-					この場合，<code>MapMessage</code>のペイロードデータから，
+					この例の場合，<code>MapMessage</code>のペイロードデータから，
 					<code>foo</code>というキーにマッピングされている値がバインドされます．
 				</p>
 <source><![CDATA[
   @JMSPayload
-  int foo;
+  private int foo;
 ]]></source>
 <source><![CDATA[
   @JMSPayload
@@ -227,7 +237,8 @@
 ]]></source>
 				<p>
 					ただし，フィールドまたはプロパティの型が<code>Map</code>の場合は，
-					<code>MapMessage</code>のペイロードが持つ全てのマッピングを含んだ<code>Map</code>がバインドされます．
+					<code>MapMessage</code>のペイロードが持つ全てのマッピングを含んだ
+					<code>Map&lt;String, Object&gt;</code>がバインドされます．
 				</p>
 <source><![CDATA[
   @JMSPayload
@@ -250,7 +261,7 @@
 				リスナ・メソッドは，デフォルトではメソッド名が<code>onMessage</code>のメソッドです．
 			</p>
 <source><![CDATA[
-  void onMessage() {
+  public void onMessage() {
     ...
   }
 ]]></source>
@@ -259,12 +270,12 @@
 				引数の型はメッセージのペイロードデータ型か，<code>javax.jms.Message</code>です．
 			</p>
 <source><![CDATA[
-  void onMessage(String text) {
+  public void onMessage(String text) {
     ...
   }
 ]]></source>
 <source><![CDATA[
-  void onMessage(Message message) {
+  public void onMessage(Message message) {
     ...
   }
 ]]></source>
@@ -273,13 +284,13 @@
 			</p>
 <source><![CDATA[
   @OnMessage
-  void foo() {
+  public void foo() {
     ...
   }
 ]]></source>
 <source><![CDATA[
   @OnMessage
-  void bar(Map payload) {
+  public void bar(Map payload) {
     ...
   }
 ]]></source>
@@ -296,13 +307,13 @@
 <source><![CDATA[
 public class RequestReplyListener {
     @Binding(bindingType = BindingType.MUST)
-    protected MessageSender sender;
+    private MessageSender sender;
 
     @JMSHeader
-    protected String messageID;
+    private String messageID;
 
     @JMSPayload
-    protected String requestMessage;
+    private String requestMessage;
 
     public void onMessage() {
         String replyMessage = ...;
