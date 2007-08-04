@@ -155,13 +155,20 @@
         <property name="activationSpecClassName">
             "org.apache.activemq.ra.ActiveMQActivationSpec"
         </property>
+
+        <!-- デスティネーション名 -->
         <initMethod name="setProperty">
             <arg>"destination"</arg>
             <arg>"foo"</arg>
         </initMethod>
+
+        <!-- デスティネーションタイプ -->
         <initMethod name="setProperty">
             <arg>"destinationType"</arg>
             <arg>"javax.jms.Queue"</arg>
+            <!-- トピックの場合
+            <arg>"javax.jms.Topic"</arg>
+            -->
         </initMethod>
     </component>
     <component class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"/>
@@ -192,18 +199,27 @@
         <initMethod name="setProperty">
             <arg>"connectionFactoryProperties"</arg>
             <arg>"QueueManager=QMGR1"</arg>
+            <!-- より詳細な情報を設定する場合は以下のように設定します．
+            <arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
+            -->
         </initMethod>
 
-        <!-- キュー名 -->
+        <!-- デスティネーション名 -->
         <initMethod name="setProperty">
             <arg>"destinationProperties"</arg>
             <arg>"BaseQueueName=LQ1"</arg>
+            <!-- トピックの場合
+            <arg>"BaseTopicName=Stock/Tse/4812"</arg>
+            -->
         </initMethod>
 
         <!-- デスティネーションタイプ -->
         <initMethod name="setProperty">
             <arg>"destinationType"</arg>
-            <arg>"javax.jms.Queue"</arg><!-- または javax.jms.Topic -->
+            <arg>"javax.jms.Queue"</arg>
+            <!-- トピックの場合
+            <arg>"javax.jms.Topic"</arg>
+            -->
         </initMethod>
     </component>
     <component class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"/>

@@ -546,7 +546,7 @@
 
     <!-- デスティネーション (キューまたはトピック) ファクトリ -->
     <component class="org.seasar.jms.core.destination.impl.QueueFactory">
-        <!-- キュー名を指定します -->
+        <!-- デスティネーション名を指定します -->
         <property name="name">"Foo"</property>
     </component>
 ]]></source>
@@ -571,7 +571,7 @@
             <arg>"connectionFactoryProperties"</arg>
             <arg>"QueueManager=QMGR1"</arg>
             <!-- より詳細な情報を設定する場合は以下のように設定します
-            <arg>"HostName=host,QueueManager=QMGR1,Port=1234,TransportType=1"</arg>
+            <arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
             -->
         </initMethod>
     </component>
@@ -586,7 +586,7 @@
 
     <!-- デスティネーション (キューまたはトピック) ファクトリ -->
     <component class="org.seasar.jms.core.destination.impl.QueueFactory">
-        <!-- キュー名を指定します -->
+        <!-- デスティネーション名を指定します -->
         <property name="name">"LQ2"</property>
     </component>
 ]]></source>
