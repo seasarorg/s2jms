@@ -25,15 +25,16 @@ public class SendPage {
     protected MessagingService messagingService;
 
     protected String replyMsg;
+
     protected String sendMsg;
+
     protected boolean needReply;
 
     public void doSend() {
         final String id = messagingService.send(sendMsg, needReply);
         if (needReply) {
             replyMsg = messagingService.receive(id);
-        }
-        else {
+        } else {
             replyMsg = null;
         }
         sendMsg = null;

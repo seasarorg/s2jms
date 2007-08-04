@@ -32,7 +32,7 @@ public class ErrorPage {
         return null;
     }
 
-    protected String buildStackTrace(Throwable t) {
+    protected String buildStackTrace(final Throwable t) {
         if (t == null) {
             return "";
         }
@@ -67,7 +67,7 @@ public class ErrorPage {
         return buf.toString();
     }
 
-    protected String lineString(int lineNumber) {
+    protected String lineString(final int lineNumber) {
         if (lineNumber >= 0) {
             return "#" + Integer.toString(lineNumber);
         }
@@ -78,7 +78,7 @@ public class ErrorPage {
         return context;
     }
 
-    public void setFacesContext(FacesContext context) {
+    public void setFacesContext(final FacesContext context) {
         this.context = context;
     }
 
@@ -86,7 +86,7 @@ public class ErrorPage {
         return stackTrace;
     }
 
-    public void setStackTrace(String stackTace) {
+    public void setStackTrace(final String stackTace) {
         this.stackTrace = stackTace;
     }
 
@@ -94,7 +94,7 @@ public class ErrorPage {
         return exception;
     }
 
-    public void setException(Exception exception2) {
+    public void setException(final Exception exception2) {
         this.exception = exception2;
     }
 }

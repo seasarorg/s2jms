@@ -22,14 +22,11 @@ import org.seasar.jms.container.impl.JMSContainerInitializer;
  */
 public class Main {
 
-    /**
-     * @param args
-     */
     public static void main(final String[] args) {
         try {
             new JMSContainerInitializer("app.dicon").initialize();
-        }
-        catch (final Throwable e) {
+            Thread.sleep(Long.MAX_VALUE);
+        } catch (final Throwable e) {
             e.printStackTrace();
         }
     }
