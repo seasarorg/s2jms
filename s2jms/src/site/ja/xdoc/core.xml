@@ -9,7 +9,11 @@
 				<li><p><a href="#概要">概要</a></p></li>
 				<li><p><a href="#MessageSender">MessageSender</a></p></li>
 				<li><p><a href="#MessageReceiver">MessageReceiver</a></p></li>
-				<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
+				<li><p><a href="#Tips">Tips</a></p>
+					<ul>
+						<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
+					</ul>
+				</li>
 			</ul>
 		</section>
 
@@ -250,10 +254,11 @@
 			</ul>
 		</section>
 
-		<section name="リクエスト～リプライ">
-			<p>
-				要求メッセージを送信した後に応答メッセージを受信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
-			</p>
+		<section name="Tips">
+			<subsection name="リクエスト～リプライ">
+				<p>
+					要求メッセージを送信した後に応答メッセージを受信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
+				</p>
 <source><![CDATA[
         String requestMessage = ...;
         sender.send(requestMessage);
@@ -261,10 +266,12 @@
         receiver.setMessageSelector("JMSCorrelationID = '" + messageID + "'");
         String replyMessage = receiver.receiveText();
 ]]></source>
-			<p>
-				要求メッセージを受信して応答メッセージを作成するアプリケーションでは，
-				応答メッセージの<code>JMSCorrelationID</code>ヘッダに要求メッセージの<code>JMSMessageID</code>ヘッダの値を設定します．
-			</p>
+				<p>
+					送信した要求メッセージの<code>JMSMessageID</code>ヘッダの値と一致する
+					<code>JMSCorrelationID</code>ヘッダを持つメッセージだけを受信するように，
+					<code>messageSelector</code>を指定します．
+				</p>
+			</subsection>
 		</section>
 	</body>
 </document>

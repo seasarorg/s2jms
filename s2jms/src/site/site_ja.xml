@@ -39,6 +39,7 @@
     <menu name="ドキュメント">
       <item name="インストール" href="install.html"/>
       <item name="S2JMSとは" href="basics.html"/>
+      <item name="サンプル解説" href="example.html"/>
       <item name="S2JMS-Core" href="core.html"/>
       <item name="S2JMS-Container" href="container.html"/>
       <item name="S2JMS-Server" href="server.html"/>

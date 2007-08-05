@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>サンプル解説</title>
+	</properties>
+	<body>
+		<section name="目次">
+			<ul>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#セットアップ">セットアップ</a></p>
+					<ul>
+						<li><p><a href="#ダウンロード">ダウンロード</a></p></li>
+						<li><p><a href="#インストール">インストール</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#サンプルの起動">サンプルの起動</a></p>
+					<ul>
+						<li><p><a href="#ActiveMQブローカの起動">ActiveMQブローカの起動</a></p></li>
+						<li><p><a href="#S2JMS-Server-Examleの起動">S2JMS-Server-Examleの起動</a></p></li>
+						<li><p><a href="#S2JMS-Teeda-Exampleの起動">S2JMS-Teeda-Exampleの起動</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#サンプルの実行">サンプルの実行</a></p>
+					<ul>
+						<li><p><a href="#要求メッセージの送信">要求メッセージの送信</a></p></li>
+						<li><p><a href="#要求メッセージの送信と返信メッセージの受信">要求メッセージの送信と返信メッセージの受信</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#HOT deploy">HOT deploy</a></p>
+					<ul>
+						<li><p><a href="#s2jms-teeda-exampleの修正">s2jms-teeda-exampleの修正</a></p></li>
+						<li><p><a href="#s2jms-server-exampleの修正">s2jms-server-exampleの修正</a></p></li>
+						<li><p><a href="#修正後の確認">修正後の確認</a></p></li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				S2JMS-Examplesは，次の二つのアプリケーションからなるサンプルです．
+			</p>
+			<dl>
+				<dt>s2jms-teeda-example</dt>
+				<dd>
+					S2JMS-Coreを利用してアウトバウンド通信を行うサンプルで，
+					Teedaを利用したWebアプリケーションです．
+				</dd>
+				<dt>s2jms-server-example</dt>
+				<dd>
+					S2JMS-Containerを利用してインバウンド通信を行うサンプルで，
+					S2JMS-Serverで起動するスタンドアロンアプリケーションです．
+				</dd>
+			</dl>
+			<p>
+				s2jms-teeda-exampleは，画面から入力された文字列を<code>TextMessage</code>のペイロードに設定して
+				<code>Foo</code>というキューにメッセージを送信します．
+			</p>
+			<p>
+				このメッセージには<code>needReply</code>という<code>boolean</code>型のプロパティがあり，
+				画面で指定された値が設定されます．
+				この値が<code>true</code>の場合，s2jms-server-exampleは<code>Bar</code>というキューに
+				返信メッセージを送信します．
+				返信メッセージも<code>TextMessage</code>です．
+				s2jms-teeda-exampleは，<code>needReply</code>に<code>true</code>を設定した場合は返信メッセージを受信し，
+				そのメッセージを画面に表示します．
+			</p>
+			<img src="images/example.png" width="427" hight="106"/>
+		</section>
+
+		<section name="セットアップ">
+			<subsection name="ダウンロード">
+				<p>
+					「<a href="downloads.html">ダウンロード</a>」からS2JMS-Examplesをダウンロードしてください．
+				</p>
+			</subsection>
+
+			<subsection name="インストール">
+				<p>
+					S2JMS-Examplesの配布ファイルは，Eclipseプロジェクトをアーカイブしたものになっています．
+				</p>
+				<p>
+					S2JMS-Examplesを実行するには，<a href="http://www.eclipsetotale.com/tomcatPlugin.html">Sysdeo Tomcat Launcher</a>プラグインが必要です．
+					あらかじめインストールしてください．
+				</p>
+				<p>
+					以下の手順でS2JMS-ExamplesをEclipseワークスペースにインポートしてください．
+				</p>
+				<ul>
+					<li>
+						<p>
+							ダウンロードしたS2JMS-Examplesの配布ファイルを，Eclipseのワークスペースまたは適当なディレクトリに解凍してください．
+						</p>
+					</li>
+					<li>
+						<p>
+							Eclipseの「File」－「Import」メニューで「Import Wizard」を開きます．
+						</p>
+					</li>
+					<li>
+						<p>
+							「Select a import source」で「General」－「Existing Project into Workspace」を選択し，
+							「Next」ボタンを押下します．
+						</p>
+					</li>
+					<li>
+						<p>
+							「Select a root directory」でS2JMS-Examplesの配布ファイルを解凍したディレクトリを指定します．
+						</p>
+					</li>
+					<li>
+						<p>
+							「Projects」で"s2jms-server-examplea"，"s2jms-teeda-example"がチェックされていることを確認して
+							「Finish」ボタンを押下します．
+						</p>
+					</li>
+				</ul>
+				<p>
+					インポートされたs2jms-teeda-exampleプロジェクトを右クリックして，「Tomcatプロジェクト」－「Tomcatのコンテキストを更新」を選択します．
+				</p>
+			</subsection>
+		</section>
+
+		<section name="サンプルの起動">
+			<subsection name="ActiveMQブローカの起動">
+				<p>
+					このサンプルでは，MOMとして<a href="http://activemq.apache.org/">Apache ActiveMQ</a>を使用します．
+					Apache ActiveMQは，s2jms-server-exampleの<code>activemq</code>ディレクトリ以下に含まれています．
+				</p>
+				<p>
+					コマンドプロンプトを開いて，s2jms-server-exampleプロジェクトのディレクトリへ移動し，次のコマンドを実行します．
+				</p>
+<source>
+<kbd>activemq\bin\activemq.bat</kbd>
+</source>
+				<p>
+					次のようなメッセージが表示されます．
+				</p>
+<source><![CDATA[
+INFO  BrokerService                  - ActiveMQ JMS Message Broker (localhost, 
+ID:Windows-01-2529-1186334265982-1:0) started
+]]></source>
+			</subsection>
+
+			<subsection name="S2JMS-Server-Examleの起動">
+				<p>
+					s2jms-server-exampleの起動方法は2種類あります．
+					Eclipseのデバッガ上で起動する方法と，コマンドプロンプトから起動する方法です．
+					デバッガ上で起動した場合はHOT deployモード，コマンドプロンプトから起動した場合はCOOL deployモードになります．
+				</p>
+				<p>
+					Eclipseのデバッガ上でs2jms-server-exampleを起動するには，
+					s2jms-server-exampleプロジェクトの<code>src/test/java</code>ソースフォルダ以下にある
+					<code>org.seasar.jms.example.server.Main</code>クラスを開き，
+					「Run」－「Debug As」－「Java Application」を選択します．
+				</p>
+				<p>
+					コンソールに次のようなメッセージが表示されます．
+				</p>
+<source><![CDATA[
+2007-08-06 02:26:16.623 [DEBUG] 
+    ActiveMQ Transport: tcp://localhost/127.0.0.1:61616 
+    org.apache.activemq.transport.WireFormatNegotiator
+    tcp://localhost/127.0.0.1:61616 after negotiation: 
+    OpenWireFormat{version=2, cacheEnabled=true, stackTraceEnabled=true, 
+    tightEncodingEnabled=true, sizePrefixDisabled=false}
+]]></source>
+				<p>
+					コマンドプロンプトからs2jms-server-exampleを起動するには，コマンドプロンプトを開いて
+					s2jms-server-exampleプロジェクトのディレクトリへ移動し，次のコマンドを実行します．
+				</p>
+<source>
+<kbd>java -jar lib\s2jms-server-x.y.z.jar --classpath build/classes</kbd>
+</source>
+				<p>
+					デバッガ上で起動した場合と同じメッセージが表示されます．
+					コマンドプロンプトから起動したs2jms-server-exampleを停止するには，
+					コマンドプロンプトで<kbd>Ctrl-C</kbd>を押下してください．
+				</p>
+			</subsection>
+
+			<subsection name="S2JMS-Teeda-Exampleの起動">
+				<p>
+					s2jms-teeda-exampleを起動するには，メニューから「Tomcat」－「Tomcat起動」を選択してTomcatを起動します．
+				</p>
+				<p>
+					コンソールに次のようなメッセージが表示されます．
+				</p>
+<source><![CDATA[
+2007/08/06 2:33:47 org.apache.catalina.startup.Catalina start
+情報: Server startup in 18688 ms
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="サンプルの実行">
+			<subsection name="要求メッセージの送信">
+				<p>
+					ブラウザで次のアドレスを開きます．
+				</p>
+				<ul>
+					<li><p><code><a href="http://localhost:8080/s2jms-teeda-example/view/send/send.html">http://localhost:8080/s2jms-teeda-example/view/send/send.html</a></code></p></li>
+				</ul>
+				<img src="images/example1.png" width="537" hight="347"/>
+				<p>
+					テキストフィールドに"<code>Foo</code>"と入力して「送信」ボタンを押下します．
+				</p>
+				<img src="images/example2.png" width="537" hight="347"/>
+				<p>
+					s2jms-server-exampleのコンソールに次のように表示されます．
+				</p>
+<source><![CDATA[
+2007-08-06 02:40:09.998 [INFO] pool-1-thread-2 org.seasar.jms.example.server.listener.EchoListener
+    properties : {needReply=false}
+2007-08-06 02:40:09.998 [INFO] pool-1-thread-2 org.seasar.jms.example.server.listener.EchoListener
+    message : Foo
+]]></source>
+			</subsection>
+
+			<subsection name="要求メッセージの送信と返信メッセージの受信">
+				<p>
+					ブラウザでテキストフィールドに"<code>Bar</code>"と入力してチェックボタンをチェックし，「送信」ボタンを押下します．
+				</p>			
+				<img src="images/example3.png" width="537" hight="347"/>
+				<p>
+					s2jms-server-exampleのコンソールに次のように表示されます．
+				</p>
+<source><![CDATA[
+2007-08-06 02:45:24.420 [INFO] pool-1-thread-4 org.seasar.jms.example.server.listener.EchoListener
+    properties : {needReply=true}
+2007-08-06 02:45:24.420 [INFO] pool-1-thread-4 org.seasar.jms.example.server.listener.EchoListener
+    message : Bar
+2007-08-06 02:45:24.576 [DEBUG] pool-1-thread-4 org.apache.activemq.transport.WireFormatNegotiator
+    Sending: WireFormatInfo { version=2, properties={TightEncodingEnabled=true, CacheSize=1024, 
+    TcpNoDelayEnabled=true, SizePrefixDisabled=false, StackTraceEnabled=true, 
+    MaxInactivityDuration=30000, CacheEnabled=true}, magic=[A,c,t,i,v,e,M,Q]}
+]]></source>
+				<p>
+					ブラウザには次のように返信メッセージが表示されます．
+				</p>
+				<img src="images/example4.png" width="537" hight="347"/>
+			</subsection>
+		</section>
+
+		<section name="HOT deploy">
+			<p>
+				s2jms-server-example・s2jms-teeda-exampleともHOT deployに対応しており，
+				起動したままソースを修正して即確認することができます．
+			</p>
+
+			<subsection name="s2jms-teeda-exampleの修正">
+				<p>
+					 s2jms-teeda-exampleプロジェクトの<code>src/main/java</code>ソースフォルダから次のクラスを開きます．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.example.teeda.web.send.SendPage</code></p></li>
+				</ul>
+				<p>
+					<code>doSend()</code>メソッドを次のように修正します．
+				</p>
+<source>
+    public void doSend() {
+        final String id = messagingService.send(<strong>"■" + </strong>sendMsg<strong> + "■"</strong>, needReply);
+</source>
+			</subsection>
+			
+			<subsection name="s2jms-server-exampleの修正">
+				<p>
+					 s2jms-server-exampleプロジェクトの<code>src/main/java</code>ソースフォルダから次のクラスを開きます．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.example.server.listener.EchoListener</code></p></li>
+				</ul>
+				<p>
+					<code>onMessage()</code>メソッドを次のように修正します．
+				</p>
+<source>
+    public void onMessage() {
+        logger.info("message id : " + messageID);
+        logger.info("properties : " + properties);
+        logger.info("message : " + text);
+        if (needReply) {
+            messageSender.setCorrelationID(messageID);
+            messageSender.send("<strong>☆</strong> " + text + " <strong>☆</strong>");
+        }
+    }
+</source>
+			</subsection>
+
+			<subsection name="修正後の確認">
+				<p>
+					ブラウザで送信画面を開いてテキストフィールドに"<code>Hoge</code>"と入力し，
+					チェックボックスをチェックして「送信」ボタンを押下します．
+				</p>
+				<img src="images/example4.png" width="537" hight="347"/>
+				<p>
+					s2jms-server-exampleのコンソールに次のように表示されます．
+				</p>
+<source><![CDATA[
+2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.EchoListener
+    message id : ID:Windows-01-2559-1186335607717-1:0:15:1:1
+2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.EchoListener
+    properties : {needReply=true}
+2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.EchoListener
+    message : ■Hoge■
+]]></source>
+				<p>
+					ブラウザには次のように返信メッセージが表示されます．
+				</p>
+				<img src="images/example5.png" width="537" hight="347"/>
+				<p>
+					s2jms-server-example・s2jms-teeda-example両方の修正が反映されていることが分かります．
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

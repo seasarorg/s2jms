@@ -14,8 +14,13 @@
 				  	    <li><p><a href="#メッセージペイロードデータのバインド">メッセージペイロードデータのバインド</a></p></li>
 					</ul>
 				</li>
-		  	    <li><p><a href="#リスナ・メソッド">リスナ・メソッド</a></p></li>
-				<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
+				<li><p><a href="#リスナ・メソッド">リスナ・メソッド</a></p></li>
+				<li><p><a href="#HOT deploy">HOT deploy</a></p></li>
+				<li><p><a href="#Tips">Tips</a></p>
+					<ul>
+						<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
+					</ul>
+				</li>
 			</ul>
 		</section>
 
@@ -300,10 +305,14 @@
 			</p>
 		</section>
 
-		<section name="リクエスト～リプライ">
-			<p>
-				要求メッセージを受信した後に応答メッセージを送信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
-			</p>
+		<section name="HOT deploy">
+		</section>
+
+		<section name="Tips">
+			<subsection name="リクエスト～リプライ">
+				<p>
+					要求メッセージを受信した後に応答メッセージを送信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
+				</p>
 <source><![CDATA[
 public class RequestReplyListener {
     @Binding(bindingType = BindingType.MUST)
@@ -322,6 +331,11 @@ public class RequestReplyListener {
     }
 }
 ]]></source>
+				<p>
+					受信した要求メッセージの<code>JMSMessageID</code>ヘッダの値を，
+					応答メッセージの<code>JMSCorrelationID</code>ヘッダ設定します．
+				</p>
+			</subsection>
 		</section>
 	</body>
 </document>
