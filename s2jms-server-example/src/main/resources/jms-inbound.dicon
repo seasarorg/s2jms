@@ -43,7 +43,7 @@
 	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
 		<!-- アプリケーション固有のメッセージリスナ・コンポーネントの名前を指定します (複数指定可) -->
 		<initMethod name="addMessageListener">
-			<arg>"echoListener"</arg>
+			<arg>"exampleListener"</arg>
 		</initMethod>
 	</component>
 </components>

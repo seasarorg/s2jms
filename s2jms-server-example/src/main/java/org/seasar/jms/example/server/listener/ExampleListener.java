@@ -23,15 +23,14 @@ import org.seasar.framework.log.Logger;
 import org.seasar.jms.container.annotation.JMSHeader;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.JMSProperty;
-import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.core.MessageSender;
 
 /**
  * @author koichik
  */
-public class EchoListener {
+public class ExampleListener {
 
-    private static Logger logger = Logger.getLogger(EchoListener.class);
+    private static Logger logger = Logger.getLogger(ExampleListener.class);
 
     @Binding(bindingType = BindingType.MUST)
     protected MessageSender messageSender;
@@ -48,11 +47,10 @@ public class EchoListener {
     @JMSPayload
     protected String text;
 
-    public EchoListener() {
+    public ExampleListener() {
     }
 
-    @OnMessage
-    public void echo() {
+    public void onMessage() {
         logger.info("message id : " + messageID);
         logger.info("properties : " + properties);
         logger.info("message : " + text);
