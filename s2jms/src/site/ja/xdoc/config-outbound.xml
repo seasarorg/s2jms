@@ -588,6 +588,11 @@
     <component class="org.seasar.jms.core.destination.impl.QueueFactory">
         <!-- デスティネーション名を指定します -->
         <property name="name">"LQ2"</property>
+        <!-- URI 形式で指定することもできます
+        <property name="name">"queue://HOST1.QM1/Q1?persistence=1&priority=5"</property>
+        または
+        <property name="name">"topic://Sport/Football/Results?multicast=7"</property>
+        -->
     </component>
 ]]></source>
 			</subsection>

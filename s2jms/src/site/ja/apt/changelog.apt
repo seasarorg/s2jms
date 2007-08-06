@@ -1,0 +1,36 @@
+ ------
+S2JMS Changelog
+ ------
+ ------
+ ------
+
+
+
+Version {1.0.0-RC1} (2007/08/08)
+
+* 移行の注意
+
+  S2JMS 1.0.0-RC1 は，S2JCA 1.0.0-RC1 との組み合わせで動作します．
+  これ以前のバージョンでは動作しないのでご注意ください．
+
+* 変更点
+
+** Bug
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-5}JMS-5}}] - MessageReceiver で JMS メッセージを受信する度に javax.jms.Connection#stop() を呼び出さないようにしました．
+    
+** Improvement
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-1}JMS-1}}] - MessageSender および MessageReceiver で，送信または受信したメッセージおよびそのヘッダの一部を取得できるようにしました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-2}JMS-2}}] - JndiDestinationFactory の evn プロパティ (JNDI 環境プロパティ) を Hashtable ではなく Map で設定可能にしました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-3}JMS-3}}] - MessageSender で，送信するメッセージのヘッダを設定できるようにしました．メッセージのプロパティについても，整合性を考慮して addProperty(String, Object) メソッドでプロパティを設定するようにしました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-6}JMS-6}}] - MessageSender および MessageReceiver で，送信するメッセージのヘッダ／プロパティや受信するメッセージのタイムアウト時間やセレクタなどを設定する setter メソッドの戻り値型を MessageSender および MessageReceiver にしました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-7}JMS-7}}] - S2JMS-Container で，リスナ・コンポーネントの Map 型のフィールドまたはプロパティ (setter メソッド) に @JMSProperty アノテーションが付けられた場合は，JMS メッセージの全てのプロパティをマッピングとして持つ Map\<String, Object\> をバインドするようにしました．
+    
+** New Feature
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-4}JMS-4}}] - DestinationFactory の実装として，一時キューを作成する TemporaryQueueFactory，一時トピックを作成する TemporaryTopicFactory を追加しました．

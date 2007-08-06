@@ -260,16 +260,28 @@
 					要求メッセージを送信した後に応答メッセージを受信する，リクエスト～リプライ型のアプリケーションは次のように実現することができます．
 				</p>
 <source><![CDATA[
-        String requestMessage = ...;
+    public String send(String requestMessage) {
         sender.send(requestMessage);
         String messageID = sender.getMessageID();
+        return messageID;
+    }
+
+    public String receive(String messageID) {
         receiver.setMessageSelector("JMSCorrelationID = '" + messageID + "'");
         String replyMessage = receiver.receiveText();
+        return replyMessage;
+    }
 ]]></source>
 				<p>
 					送信した要求メッセージの<code>JMSMessageID</code>ヘッダの値と一致する
 					<code>JMSCorrelationID</code>ヘッダを持つメッセージだけを受信するように，
 					<code>messageSelector</code>を指定します．
+				</p>
+				<p>
+					リクエスト～リプライ型のアプリケーションでは，要求メッセージの送信 (<code>send(String)</code>) と
+					応答メッセージの受信 (<code>receive(String)</code>) は別のトランザクションにする必要があります．
+					同じトランザクションにすると，トランザクションがコミットするまで相手側は要求メッセージを受信することができません．
+					そのため応答メッセージが返ってくることもなく，受信処理は完了しません．
 				</p>
 			</subsection>
 		</section>

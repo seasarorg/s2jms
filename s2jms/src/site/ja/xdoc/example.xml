@@ -23,7 +23,14 @@
 				<li><p><a href="#サンプルの実行">サンプルの実行</a></p>
 					<ul>
 						<li><p><a href="#要求メッセージの送信">要求メッセージの送信</a></p></li>
-						<li><p><a href="#要求メッセージの送信と返信メッセージの受信">要求メッセージの送信と返信メッセージの受信</a></p></li>
+						<li><p><a href="#要求メッセージの送信と応答メッセージの受信">要求メッセージの送信と応答メッセージの受信</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#ソースコード解説">ソースコード解説</a></p>
+					<ul>
+						<li><p><a href="#s2jms-teeda-example">s2jms-teeda-example</a></p></li>
+						<li><p><a href="#s2jms-server-example">s2jms-server-example</a></p></li>
+						<li><p><a href="#"></a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#HOT deploy">HOT deploy</a></p>
@@ -60,9 +67,9 @@
 				このメッセージには<code>needReply</code>という<code>boolean</code>型のプロパティがあり，
 				画面で指定された値が設定されます．
 				この値が<code>true</code>の場合，s2jms-server-exampleは<code>Bar</code>というキューに
-				返信メッセージを送信します．
-				返信メッセージも<code>TextMessage</code>です．
-				s2jms-teeda-exampleは，<code>needReply</code>に<code>true</code>を設定した場合は返信メッセージを受信し，
+				応答メッセージを送信します．
+				応答メッセージも<code>TextMessage</code>です．
+				s2jms-teeda-exampleは，<code>needReply</code>に<code>true</code>を設定した場合は応答メッセージを受信し，
 				そのメッセージを画面に表示します．
 			</p>
 			<img src="images/example.png" width="427" hight="106"/>
@@ -210,14 +217,14 @@ ID:Windows-01-2529-1186334265982-1:0) started
 					s2jms-server-exampleのコンソールに次のように表示されます．
 				</p>
 <source><![CDATA[
-2007-08-06 02:40:09.998 [INFO] pool-1-thread-2 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 02:40:09.998 [INFO] pool-1-thread-2 org.seasar.jms.example.server.listener.ExampleListener
     properties : {needReply=false}
-2007-08-06 02:40:09.998 [INFO] pool-1-thread-2 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 02:40:09.998 [INFO] pool-1-thread-2 org.seasar.jms.example.server.listener.ExampleListener
     message : Foo
 ]]></source>
 			</subsection>
 
-			<subsection name="要求メッセージの送信と返信メッセージの受信">
+			<subsection name="要求メッセージの送信と応答メッセージの受信">
 				<p>
 					ブラウザでテキストフィールドに"<code>Bar</code>"と入力してチェックボタンをチェックし，「送信」ボタンを押下します．
 				</p>			
@@ -226,9 +233,9 @@ ID:Windows-01-2529-1186334265982-1:0) started
 					s2jms-server-exampleのコンソールに次のように表示されます．
 				</p>
 <source><![CDATA[
-2007-08-06 02:45:24.420 [INFO] pool-1-thread-4 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 02:45:24.420 [INFO] pool-1-thread-4 org.seasar.jms.example.server.listener.ExampleListener
     properties : {needReply=true}
-2007-08-06 02:45:24.420 [INFO] pool-1-thread-4 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 02:45:24.420 [INFO] pool-1-thread-4 org.seasar.jms.example.server.listener.ExampleListener
     message : Bar
 2007-08-06 02:45:24.576 [DEBUG] pool-1-thread-4 org.apache.activemq.transport.WireFormatNegotiator
     Sending: WireFormatInfo { version=2, properties={TightEncodingEnabled=true, CacheSize=1024, 
@@ -236,9 +243,189 @@ ID:Windows-01-2529-1186334265982-1:0) started
     MaxInactivityDuration=30000, CacheEnabled=true}, magic=[A,c,t,i,v,e,M,Q]}
 ]]></source>
 				<p>
-					ブラウザには次のように返信メッセージが表示されます．
+					ブラウザには次のように応答メッセージが表示されます．
 				</p>
 				<img src="images/example4.png" width="537" hight="347"/>
+			</subsection>
+		</section>
+
+		<section name="ソースコード解説">
+			<subsection name="s2jms-teeda-example">
+				<p>
+					s2jms-teeda-exampleはDoltengで作成したTeedaアプリケーションをベースとしています．
+					送信画面の<code>send.html</code>および<code>SendPage</code>についての詳細は
+					Teedaのドキュメントを参照してください．
+				</p>
+				<p>
+					JMSメッセージの送信は以下のクラスで行っています．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.example.teeda.web.send.MessagingService</code> (インタフェース)</p></li>
+					<li><p><code>org.seasar.jms.example.teeda.web.send.impl.MessagingServiceImpl</code> (実装クラス)</p></li>
+				</ul>
+				<p>
+					<code>MessagingService</code>には，次のメソッドが定義されています．
+				</p>
+				<ul>
+					<li><p><code>String send(String text, boolean needReply)</code></p></li>
+					<li><p><code>String receive(String id)</code></p></li>
+				</ul>
+
+				<h4><code>MessagingServiceImpl</code> クラス</h4>
+<source><![CDATA[
+public class MessagingServiceImpl implements MessagingService {
+
+    @Binding(bindingType = BindingType.MUST)
+    protected MessageSender sender;
+
+    @Binding(bindingType = BindingType.MUST)
+    protected MessageReceiver receiver;
+    ...
+}
+]]></source>
+				<p>
+					<code>MessagingServiceImpl</code>クラスは，S2JMS-Coreが提供する
+					<code>MessageSender</code>型および<code>MessageReceiver</code>型の
+					2つのフィールドを持っています．
+					<code>@Binding</code>アノテーションが指定されているため，Seasar2によってこれらのフィールドに
+					コンポーネントが直接DIされます．
+					<code>MessageSender</code>および<code>MessageReceiver</code>の詳細については，
+					「<a href="core.html">S2JMS-Core</a>」を参照してください．
+				</p>
+
+				<h4><code>String send(String text, boolean needReply)</code> メソッド</h4>
+<source><![CDATA[
+    public String send(final String text, final boolean needReply) {
+        sender.addProperty("needReply", needReply);
+        sender.send(text);
+        return sender.getMessageID();
+    }
+]]></source>
+				<p>
+					<code>send(String, boolean)</code>メソッドは，<code>TextMessage</code>を送信します．
+					<code>TextMessage</code>のペイロードには，メソッドの第1引数で渡された文字列が設定されます．
+					また，<code>TextMessage</code>のプロパティには<code>needReply</code>という名前の
+					<code>boolean</code>型のプロパティが設定されます．
+					<code>needReply</code>プロパティの値は第2引数で渡された値です．
+				</p>
+				<p>
+					<code>send(String, boolean)</code>メソッドは，送信した<code>TextMessage</code>の
+					メッセージIDを返します．
+				</p>
+
+				<h4><code>String receive(String id)</code> メソッド</h4>
+<source><![CDATA[
+    public String receive(final String id) {
+        receiver.setMessageSelector("JMSCorrelationID = '" + id + "'");
+        return receiver.receiveText();
+    }
+]]></source>
+				<p>
+					<code>recieve(String)</code>メソッドは，<code>TextMessage</code>を受信します．
+					直前に<code>send(String, boolean)</code>によって送信されたメッセージに対する応答メッセージを受信するため，
+					メッセージセレクタで相関IDを指定しています．
+					相関IDの値は，<code>send(String, boolean)</code>メソッドの戻り値です．
+				</p>
+				<p>
+					<code>receive(String)</code>メソッドは，受信した<code>TextMessage</code>の
+					ペイロードに設定されている文字列を返します．
+				</p>
+
+				<h4>トランザクション</h4>
+				<p>
+					s2jms-teeda-exampleでは，トランザクション境界は<code>Page</code>クラスではなく，
+					<code>Service</code>クラスに設定されています．
+					もし<code>Page</code>クラスにトランザクション境界が設定されると，
+					送信したメッセージは<code>Page</code>クラスのメソッドが終了するまでトランザクションがコミットされないため，
+					s2jms-server-exampleはそのメッセージを受信することができなくなります．
+					そのため，応答メッセージが返ってくることもなく，<code>receive(String)</code>はメッセージを受信することができないために
+					画面を返すこともできなくなります．
+				</p>
+				<p>
+					リクエスト～リプライ型のアプリケーションでは，要求メッセージの送信と応答メッセージの受信は
+					別のトランザクションにする必要があります．
+				</p>
+			</subsection>
+
+			<subsection name="s2jms-server-example">
+				<p>
+					s2jms-server-exampleは，S2JMS-Containerを利用したアプリケーションです．
+				</p>
+				<p>
+					S2JMS-ContainerがJMSメッセージを受信すると呼び出されるリスナ・コンポーネントは以下のクラスです．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.example.server.listener.ExampleListener</code></p></li>
+				</ul>
+				<p>
+					<code>ExampleListener</code>には，次のリスナ・メソッドが定義されています．
+				</p>
+				<ul>
+					<li><p><code>void onMessage()</code></p></li>
+				</ul>
+				<p>
+					リスナ・コンポーネント及びリスナ・メソッドの詳細については，
+					「<a href="container.html">S2JMS-Container</a>」を参照してください．
+				</p>
+
+				<h4><code>ExampleListener</code>クラス</h4>
+<source><![CDATA[
+public class ExampleListener {
+
+    private static Logger logger = Logger.getLogger(ExampleListener.class);
+
+    @Binding(bindingType = BindingType.MUST)
+    protected MessageSender messageSender;
+
+    @JMSHeader
+    protected String messageID;
+
+    @JMSProperty
+    protected Map<String, Object> properties;
+
+    @JMSProperty
+    protected boolean needReply;
+
+    @JMSPayload
+    protected String text;
+    ...
+}
+]]></source>
+				<p>
+					<code>ExampleListener</code>クラスはS2JMS-Coreが提供する
+					<code>MessageSender</code>型のフィールドを持っています．
+					<code>@Binding</code>アノテーションが指定されているため，Seasar2によってこれらのフィールドに
+					コンポーネントが直接DIされます．
+				</p>
+				<p>
+					その他のフィールドにはS2JMS-Containerの提供するアノテーションが付けられているため，
+					S2JMS-Containerによって受信したJMSメッセージのヘッダ，プロパティ，ペイロードの値がフィールドにバインドされます．
+				</p>
+
+				<h4><code>void onMessage() メソッド</code>クラス</h4>
+<source><![CDATA[
+    public void onMessage() {
+        logger.info("message id : " + messageID);
+        logger.info("properties : " + properties);
+        logger.info("message : " + text);
+        if (needReply) {
+            messageSender.setCorrelationID(messageID);
+            messageSender.send("★★★ " + text + " ★★★");
+        }
+    }
+]]></source>
+				<p>
+					<code>onMessage()</code>メソッドは，受信したメッセージのヘッダ，プロパティ，ペイロードをログに出力します．
+				</p>
+				<p>
+					JMSメッセージのプロパティからバインドされた<code>needReply</code>が<code>true</code>の場合は
+					応答メッセージを送信します．
+					応答メッセージのペイロードは，受信メッセージのペイロードがバインドされた<code>text</code>フィールドの
+					前後に星を付加した文字列です．
+					その際，応答メッセージの相関IDには，受信メッセージのIDを設定しています．
+					これにより，s2jms-teeda-exampleの<code>MessagingService</code>の<code>receive(String)</code>メソッドは
+					応答メッセージだけを受信することができるようになります．
+				</p>
 			</subsection>
 		</section>
 
@@ -269,7 +456,7 @@ ID:Windows-01-2529-1186334265982-1:0) started
 					 s2jms-server-exampleプロジェクトの<code>src/main/java</code>ソースフォルダから次のクラスを開きます．
 				</p>
 				<ul>
-					<li><p><code>org.seasar.jms.example.server.listener.EchoListener</code></p></li>
+					<li><p><code>org.seasar.jms.example.server.listener.ExampleListener</code></p></li>
 				</ul>
 				<p>
 					<code>onMessage()</code>メソッドを次のように修正します．
@@ -292,22 +479,22 @@ ID:Windows-01-2529-1186334265982-1:0) started
 					ブラウザで送信画面を開いてテキストフィールドに"<code>Hoge</code>"と入力し，
 					チェックボックスをチェックして「送信」ボタンを押下します．
 				</p>
-				<img src="images/example4.png" width="537" hight="347"/>
+				<img src="images/example5.png" width="537" hight="347"/>
 				<p>
 					s2jms-server-exampleのコンソールに次のように表示されます．
 				</p>
 <source><![CDATA[
-2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.ExampleListener
     message id : ID:Windows-01-2559-1186335607717-1:0:15:1:1
-2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.ExampleListener
     properties : {needReply=true}
-2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.EchoListener
+2007-08-06 03:24:26.107 [INFO] pool-1-thread-10 org.seasar.jms.example.server.listener.ExampleListener
     message : ■Hoge■
 ]]></source>
 				<p>
-					ブラウザには次のように返信メッセージが表示されます．
+					ブラウザには次のように応答メッセージが表示されます．
 				</p>
-				<img src="images/example5.png" width="537" hight="347"/>
+				<img src="images/example6.png" width="537" hight="347"/>
 				<p>
 					s2jms-server-example・s2jms-teeda-example両方の修正が反映されていることが分かります．
 				</p>

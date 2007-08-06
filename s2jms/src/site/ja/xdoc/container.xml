@@ -15,7 +15,19 @@
 					</ul>
 				</li>
 				<li><p><a href="#リスナ・メソッド">リスナ・メソッド</a></p></li>
-				<li><p><a href="#HOT deploy">HOT deploy</a></p></li>
+				<li><p><a href="#SMART deploy">SMART deploy</a></p>
+					<ul>
+						<li><p><a href="#リスナ・コンポーネントの規約">リスナ・コンポーネントの規約</a></p></li>
+						<li><p><a href="#diconファイルの設定">diconファイルの設定</a></p></li>
+					</ul>
+				</li>
+				<li><p><a href="#フィルタ">フィルタ</a></p>
+					<ul>
+						<li><p><a href="#フィルタの作成">フィルタの作成</a></p></li>
+						<li><p><a href="#標準のフィルタ">標準のフィルタ</a></p></li>
+						<li><p><a href="#フィルタの設定">フィルタの設定</a></p></li>
+					</ul>
+				</li>
 				<li><p><a href="#Tips">Tips</a></p>
 					<ul>
 						<li><p><a href="#リクエスト～リプライ">リクエスト～リプライ</a></p></li>
@@ -305,7 +317,195 @@
 			</p>
 		</section>
 
-		<section name="HOT deploy">
+		<section name="SMART deploy">
+			<p>
+				リスナ・コンポーネントはSMART deployで自動登録することができます．
+				HOT deployモードでは，S2JMS-Containerを利用したアプリケーションを再起動することなく，
+				リスナ・コンポーネントを修正して確認することができます．
+			</p>
+
+			<subsection name="リスナ・コンポーネントの規約">
+				<p>
+					リスナ・コンポーネントのFQNは次のようになります．
+				</p>
+				<ul>
+					<li><p><code><var>&lt;root&gt;</var>.listener.<var>Xxx</var>Listener</code></p></li>
+				</ul>
+				<p>
+					インタフェースと実装を分離する場合は次のようになります．
+				</p>
+				<ul>
+					<li><p><code><var>&lt;root&gt;</var>.listener.<var>Xxx</var>Listener</code> (インタフェース)</p></li>
+					<li><p><code><var>&lt;root&gt;</var>.listener.impl.<var>Xxx</var>ListenerImpl</code> ()</p></li>
+				</ul>
+				<p>
+					これらのコンポーネント名は，クラスの単純名 (FQNからパッケージを除いた名前) の先頭を小文字にしたものになります．
+					ただし，クラス名の先頭2文字が大文字の場合はコンポーネント名の先頭2文字も大文字となります．
+				</p>
+				<ul>
+					<li><p><code>root.listener.XxxListener</code> → <code>xxxListener</code></p></li>
+					<li><p><code>root.listener.XXXListener</code> → </p><code>XXXListener</code></li>
+				</ul>
+				<p>
+					<code>listener</code>パッケージ以下にサブパッケージを作成することもできます．
+				</p>
+				<ul>
+					<li><p><code><var>&lt;root&gt;</var>.listener.aaa.<var>Xxx</var>Listener</code></p></li>
+					<li><p><code><var>&lt;root&gt;</var>.listener.bbb.<var>Yyy</var>ListenerImpl</code></p></li>
+				</ul>
+				<p>
+					サブパッケージを使った場合，コンポーネント名はサブパッケージ名がプレフィックスとして先頭に付加されます．
+				</p>
+				<ul>
+					<li><p><code>root.listener.aaa.XxxListener</code> → <code>aaa_xxxListener</code></p></li>
+					<li><p><code>root.listener.aaa.XXXListener</code> → </p><code>aaa_XXXListener</code></li>
+				</ul>
+				<p>
+					コンポーネント名は，インバウンド通信の設定を行うdiconファイルで使用します．
+					以下のように，<code>JMSContainerImpl</code>の定義の中で
+					リスナ・コンポーネントのコンポーネント名を指定します．
+				</p>
+<source><![CDATA[
+    <!-- S2JMS-Container の設定 -->
+    <component class="org.seasar.jms.container.impl.JMSContainerImpl">
+        <!-- アプリケーションのリスナ・コンポーネントの名前を指定します (複数指定可) -->
+        <initMethod name="addMessageListener">
+            <arg>"aaa_XxxListener"</arg>
+        </initMethod>
+    </component>
+]]></source>
+				<p>
+					<code>JMSContainerImpl</code>の設定については，
+					「<a href="config-inbound.html#JMSコンテナの設定">JMSコンテナの設定</a>」を参照してください．
+				</p>
+			</subsection>
+
+			<subsection name="diconファイルの設定">
+				<h4><code>creator.dicon</code></h4>
+				<p>
+					<code>creator.dicon</code>ファイルに<code>ListenerCreator</code>の定義を追加します．
+				</p>
+<source><![CDATA[
+    <component class="org.seasar.jms.container.creator.ListenerCreator"/>
+]]></source>
+				<p>
+					デフォルトでは，リスナ・コンポーネントはリクエストスコープになります．
+				</p>
+
+				<h4><code>customizer.dicon</code></h4>
+				<p>
+					<code>customizer.dicon</code>ファイルに<code>listenerCustomizer</code>の定義を追加します．
+				</p>
+<source><![CDATA[
+    <component name="listenerCustomizer"
+            class="org.seasar.framework.container.customizer.CustomizerChain">
+        <initMethod name="addCustomizer">
+            <arg>traceCustomizer</arg>
+        </initMethod>
+    </component>
+]]></source>
+				<p>
+					JMSメッセージをトランザクショナルに受信するように設定されている場合，
+					リスナ・コンポーネントはトランザクション境界内で呼び出されるため，
+					<code>listenerCustomizer</code>にトランザクション制御のカスタマイザを設定する必要はありません．
+					JMSメッセージをトランザクショナルに受信する設定については，
+					「<a href="config-inbound.html#MessageEndpointFactory">MessageEndpointFactory</a>」を参照してください．
+				</p>
+			</subsection>
+		</section>
+
+		<section name="フィルタ">
+			<p>
+				フィルタを作成することにより，S2JMS-Containerが受信したJMSメッセージをリスナ・コンポーネントにバインドするまでの間に，
+				様々な処理を行うことができます．
+			</p>
+
+			<subsection name="フィルタの作成">
+				<p>
+					フィルタは，次のインタフェースを実装したクラスです．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.container.filter.Filter</code></p></li>
+				</ul>
+				<p>
+					<code>Filter</code>インタフェースは次のメソッドを定義しています．
+				</p>
+				<ul>
+					<li><p><code>void doFilter(Message message, FilterChain chain) throws Exception</code></p></li>
+				</ul>
+				<p>
+					第2引数で渡される<code>FilterChain</code>は次のインタフェースです．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jms.container.filter.FilterChain</code></p></li>
+				</ul>
+				<p>
+					<code>FilterChain</code>は次のメソッドを定義しています．
+				</p>
+				<ul>
+					<li><p><code>void doFilter(Message message) throws Exception</code></p></li>
+				</ul>
+				<p>
+					フィルタの<code>doFilter(Message, FilterChain)</code>メソッドでは，
+					メッセージを処理して<code>FilterChain#doFilter(Message)</code>を呼び出すことで
+					後続のフィルタに制御を移すことができます．
+				</p>
+			</subsection>
+
+			<subsection name="標準のフィルタ">
+				<p>
+					S2JMS-Containerでは，標準で次のフィルタを提供しています．
+				</p>
+				<dl>
+					<dt><code>org.seasar.jms.container.filter.impl.TraceFilter</code></dt>
+					<dd>
+						リスナコンポーネントの呼び出し前後にトレースをログ出力するコンポーネントです．
+					</dd>
+					<dt><code>org.seasar.jms.container.filter.impl.DumpMessageFilter</code></dt>
+					<dd>
+						JMSメッセージの内容をログにダンプ出力するフィルタです．
+					</dd>
+					<dt><code>org.seasar.jms.container.filter.impl.RollBackFilter</code></dt>
+					<dd>
+						リスナコンポーネントまたはフィルタで例外が発生した場合にトランザクションをロールバックするフィルタです．
+					</dd>
+					<dt><code>org.seasar.jms.container.filter.impl.ExternalContextFilter</code></dt>
+					<dd>
+						JMSメッセージを外部コンテキストに設定するフィルタです．
+						このフィルタにより，受信したJMSメッセージがリスナ・コンポーネントにバインドできるようになります．
+					</dd>
+					<dt><code>org.seasar.jms.container.filter.impl.HotdeployFilter</code></dt>
+					<dd>
+						HOT deployを有効にするためのフィルタです．
+					</dd>
+				</dl>
+				<p>
+					これらのフィルタは，上記の記述順で<code>jms-default-filter.dicon</code>に定義されています．
+					<code>jms-default-filter.dicon</code>はS2JMS-ContainerのJarファイルの中に含まれています．
+				</p>
+			</subsection>
+
+			<subsection name="フィルタの設定">
+				<p>
+					フィルタを使用するには，インバウンド通信の設定を行っている
+					(<code>JMSContainerImpl</code>を定義している)
+					diconファイルから，フィルタを定義しているdiconファイルをインクルードします．
+				</p>
+				<p>
+					S2JMS-Containerの標準フィルタを使用する場合は次のようになります．
+				</p>
+<source><![CDATA[
+    <include path="jms-default-filter.dicon"/>
+    ・・・
+    <component class="org.seasar.jms.container.impl.JMSContainerImpl">
+        ・・・
+    </component>
+]]></source>
+				<p>
+					<code>JMSContainerImpl</code>の設定については，
+					「<a href="config-inbound.html#JMSコンテナの設定">JMSコンテナの設定</a>」を参照してください．
+				</p>
+			</subsection>
 		</section>
 
 		<section name="Tips">
