@@ -368,7 +368,7 @@ public class MessagingServiceImpl implements MessagingService {
 					「<a href="container.html">S2JMS-Container</a>」を参照してください．
 				</p>
 
-				<h4><code>ExampleListener</code>クラス</h4>
+				<h4><code>ExampleListener</code> クラス</h4>
 <source><![CDATA[
 public class ExampleListener {
 
@@ -392,9 +392,9 @@ public class ExampleListener {
 }
 ]]></source>
 				<p>
-					<code>ExampleListener</code>クラスはS2JMS-Coreが提供する
+					<code>ExampleListener</code>クラスは，S2JMS-Coreが提供する
 					<code>MessageSender</code>型のフィールドを持っています．
-					<code>@Binding</code>アノテーションが指定されているため，Seasar2によってこれらのフィールドに
+					<code>@Binding</code>アノテーションが指定されているため，Seasar2によってこのフィールドに
 					コンポーネントが直接DIされます．
 				</p>
 				<p>
@@ -402,7 +402,7 @@ public class ExampleListener {
 					S2JMS-Containerによって受信したJMSメッセージのヘッダ，プロパティ，ペイロードの値がフィールドにバインドされます．
 				</p>
 
-				<h4><code>void onMessage() メソッド</code>クラス</h4>
+				<h4><code>void onMessage()</code> メソッド</h4>
 <source><![CDATA[
     public void onMessage() {
         logger.info("message id : " + messageID);
@@ -415,6 +415,7 @@ public class ExampleListener {
     }
 ]]></source>
 				<p>
+					受信メッセージがフィールドにバインドされた後，<code>onMessage()</code>メソッドが呼び出されます．
 					<code>onMessage()</code>メソッドは，受信したメッセージのヘッダ，プロパティ，ペイロードをログに出力します．
 				</p>
 				<p>
@@ -496,7 +497,7 @@ public class ExampleListener {
 				</p>
 				<img src="images/example6.png" width="537" hight="347"/>
 				<p>
-					s2jms-server-example・s2jms-teeda-example両方の修正が反映されていることが分かります．
+					s2jms-teeda-example・s2jms-server-example両方の修正が反映されています．
 				</p>
 			</subsection>
 		</section>
