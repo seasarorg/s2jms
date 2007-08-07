@@ -23,11 +23,11 @@
 				主なコンポーネントのインタフェースは次の二つです．
 			</p>
 			<dl>
-				<dt>MessageSender</dt>
+				<dt><code>MessageSender</code></dt>
 				<dd>
 					JMSメッセージを送信する場合に使用するコンポーネントのインタフェースです．
 				</dd>
-				<dt>MessageReceiver</dt>
+				<dt><code>MessageReceiver</code></dt>
 				<dd>
 					JMSメッセージを受信する場合に使用するコンポーネントのインタフェースです．
 				</dd>
@@ -36,6 +36,8 @@
 				いずれもdiconファイルに定義し，アプリケーションはS2コンテナからDIされたコンポーネントを使用します．
 				diconファイルへの定義については，
 				「<a href="config.html">コンフィグレーション</a>」－「<a href="config-outbound.html">アウトバウンド通信</a>」を参照してください．
+				<code>MessageSender</code>・<code>MessageReceiver</code>とも<strong>スレッドセーフではありません</strong>．
+				diconに登録する際は必ず<code>instance</code>属性を<code>prototype</code>にしてください．
 			</p>
 		</section>
 

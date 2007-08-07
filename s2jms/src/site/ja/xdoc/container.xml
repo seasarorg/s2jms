@@ -39,24 +39,17 @@
 		<section name="概要">
 			<p>
 				S2JMS-Containerは，POJO (Plain Old Java Object) がJMSのAPIを意識することなく，
-				非同期通信によるメッセージを受信できるようにするためのコンポーネントです．
+				受信したJMSメッセージを処理できるようにするためのコンポーネント群です．
 			</p>
 			<p>
-				通常，JMSによるインバウンドメッセージ受信アプリケーション (EJBのMessage-Driven Beanなど)
-				を作成するには，以下の手順を踏みます．
-			</p>
-			<ol>
-				<li><p><code>javax.jms.MessageListener</code>インターフェースを実装したクラスを作成する．</p></li>
-				<li><p><code>onMessage(javax.jms.Message)</code>メソッドを作成する．</p></li>
-			 	<li><p><code>onMessage(javax.jms.Message)</code>メソッドの中で，受信した<code>javax.jms.Message</code>を処理する．</p></li>
-			</ol>
-			<p>
-				しかし，この場合作成したクラスはJMSのAPIに依存することになってしまいます．
+				S2JMS-Containerを利用することで，JMSのAPIに依存しない受信コンポーネント (Message-Driven POJO)
+				を作成することができ，特に既存の資産をJMS受信アプリケーションに流用することが容易となります．
+				このメッセージ受信コンポーネントを，「リスナ・コンポーネント」と呼びます．
 			</p>
 			<p>
-				S2JMS-Containerを利用することで，JMSのAPIに依存しない受信コンポーネント (Message-Driven POJOs)
-				を作ることができ，特に既存の資産をJMS受信アプリケーションに流用することが容易となります
-				(このメッセージ受信コンポーネントを，「リスナ・コンポーネント」と呼びます)．
+				リスナ・コンポーネントはEJBのMessage-Driven Beanと似ていますが，
+				<code>javax.jms.MessageLister</code>を実装したり，
+				受信した<code>javax.jms.Message</code>を直接扱う必要がありません．
 			</p>
 			<p>
 				S2JMS-Containerは，インバウンド通信によりJMSメッセージを受信すると，
