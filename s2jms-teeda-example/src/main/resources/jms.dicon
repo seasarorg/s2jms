@@ -41,7 +41,8 @@
 	<component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
 
 	<!-- メッセージ送信コンポーネント -->
-	<component class="org.seasar.jms.core.impl.MessageSenderImpl">
+	<component instance="prototype"
+			class="org.seasar.jms.core.impl.MessageSenderImpl">
 		<property name="destinationFactory">
 			<!-- デスティネーション (キューまたはトピック) ファクトリ -->
 			<component class="org.seasar.jms.core.destination.impl.QueueFactory">
@@ -52,7 +53,8 @@
 	</component>
 
 	<!-- メッセージ受信コンポーネント -->
-	<component class="org.seasar.jms.core.impl.MessageReceiverImpl">
+	<component instance="prototype"
+			class="org.seasar.jms.core.impl.MessageReceiverImpl">
 		<property name="destinationFactory">
 			<!-- デスティネーション (キューまたはトピック) ファクトリ -->
 			<component class="org.seasar.jms.core.destination.impl.QueueFactory">
