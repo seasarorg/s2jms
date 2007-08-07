@@ -23,7 +23,7 @@
 
 	<!-- メッセージ送信コンポーネント -->
 	<component instance="prototype"
-		class="org.seasar.jms.core.impl.MessageSenderImpl"
+		class="org.seasar.jms.core.impl.MessageSenderImpl">
 		<property name="destinationFactory">
 			<!-- デスティネーション (キューまたはトピック) ファクトリ -->
 			<component class="org.seasar.jms.core.destination.impl.QueueFactory">
@@ -31,5 +31,5 @@
 				<property name="name">"Bar"</property>
 			</component>
 		</property>
-	/>
+	</component>
 </components>
