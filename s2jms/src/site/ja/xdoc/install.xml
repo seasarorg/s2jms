@@ -162,15 +162,23 @@
 			</subsection>
 			<subsection name="グループID・成果物ID">
 				<p>
-					S2JMSのグループID・成果物IDについては「<a href="project-summary.html">プロジェクトサマリ</a>」を
-					参照してください．
+					S2JMSのグループID・成果物IDについては以下を参照してください．
 				</p>
+				<ul>
+					<li><p><a href="../s2jms-core/ja/project-summary.html">S2JMS-Core</a></p></li>
+					<li><p><a href="../s2jms-container/ja/project-summary.html">S2JMS-Container</a></p></li>
+					<li><p><a href="../s2jms-server/ja/project-summary.html">S2JMS-Server</a></p></li>
+				</ul>
 			</subsection>
 			<subsection name="依存関係">
 				<p>
-					S2JMSの依存関係については「<a href="../s2jms-core/ja/dependencies.html">プロジェクトの依存関係</a>」を
-					参照してください．
+					S2JMSの依存関係については以下を参照してください．
 				</p>
+				<ul>
+					<li><p><a href="../s2jms-core/ja/dependencies.html">S2JMS-Core</a></p></li>
+					<li><p><a href="../s2jms-container/ja/dependencies.html">S2JMS-Container</a></p></li>
+					<li><p><a href="../s2jms-server/ja/dependencies.html">S2JMS-Server</a></p></li>
+				</ul>
 			</subsection>
 		</section>
 		<section name="JDKでの利用">

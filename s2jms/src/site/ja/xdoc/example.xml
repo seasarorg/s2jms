@@ -15,7 +15,6 @@
 				</li>
 				<li><p><a href="#サンプルの起動">サンプルの起動</a></p>
 					<ul>
-						<li><p><a href="#ActiveMQブローカの起動">ActiveMQブローカの起動</a></p></li>
 						<li><p><a href="#S2JMS-Server-Examleの起動">S2JMS-Server-Examleの起動</a></p></li>
 						<li><p><a href="#S2JMS-Teeda-Exampleの起動">S2JMS-Teeda-Exampleの起動</a></p></li>
 					</ul>
@@ -129,26 +128,6 @@
 		</section>
 
 		<section name="サンプルの起動">
-			<subsection name="ActiveMQブローカの起動">
-				<p>
-					このサンプルでは，MOMとして<a href="http://activemq.apache.org/">Apache ActiveMQ</a>を使用します．
-					Apache ActiveMQは，s2jms-server-exampleの<code>activemq</code>ディレクトリ以下に含まれています．
-				</p>
-				<p>
-					コマンドプロンプトを開いて，s2jms-server-exampleプロジェクトのディレクトリへ移動し，次のコマンドを実行します．
-				</p>
-<source>
-<kbd>activemq\bin\activemq.bat</kbd>
-</source>
-				<p>
-					次のようなメッセージが表示されます．
-				</p>
-<source><![CDATA[
-INFO  BrokerService                  - ActiveMQ JMS Message Broker (localhost, 
-ID:Windows-01-2529-1186334265982-1:0) started
-]]></source>
-			</subsection>
-
 			<subsection name="S2JMS-Server-Examleの起動">
 				<p>
 					s2jms-server-exampleの起動方法は2種類あります．
