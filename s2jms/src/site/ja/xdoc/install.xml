@@ -85,11 +85,16 @@
 				<ul>
 					<li><p><a href="http://s2container.seasar.org">Seasar2</a></p></li>
 					<li><p><a href="http://s2container.seasar.org">S2-Tiger</a></p></li>
-					<li><p><a href="http://s2jca.sandbox.seasar.org">S2-JCA</a></p></li>
+					<li><p><a href="http://s2jca.seasar.org">S2JCA</a></p></li>
 				</ul>
 				<p>
-					依存するバージョンについては「<a href="../s2jms-core/ja/dependencies.html">プロジェクトの依存関係</a>」を参照してください．
+					依存するバージョンについては以下を参照してください．
 				</p>
+				<ul>
+					<li><p><a href="../s2jms-core/ja/dependencies.html">S2JMS-Core</a></p></li>
+					<li><p><a href="../s2jms-container/ja/dependencies.html">S2JMS-Container</a></p></li>
+					<li><p><a href="../s2jms-server/ja/dependencies.html">S2JMS-Server</a></p></li>
+				</ul>
 			</subsection>
 			<subsection name="インポート">
 				<p>
@@ -189,7 +194,7 @@
 				<ul>
 					<li><p><a href="http://s2container.seasar.org">Seasar2</a></p></li>
 					<li><p><a href="http://s2container.seasar.org">S2-Tiger</a></p></li>
-					<li><p><a href="http://s2jca.sandbox.seasar.org">S2-JCA</a></p></li>
+					<li><p><a href="http://s2jca.seasar.org">S2JCA</a></p></li>
 				</ul>
 				<p>
 					依存するバージョンについては「<a href="dependencies.html">プロジェクトの依存関係</a>」を参照してください．

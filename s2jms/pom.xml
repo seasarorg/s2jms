@@ -22,7 +22,7 @@
 
   <!-- More Project Information -->
   <name>S2JMS</name>
-  <url>http://s2jms.sandbox.seasar.org/</url>
+  <url>http://s2jms.seasar.org/</url>
   <inceptionYear>2005</inceptionYear>
   <licenses>
     <license>
@@ -95,9 +95,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/sandbox/s2jms/trunk/s2jms/</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/s2jms/trunk/s2jms/</developerConnection>
-    <url>http://svn.seasar.org/browse/?root=sandbox.s2jms</url>
+    <connection>scm:svn:https://www.seasar.org/svn/s2jms/trunk/s2jms/</connection>
+    <developerConnection>scm:svn:https://www.seasar.org/svn/s2jms/trunk/s2jms/</developerConnection>
+    <url>http://svn.seasar.org/browse/?root=s2jms</url>
   </scm>
   <repositories>
     <repository>
@@ -121,7 +121,7 @@
     </snapshotRepository>
     <site>
       <id>www.seasar.org</id>
-      <url>scp://www.seasar.org/home/groups/sandbox/s2jms/public_html/</url>
+      <url>scp://www.seasar.org/home/groups/s2jms/public_html/</url>
     </site>
   </distributionManagement>
 
@@ -225,12 +225,6 @@
 
   <!-- Dependency Settings -->
   <dependencies>
-    <dependency>
-      <groupId>org.seasar.container</groupId>
-      <artifactId>s2-tiger</artifactId>
-      <version>2.4.16</version>
-      <type>jar</type>
-    </dependency>
     <dependency>
       <groupId>org.seasar.jca</groupId>
       <artifactId>s2jca</artifactId>

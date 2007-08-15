@@ -22,6 +22,16 @@
 		</section>
 		<section name="ニュース">
 			<dl>
+				<dt>2007/08/16</dt>
+				<dd>
+					<div>
+						Sandboxを卒業しました．プロジェクトおよびSVNリポジトリのURLが変更になっているのでご注意ください．
+					</div>
+					<dl>
+						<dt>プロジェクトURL</dt><dd><code>http://s2jms.seasar.org/</code></dd>
+						<dt>SVNリポジトリ</dt><dd><code>https://www.seasar.org/svn/s2jms/</code></dd>
+					</dl>
+				</dd>
 				<dt>2007/08/08</dt>
 				<dd>
 					S2JMS 1.0.0-RC1をリリースしました． (<a href="downloads.html">ダウンロード</a>)

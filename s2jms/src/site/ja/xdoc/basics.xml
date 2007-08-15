@@ -56,7 +56,7 @@ connectionFactory.close();
 					ちょうど，JDBCに対するS2JDBCやS2Daoと同じような位置づけになります．
 				</p>
 				<p>
-					S2JMSは，<a href="http://s2jca.sandbox.seasar.org/ja">S2JCA</a>が提供する
+					S2JMSは，<a href="http://s2jca.seasar.org/ja">S2JCA</a>が提供する
 					コネクションプーリングやJTAトランザクションとの連携をインフラとして利用します．
 				</p>
 				<img src="images/s2jms.png" width="463" hight="378"/>
