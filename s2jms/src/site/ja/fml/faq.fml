@@ -8,12 +8,10 @@
 				JMSってなんですか？
 			</question>
 			<answer>
-				<a href="http://java.sun.com/j2ee/connector/index.jsp">JCA (J2EE Connector Architecture)</a> とは，
-				RDBMSやMOM (Message-Oriented Middleware) をはじめ，
-				CICSなどのメインフレーム，TUXEDOなどのTPモニタ，SAPなどのERP等への接続を包括的に扱う仕様で，
+				<a href="http://java.sun.com/products/jms/">JMS (Java Message Service)</a> とは，
+				MOM (Message-Oriented Middleware) を利用して非同期メッセージングを行うための仕様で，
 				JavaEE仕様の一部となっています．
-				JCAにより，JDBCやJMSはもちろん，独自仕様のリソースに対しても，コネクションプールやトランザクション制御などを
-				単一のコネクションマネージャでサポートすることが可能となります． 
+				JMSにより，MOM固有のAPIに依存することなく，メッセージを送受信することが可能となります．
 			</answer>
 		</faq>
 		<faq id="general-s2jms">
@@ -21,16 +19,13 @@
 				S2JMSってなんですか？
 			</question>
 			<answer>
-				S2JCAはJCA仕様に準拠したリソースアダプタをSeasar2から利用するためのプロダクトです．
-				JCA仕様の主な登場人物は次の3つです．
+				S2JMSは，JMSを使用してメッセージの送受信を簡単に行うためのプロダクトです．
+				次の3つのモジュールから構成されます．
 				<ul>
-				<li>リソースアダプタ</li>
-				<li>アプリケーションサーバ</li>
-				<li>アプリケーション</li>
+					<li>S2JMS-Core</li>
+					<li>S2JMS-Container</li>
+					<li>S2JMS-Server</li>
 				</ul>
-				S2JCAはこの中のApplication Serverに相当する部分の実装です．
-				S2JCAを使うことで，TomcatなどのJavaEEフルスペック対応ではない環境からでもリソースアダプタを通じて
-				MOMやメインフレーム等に接続することが可能となります．
 			</answer>
 		</faq>
 		<faq id="general-s2jms-core">
