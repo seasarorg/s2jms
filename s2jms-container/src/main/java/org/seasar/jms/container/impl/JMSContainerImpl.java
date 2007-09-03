@@ -27,6 +27,7 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.StringUtil;
@@ -43,11 +44,11 @@ import org.seasar.jms.core.util.MessageHandlerUtil;
  * S2JMS-Containerの実装クラスです。
  * <p>
  * S2JMS-ContainerはJCAのメッセージエンドポイントとして受信したJMSメッセージを受け取り、
- * 登録されているメッセージリスナーコンポーネントのリスナーメソッドを呼び出します。 メッセージリスナーコンポーネントはそのコンポーネント名を{@link #addMessageListener(String)}メソッドで登録します。
- * S2JMS-Containerはメッセージを受信するたびにS2コンテナからメッセージリスナーコンポーネントを名前でルックアップします。
- * その際に、S2JMS-Containerは受信したメッセージをS2コンテナの外部コンテキストのリクエストオブジェクトとして登録するため、
- * メッセージリスナーコンポーネントのインスタンス属性を <code>request</code> または <code>prototype</code>
- * にすることにより、 JMSメッセージやそのヘッダ・プロパティ・ペイロードをメッセージリスナーコンポーネントにインジェクションすることが可能です。
+ * 登録されているリスナ・コンポーネントのリスナ・メソッドを呼び出します。リスナ・コンポーネントはそのコンポーネント名を{@link #addMessageListener(String)}メソッドで登録します。
+ * S2JMS-Containerはメッセージを受信するたびにS2コンテナからリスナ・コンポーネントを名前でルックアップしますします。
+ * </p>
+ * <p>
+ * S2JMS-Containerにフィルタを設定することにより、リスナ・メソッドを呼び出すまでに任意の処理を組み込むことが可能です。
  * </p>
  * 
  * @author y-komori
@@ -98,13 +99,18 @@ public class JMSContainerImpl implements JMSContainer, Disposable {
      * 
      * @param message
      *            受信したJMSメッセージ
+     * @throws RuntimeException
+     *             リスナ・コンポーネントまたはフィルタで例外が発生した場合にスローされます
      */
     public void onMessage(final Message message) {
         initialize();
         try {
             final FilterChain filterChain = new FilterChainImpl();
             filterChain.doFilter(message);
-        } catch (final Exception ignore) {
+        } catch (final RuntimeException e) {
+            throw e;
+        } catch (final Exception e) {
+            throw new SRuntimeException("EJMS0000", null, e);
         }
     }
 

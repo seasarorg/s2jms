@@ -4,8 +4,10 @@
 <components>
 	<include path="jta.dicon"/>
 
+	<component class="org.seasar.jms.container.filter.impl.IgnoreExceptionFilter"/>
 	<component class="org.seasar.jms.container.filter.impl.TraceFilter"/>
 	<component class="org.seasar.jms.container.filter.impl.DumpMessageFilter"/>
+	<component class="org.seasar.jms.container.filter.impl.RollBackFilter"/>
 	<component class="org.seasar.jms.container.filter.impl.ExternalContextFilter"/>
 	<component class="org.seasar.jms.container.filter.impl.HotdeployFilter"/>
 </components>
