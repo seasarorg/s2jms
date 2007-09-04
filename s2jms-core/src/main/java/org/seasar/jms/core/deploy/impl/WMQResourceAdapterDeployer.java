@@ -73,6 +73,7 @@ import org.seasar.jca.deploy.impl.RarResourceAdapterDeployer;
  * <td><code>RMPolicy</code></td>
  * <td><code>OnePerPhysicalConnection</code></td>
  * </tr>
+ * </table>
  * <p>
  * 上記以外のプロパティが必要な場合は{@link #setProperty(String, String)}で設定することができます．
  * <p>
