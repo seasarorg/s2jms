@@ -11,7 +11,7 @@
 					<ul>
 				  	    <li><p><a href="#メッセージヘッダのバインド">メッセージヘッダのバインド</a></p></li>
 				  	    <li><p><a href="#メッセージプロパティのバインド">メッセージプロパティのバインド</a></p></li>
-				  	    <li><p><a href="#メッセージペイロードデータのバインド">メッセージペイロードデータのバインド</a></p></li>
+				  	    <li><p><a href="#メッセージボディのバインド">メッセージボディのバインド</a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#リスナ・メソッド">リスナ・メソッド</a></p></li>
@@ -53,7 +53,7 @@
 			</p>
 			<p>
 				S2JMS-Containerは，インバウンド通信によりJMSメッセージを受信すると，
-				JMSメッセージのヘッダやプロパティ，ペイロードをリスナ・コンポーネントにバインドしてメッセージを処理するメソッドを呼び出します
+				JMSメッセージのヘッダやプロパティ，ボディをリスナ・コンポーネントにバインドしてメッセージを処理するメソッドを呼び出します
 				(このメソッドを，「リスナ・メソッド」と呼びます)．
 				このため，リスナ・コンポーネントは<code>javax.jms.MessageListener</code>インターフェースを実装したり，
 				JMSメッセージを直接扱ったりすることなく，メッセージを処理することができます．
@@ -62,7 +62,7 @@
 
 		<section name="メッセージのバインド">
 			<p>
-				S2JMS-Containerを使用すると，受信したJMSメッセージのヘッダ，プロパティ，およびペイロードを，
+				S2JMS-Containerを使用すると，受信したJMSメッセージのヘッダ，プロパティ，およびボディを，
 				リスナ・コンポーネントにバインドすることができます．
 			</p>
 
@@ -199,39 +199,39 @@
 				</p>
 			</subsection>
 
-			<subsection name="メッセージペイロードデータのバインド">
+			<subsection name="メッセージボディのバインド">
 				<p>
-					ヘッダと同様にメッセージの本体 (ペイロードデータ) もバインドすることができます．
+					ヘッダと同様にメッセージのボディもバインドすることができます．
 				</p>
 				<p>
 					<code>MapMessage</code>を除いて，
-					以下のようにフィールドやsetterメソッドに<code>@JMSPayload</code>アノテーションのみを指定した場合，
-					メッセージのペイロードデータがバインドされます．
-					この例の場合，<code>TextMessage</code>のペイロードデータである文字列がバインドされます．
+					以下のようにフィールドやsetterメソッドに<code>@JMSBody</code>アノテーションのみを指定した場合，
+					メッセージのボディがバインドされます．
+					この例の場合，<code>TextMessage</code>のボディである文字列がバインドされます．
 				</p>
 <source><![CDATA[
-  @JMSPayload
+  @JMSBody
   private String text;
 ]]></source>
 <source><![CDATA[
-  @JMSPayload
+  @JMSBody
   public void setText(String text){
       this.text = text;
   }
 ]]></source>
 				<p>
 					<code>MapMessage</code>の場合，
-					以下のようにフィールドやsetterメソッドに<code>@JMSPayload</code>アノテーションのみを指定した場合，
-					ペイロードデータからフィールド名に一致するマッピングの値がバインドされます．
-					この例の場合，<code>MapMessage</code>のペイロードデータから，
+					以下のようにフィールドやsetterメソッドに<code>@JMSBody</code>アノテーションのみを指定した場合，
+					メッセージのボディからフィールド名に一致するマッピングの値がバインドされます．
+					この例の場合，<code>MapMessage</code>のボディから，
 					<code>foo</code>というキーにマッピングされている値がバインドされます．
 				</p>
 <source><![CDATA[
-  @JMSPayload
+  @JMSBody
   private int foo;
 ]]></source>
 <source><![CDATA[
-  @JMSPayload
+  @JMSBody
   public void setFoo(int foo){
       this.foo = foo;
   }
@@ -240,24 +240,24 @@
 					また，以下のように<code>name</code>メンバを利用してキーを明示することもできます．
 				</p>
 <source><![CDATA[
-  @JMSPayload(name = "baz")
+  @JMSBody(name = "baz")
   public void setBar(String bar) {
       this.bar = bar;
   }
 ]]></source>
 				<p>
 					ただし，フィールドまたはプロパティの型が<code>Map</code>の場合は，
-					<code>MapMessage</code>のペイロードが持つ全てのマッピングを含んだ
+					<code>MapMessage</code>のボディが持つ全てのマッピングを含んだ
 					<code>Map&lt;String, Object&gt;</code>がバインドされます．
 				</p>
 <source><![CDATA[
-  @JMSPayload
+  @JMSBody
   public void setBaz(Map baz) {
       this.baz = baz;
   }
 ]]></source>
 				<p>
-					<code>@JMSPayload</code>アノテーションにも，<code>@JMSHeader</code>アノテーションと同様に，
+					<code>@JMSBody</code>アノテーションにも，<code>@JMSHeader</code>アノテーションと同様に，
 					<code>bindingType</code>メンバによるバインディングの制御を指定することができます．
 				</p>
 			</subsection>
@@ -277,7 +277,7 @@
 ]]></source>
 			<p>
 				引数を一つ持つこともできます．
-				引数の型はメッセージのペイロードデータ型か，<code>javax.jms.Message</code>です．
+				引数の型はメッセージのボディ型か，<code>javax.jms.Message</code>です．
 			</p>
 <source><![CDATA[
   public void onMessage(String text) {
@@ -300,7 +300,7 @@
 ]]></source>
 <source><![CDATA[
   @OnMessage
-  public void bar(Map payload) {
+  public void bar(Map body) {
     ...
   }
 ]]></source>
@@ -514,7 +514,7 @@ public class RequestReplyListener {
     @JMSHeader
     private String messageID;
 
-    @JMSPayload
+    @JMSBody
     private String requestMessage;
 
     public void onMessage() {

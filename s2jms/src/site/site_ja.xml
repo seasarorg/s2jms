@@ -36,6 +36,7 @@
       <item name="ライセンス" href="license.html"/>
       <item name="ダウンロード" href="downloads.html"/>
       <item name="Changelog" href="changelog.html"/>
+      <item name="移行ガイド" href="migration.html"/>
     </menu>
     <menu name="ドキュメント">
       <item name="インストール" href="install.html"/>

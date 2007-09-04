@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>コンフィグレーション - IBM WebSphere MQ</title>
+	</properties>
+	<body>
+		<section name="IBM WebSphere MQ">
+			<ul>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#リソースアダプタの設定">リソースアダプタの設定</a></p></li>
+				<li><p><a href="#アウトバウンド通信の設定">アウトバウンド通信の設定</a></p></li>
+				<li><p><a href="#インバウンド通信">インバウンド通信</a></p></li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
+				IBM WebSphere MQ (formerly known MQSeries) を組み合わせて使用する場合の設定例を示します．
+			</p>
+		</section>
+
+		<section name="リソースアダプタの設定">
+			<p>
+				ResourceAdapterDeployerに設定可能なGeneric Resource Adapter for JMSのプロパティは，
+				<a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の
+				「Resource Adapter properties」を参照してください．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="j2ee.dicon"/>
+
+    <!-- リソースアダプタ -->
+    <component class="org.seasar.jca.deploy.impl.WmqResourceAdapterDeployer">
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
+
+        <!-- Generic JMS ResourceAdapterへのパス -->
+        <property name="path">
+            "ra/genericra-1.5.rar"
+        </property>
+
+        <!--
+                    リソースアダプタ固有のプロパティを設定します．
+        -->
+        <initMethod name="setProperty">
+            <arg>"UserName"</arg>
+            <arg>"user"</arg>
+        </initMethod>
+        <initMethod name="setProperty">
+            <arg>"Password"</arg>
+            <arg>"password"</arg>
+        </initMethod>
+    </component>
+</components>
+]]></source>
+		</section>
+
+		<section name="アウトバウンド通信の設定">
+		http://activemq.apache.org/connection-factory-properties.html
+			<p>
+				ManagedConnectionFactoryDeployerに設定可能なGeneric Resource Adapter for JMSのプロパティは，
+				<a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の
+				「ManagedConnectionFactory Properties」を参照してください．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="jms-ra.dicon"/>
+
+    <!-- マネージドコネクションファクトリ -->
+    <component name="mcfDeployer"
+            class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
+        <property name="managedConnectionFactoryClass">
+            "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
+        </property>
+
+        <!--
+                    リソースアダプタ固有のプロパティを設定します．
+        -->
+        <!-- キューマネージャとの接続情報 -->
+        <initMethod name="setProperty">
+            <arg>"ConnectionFactoryProperties"</arg>
+            <arg>"QueueManager=QMGR1"</arg>
+            <!-- より詳細な情報を設定する場合は以下のように設定します
+            <arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
+            -->
+        </initMethod>
+    </component>
+
+    <!-- セッションファクトリ -->
+    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+
+    <!-- メッセージ送信コンポーネント -->
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageSenderImpl">
+        <property name="destinationFactory">
+            <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+            <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+                <!-- キュー名を指定します -->
+                <property name="name">"LQ1"</property>
+                <!-- URI 形式で指定することもできます
+                <property name="name">"queue://HOST1.QM1/LQ1?persistence=1&priority=5"</property>
+                -->
+            </component>
+        </property>
+    </component>
+
+    <!-- メッセージ受信コンポーネント -->
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageReceiverImpl">
+        <property name="destinationFactory">
+            <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+            <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+                <!-- キュー名を指定します -->
+                <property name="name">"LQ2"</property>
+                <!-- URI 形式で指定することもできます
+                <property name="name">"queue://HOST1.QM1/LQ2?persistence=1&priority=5"</property>
+                -->
+            </component>
+        </property>
+    </component>
+</components>
+]]></source>
+		</section>
+
+		<section name="インバウンド通信">
+			<p>
+				ManagedConnectionFactoryDeployerに設定可能なGeneric Resource Adapter for JMSのプロパティは，
+				<a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の
+				「ManagedConnectionFactory Properties」を参照してください．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="jms-ra.dicon"/>
+
+    <!-- アクティベーションスペック -->
+    <component class="org.seasar.jca.deploy.impl.ActivationSpecDeployer">
+        <property name="activationSpecClassName">
+            "com.sun.genericra.inbound.ActivationSpec"
+        </property>
+
+        <!--
+                    リソースアダプタ固有のプロパティを設定します．
+        -->
+        <!-- メッセージを並行に受信するセッション数を設定します (デフォルト 8) -->
+        <!-- この値は ResourceAdapterDeployer のスレッド数を超えないようにしてください -->
+        <!--
+        <initMethod name="setProperty">
+            <arg>"MaxPoolSize"</arg>
+            <arg>"8"</arg>
+        </initMethod>
+        -->
+
+        <!-- キューマネージャ名 -->
+        <initMethod name="setProperty">
+            <arg>"ConnectionFactoryProperties"</arg>
+            <arg>"QueueManager=QMGR1"</arg>
+            <!-- より詳細な情報を設定する場合は以下のように設定します．
+            <arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
+            -->
+        </initMethod>
+
+        <!-- デスティネーション名 -->
+        <initMethod name="setProperty">
+            <arg>"DestinationProperties"</arg>
+            <arg>"BaseQueueName=LQ1"</arg>
+            <!-- トピックの場合
+            <arg>"BaseTopicName=Stock/Tse/4812"</arg>
+            -->
+        </initMethod>
+
+        <!-- デスティネーションタイプ -->
+        <initMethod name="setProperty">
+            <arg>"DestinationType"</arg>
+            <arg>"javax.jms.Queue"</arg>
+            <!-- トピックの場合
+            <arg>"javax.jms.Topic"</arg>
+            -->
+        </initMethod>
+    </component>
+
+    <!-- メッセージエンドポイントファクトリ -->
+    <component
+        class="org.seasar.jms.container.impl.JMSMessageEndpointFactory"
+    >
+        <!-- メッセージをトランザクショナルに受信しない場合は false を指定します -->
+        <property name="deliveryTransacted">true</property>
+    </component>
+
+    <!-- S2JMS-Container の設定 -->
+    <component class="org.seasar.jms.container.impl.JMSContainerImpl">
+        <!-- アプリケーション固有のメッセージリスナ・コンポーネントの名前を指定します (複数指定可) -->
+        <initMethod name="addMessageListener">
+            <arg>"messageListener"</arg>
+        </initMethod>
+    </component>
+</components>
+]]></source>
+		</section>
+	</body>
+</document>

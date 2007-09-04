@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>コンフィグレーション - ActiveMQ</title>
+	</properties>
+	<body>
+		<section name="ActiveMQ">
+			<ul>
+				<li><p><a href="#概要">概要</a></p></li>
+				<li><p><a href="#リソースアダプタの設定">リソースアダプタの設定</a></p></li>
+				<li><p><a href="#アウトバウンド通信の設定">アウトバウンド通信の設定</a></p></li>
+				<li><p><a href="#インバウンド通信">インバウンド通信</a></p></li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				オープンソースのMOMプロダクト，<a href="http://activemq.apache.org/">Apache ActiveMQ</a>を
+				使用する場合の設定例を示します．
+			</p>
+		</section>
+
+		<section name="リソースアダプタの設定">
+			<p>
+				ResourceAdapterDeployerに設定可能なActiveMQ固有のプロパティは，
+				<a href="http://activemq.apache.org/connection-factory-properties.html">Apache ActiveMQのドキュメント</a>を
+				参照してください．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="j2ee.dicon"/>
+
+    <!-- リソースアダプタ -->
+    <component class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer">
+        <!-- スレッドプールのスレッド数 -->
+        <arg>10</arg>
+
+        <!-- ActiveMQ ResourceAdapterへのパス -->
+        <property name="path">
+            "ra/activemq-rar-4.1.1.rar"
+        </property>
+
+        <!--
+                    リソースアダプタ固有のプロパティを設定します．
+        -->
+        <!-- ActiveMQ Broker へのURL -->
+		<!-- 外部プロセスの ActiveMQ Broker を使用する場合 -->
+		<initMethod name="setProperty">
+			<arg>"ServerUrl"</arg>
+			<arg>"tcp://localhost:61616"</arg>
+		</initMethod>
+		<!-- 埋め込み (インプロセス) の ActiveMQ Broker を使用する場合 -->
+		<!--
+		<initMethod name="setProperty">
+			<arg>"BrokerXmlConfig"</arg>
+			<arg>"broker:(tcp://localhost:61616)?persistent=false&amp;useJmx=false"</arg>
+		</initMethod>
+		-->
+    </component>
+</components>
+]]></source>
+		</section>
+
+		<section name="アウトバウンド通信の設定">
+		http://activemq.apache.org/connection-factory-properties.html
+			<p>
+				ManagedConnectionFactoryDeployerに設定可能なActiveMQ固有のプロパティは，
+				<a href="http://activemq.apache.org/connection-factory-properties.html">Apache ActiveMQのドキュメント</a>を
+				参照してください．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="jms-ra.dicon"/>
+
+    <!-- マネージドコネクションファクトリ -->
+    <component name="mcfDeployer"
+            class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
+        <property name="managedConnectionFactoryClass">
+            "org.apache.activemq.ra.ActiveMQManagedConnectionFactory"
+        </property>
+    </component>
+
+    <!-- セッションファクトリ -->
+    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
+
+    <!-- メッセージ送信コンポーネント -->
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageSenderImpl">
+        <property name="destinationFactory">
+            <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+            <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+                <!-- キュー名を指定します -->
+                <property name="name">"Foo"</property>
+            </component>
+        </property>
+    </component>
+
+    <!-- メッセージ受信コンポーネント -->
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageReceiverImpl">
+        <property name="destinationFactory">
+            <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+            <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+                <!-- キュー名を指定します -->
+                <property name="name">"Bar"</property>
+            </component>
+        </property>
+    </component>
+</components>
+]]></source>
+		</section>
+
+		<section name="インバウンド通信">
+			<p>
+				ActivationSpecDeployerに設定可能なActiveMQ固有のプロパティは，
+				<a href="http://activemq.apache.org/activation-spec-properties.html">Apache ActiveMQのドキュメント</a>を
+				参照してください．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="jms-ra.dicon"/>
+
+    <!-- アクティベーションスペック -->
+    <component class="org.seasar.jca.deploy.impl.ActivationSpecDeployer">
+        <property name="activationSpecClassName">
+            "org.apache.activemq.ra.ActiveMQActivationSpec"
+        </property>
+
+		<!-- メッセージを並行に受信するセッション数を設定します (デフォルト 10) -->
+		<!-- この値は ResourceAdapterDeployer のスレッド数を超えないようにしてください -->
+		<!--
+		<initMethod name="setProperty">
+			<arg>"maxSessions"</arg>
+			<arg>"10"</arg>
+		</initMethod>
+		-->
+
+		<!-- 受信するデスティネーションを設定します -->
+		<initMethod name="setProperty">
+			<arg>"destination"</arg>
+			<arg>"Foo"</arg><!-- デスティネーションの名前 (キュー名またはトピック名) に変更してください -->
+		</initMethod>
+
+		<!-- 受信するデスティネーションの種類 (キューまたはトピック) を設定します -->
+        <initMethod name="setProperty">
+            <arg>"destinationType"</arg>
+            <arg>"javax.jms.Queue"</arg>
+            <!-- トピックの場合
+            <arg>"javax.jms.Topic"</arg>
+            -->
+        </initMethod>
+    </component>
+
+    <!-- メッセージエンドポイントファクトリ -->
+    <component
+        class="org.seasar.jms.container.impl.JMSMessageEndpointFactory"
+    >
+        <!-- メッセージをトランザクショナルに受信しない場合は false を指定します -->
+        <property name="deliveryTransacted">true</property>
+    </component>
+
+    <!-- S2JMS-Container の設定 -->
+    <component class="org.seasar.jms.container.impl.JMSContainerImpl">
+        <!-- アプリケーション固有のメッセージリスナ・コンポーネントの名前を指定します (複数指定可) -->
+        <initMethod name="addMessageListener">
+            <arg>"messageListener"</arg>
+        </initMethod>
+    </component>
+</components>
+]]></source>
+		</section>
+	</body>
+</document>

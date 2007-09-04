@@ -9,11 +9,9 @@
 				<li><p><a href="#概要">概要</a></p></li>
 				<li><p><a href="#メッセージエンドポイントの設定">メッセージエンドポイントの設定</a></p>
 					<ul>
-						<li><p><a href="#MessageEndpointDeployer">MessageEndpointDeployer</a></p></li>
+						<li><p><a href="#ActivationSpecDeployer">ActivationSpecDeployer</a></p></li>
 						<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
 						<li><p><a href="#MessageEndpointFactory">MessageEndpointFactory</a></p></li>
-						<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
-						<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#JMSコンテナの設定">JMSコンテナの設定</a></p>
@@ -28,10 +26,10 @@
 			<p>
 				インバウンド通信を使用するには，次のコンポーネントを使用します．
 			</p>
-			<img src="images/inbound-components.png" width="427" height="68"/>
+			<img src="images/inbound-components.png" width="428" height="69"/>
 			<dl>
-				<dt><code><a href="#MessageEndpointDeployer">MessageEndpointDeployer</a></code></dt>
-				<dd>インバウンド通信で利用されるメッセージエンドポイントを設定するためのコンポーネントです．</dd>
+				<dt><code><a href="#ActivationSpecDeployer">ActivationSpecDeployer</a></code></dt>
+				<dd>インバウンド通信で利用されるアクティベーションスペックを設定するためのコンポーネントです．</dd>
 				<dt><code><a href="#MessageEndpointFactory">MessageEndpointFactory</a></code></dt>
 				<dd>インバウンド通信で利用されるメッセージエンドポイントを生成するためのコンポーネントです．</dd>
 				<dt><code><a href="#JMSContainer">JMSContainer</a></code></dt>
@@ -40,16 +38,16 @@
 		</section>
 
 		<section name="メッセージエンドポイントの設定">
-			<subsection name="MessageEndpointDeployer">
+			<subsection name="ActivationSpecDeployer">
 				<p>
-					<code>MessageEndpointDeployer</code>は，
-					リソースアダプタが提供するメッセージエンドポイントを利用可能にするためのコンポーネントです．
+					<code>ActivationSpecDeployer</code>は，
+					リソースアダプタが提供するアクティベーションスペックを利用可能にするためのコンポーネントです．
 				</p>
 				<p>
-					<code>MessageEndpointDeployer</code>の実装クラスを以下に示します．
+					<code>ActivationSpecDeployer</code>の実装クラスを以下に示します．
 				</p>
 				<ul>
-					<li><p><code>org.seasar.jca.deploy.impl.MessageEndpointDeployer</code></p></li>
+					<li><p><code>org.seasar.jca.deploy.impl.ActivationSpecDeployer</code></p></li>
 				</ul>
 				<h5>プロパティ</h5>
 				<table border="1">
@@ -96,7 +94,7 @@
 					<code>MessageEndpointFactory</code>の実装クラスを以下に示します．
 				</p>
 				<ul>
-					<li><p><code>org.seasar.jca.inbound.MessageEndpointFactoryImpl</code></p></li>
+					<li><p><code>org.seasar.jms.container.impl.JMSMessageEndpointFactory</code></p></li>
 				</ul>
 				<h5>プロパティ</h5>
 				<table border="1">
@@ -143,87 +141,6 @@
 						</td>
 					</tr>
 				</table>
-			</subsection>
-
-			<subsection name="Apache ActiveMQの場合">
-				<p>
-					以下にオープンソースのMOMプロダクト，<a href="http://activemq.apache.org/">Apache ActiveMQ</a>で
-					インバウンド通信を使用する例を示します．
-				</p>
-<source><![CDATA[
-    <component class="org.seasar.jca.deploy.impl.MessageEndpointDeployer">
-        <property name="activationSpecClassName">
-            "org.apache.activemq.ra.ActiveMQActivationSpec"
-        </property>
-
-        <!-- デスティネーション名 -->
-        <initMethod name="setProperty">
-            <arg>"destination"</arg>
-            <arg>"foo"</arg>
-        </initMethod>
-
-        <!-- デスティネーションタイプ -->
-        <initMethod name="setProperty">
-            <arg>"destinationType"</arg>
-            <arg>"javax.jms.Queue"</arg>
-            <!-- トピックの場合
-            <arg>"javax.jms.Topic"</arg>
-            -->
-        </initMethod>
-    </component>
-    <component class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"/>
-]]></source>
-			</subsection>
-
-			<subsection name="IBM WebSphere MQの場合">
-				<p>
-					以下に<a href="https://genericjmsra.dev.java.net/">Generic Resource Adapter for JMS</a>を使用して
-					IBM WebSphere MQ (formerly known MQSeries) で
-					インバウンド通信を使用する例を示します．
-				</p>
-<source><![CDATA[
-    <component class="org.seasar.jca.deploy.impl.MessageEndpointDeployer">
-        <property name="activationSpecClassName">
-            "com.sun.genericra.inbound.ActivationSpec"
-        </property>
-        <initMethod name="setProperty">
-            <arg>"userName"</arg>
-            <arg>"user"</arg>
-        </initMethod>
-        <initMethod name="setProperty">
-            <arg>"password"</arg>
-            <arg>"passwork"</arg>
-        </initMethod>
-
-        <!-- キューマネージャ名 -->
-        <initMethod name="setProperty">
-            <arg>"connectionFactoryProperties"</arg>
-            <arg>"QueueManager=QMGR1"</arg>
-            <!-- より詳細な情報を設定する場合は以下のように設定します．
-            <arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
-            -->
-        </initMethod>
-
-        <!-- デスティネーション名 -->
-        <initMethod name="setProperty">
-            <arg>"destinationProperties"</arg>
-            <arg>"BaseQueueName=LQ1"</arg>
-            <!-- トピックの場合
-            <arg>"BaseTopicName=Stock/Tse/4812"</arg>
-            -->
-        </initMethod>
-
-        <!-- デスティネーションタイプ -->
-        <initMethod name="setProperty">
-            <arg>"destinationType"</arg>
-            <arg>"javax.jms.Queue"</arg>
-            <!-- トピックの場合
-            <arg>"javax.jms.Topic"</arg>
-            -->
-        </initMethod>
-    </component>
-    <component class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"/>
-]]></source>
 			</subsection>
 		</section>
 

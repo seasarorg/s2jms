@@ -24,9 +24,6 @@
 							<ul>
 								<li><p><a href="config-ra.html#ResourceAdapterDeployer">ResourceAdapterDeployer</a></p></li>
 								<li><p><a href="config-ra.html#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
-								<li><p><a href="config-ra.html#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
-								<li><p><a href="config-ra.html#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
-								<li><p><a href="config-ra.html#JBoss Messagingの場合">JBoss Messagingの場合</a></p></li>
 							</ul>
 						</li>
 						<li><p><a href="config-ra.html#スレッドプールの設定">スレッドプールの設定</a></p>
@@ -42,13 +39,9 @@
 						<li><p><a href="config-outbound.html#接続系">接続系</a></p>
 							<ul>
 								<li><p><a href="config-outbound.html#ManagedConnectionFactoryDeployer">ManagedConnectionFactoryDeployer</a></p></li>
-								<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
-								<li><p><a href="config-outbound.html#ConnectionFactory">ConnectionFactory</a></p></li>
+								<li><p><a href="config-outbound.html#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
 								<li><p><a href="config-outbound.html#SessionFactory">SessionFactory</a></p></li>
 								<li><p><a href="config-outbound.html#DestinationFactory">DestinationFactory</a></p></li>
-								<li><p><a href="config-outbound.html#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
-								<li><p><a href="config-outbound.html#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
-								<li><p><a href="config-outbound.html#JBoss Messagingの場合">JBoss Messagingの場合</a></p></li>
 							</ul>
 						</li>
 						<li><p><a href="config-outbound.html#送信系">送信系</a></p>
@@ -71,11 +64,9 @@
 						<li><p><a href="config-inbound.html#概要">概要</a></p></li>
 						<li><p><a href="config-inbound.html#メッセージエンドポイントの設定">メッセージエンドポイントの設定</a></p>
 							<ul>
-								<li><p><a href="config-inbound.html#MessageEndpointDeployer">MessageEndpointDeployer</a></p></li>
+								<li><p><a href="config-inbound.html#ActivationSpecDeployer">ActivationSpecDeployer</a></p></li>
 								<li><p><a href="config-inbound.html#MessageEndpointFactory">MessageEndpointFactory</a></p></li>
 								<li><p><a href="config-inbound.html#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
-								<li><p><a href="config-inbound.html#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
-								<li><p><a href="config-inbound.html#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
 							</ul>
 						</li>
 						<li><p><a href="config-inbound.html#JMSコンテナの設定">JMSコンテナの設定</a></p>
@@ -83,6 +74,13 @@
 								<li><p><a href="config-inbound.html#JMSContainer">JMSContainer</a></p></li>
 							</ul>
 						</li>
+					</ul>
+				</li>
+				<li><p>設定例</p>
+					<ul>
+						<li><p><a href="config-activemq.html">Apache ActiveMQ</a></p></li>
+						<li><p><a href="config-wmq.html">IBM WebSphere MQ</a></p></li>
+						<li><p><a href="config-jboss.html">JBoss Messaging</a></p></li>
 					</ul>
 				</li>
 			</ul>

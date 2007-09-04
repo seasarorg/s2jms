@@ -59,7 +59,7 @@
 				</dd>
 			</dl>
 			<p>
-				s2jms-teeda-exampleは，画面から入力された文字列を<code>TextMessage</code>のペイロードに設定して
+				s2jms-teeda-exampleは，画面から入力された文字列を<code>TextMessage</code>のボディに設定して
 				<code>Foo</code>というキューにメッセージを送信します．
 			</p>
 			<p>
@@ -282,7 +282,7 @@ public class MessagingServiceImpl implements MessagingService {
 ]]></source>
 				<p>
 					<code>send(String, boolean)</code>メソッドは，<code>TextMessage</code>を送信します．
-					<code>TextMessage</code>のペイロードには，メソッドの第1引数で渡された文字列が設定されます．
+					<code>TextMessage</code>のボディには，メソッドの第1引数で渡された文字列が設定されます．
 					また，<code>TextMessage</code>のプロパティには<code>needReply</code>という名前の
 					<code>boolean</code>型のプロパティが設定されます．
 					<code>needReply</code>プロパティの値は第2引数で渡された値です．
@@ -307,7 +307,7 @@ public class MessagingServiceImpl implements MessagingService {
 				</p>
 				<p>
 					<code>receive(String)</code>メソッドは，受信した<code>TextMessage</code>の
-					ペイロードに設定されている文字列を返します．
+					ボディに設定されている文字列を返します．
 				</p>
 
 				<h4>トランザクション</h4>
@@ -365,7 +365,7 @@ public class ExampleListener {
     @JMSProperty
     protected boolean needReply;
 
-    @JMSPayload
+    @JMSBody
     protected String text;
     ...
 }
@@ -378,7 +378,7 @@ public class ExampleListener {
 				</p>
 				<p>
 					その他のフィールドにはS2JMS-Containerの提供するアノテーションが付けられているため，
-					S2JMS-Containerによって受信したJMSメッセージのヘッダ，プロパティ，ペイロードの値がフィールドにバインドされます．
+					S2JMS-Containerによって受信したJMSメッセージのヘッダ，プロパティ，ボディの値がフィールドにバインドされます．
 				</p>
 
 				<h4><code>void onMessage()</code> メソッド</h4>
@@ -395,12 +395,12 @@ public class ExampleListener {
 ]]></source>
 				<p>
 					受信メッセージがフィールドにバインドされた後，<code>onMessage()</code>メソッドが呼び出されます．
-					<code>onMessage()</code>メソッドは，受信したメッセージのヘッダ，プロパティ，ペイロードをログに出力します．
+					<code>onMessage()</code>メソッドは，受信したメッセージのヘッダ，プロパティ，ボディをログに出力します．
 				</p>
 				<p>
 					JMSメッセージのプロパティからバインドされた<code>needReply</code>が<code>true</code>の場合は
 					応答メッセージを送信します．
-					応答メッセージのペイロードは，受信メッセージのペイロードがバインドされた<code>text</code>フィールドの
+					応答メッセージのボディは，受信メッセージのボディがバインドされた<code>text</code>フィールドの
 					前後に星を付加した文字列です．
 					その際，応答メッセージの相関IDには，受信メッセージのIDを設定しています．
 					これにより，s2jms-teeda-exampleの<code>MessagingService</code>の<code>receive(String)</code>メソッドは

@@ -11,12 +11,8 @@
 					<ul>
 						<li><p><a href="#ManagedConnectionFactoryDeployer">ManagedConnectionFactoryDeployer</a></p></li>
 						<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
-						<li><p><a href="#ConnectionFactory">ConnectionFactory</a></p></li>
 						<li><p><a href="#SessionFactory">SessionFactory</a></p></li>
 						<li><p><a href="#DestinationFactory">DestinationFactory</a></p></li>
-						<li><p><a href="#Apache ActiveMQの場合">Apache ActiveMQの場合</a></p></li>
-						<li><p><a href="#IBM WebSphere MQの場合">IBM WebSphere MQの場合</a></p></li>
-						<li><p><a href="#JBoss Messagingの場合">JBoss Messagingの場合</a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#送信系">送信系</a></p>
@@ -39,7 +35,7 @@
 			<p>
 				アウトバウンド通信を使用するための主要なコンポーネントを以下に示します．
 			</p>
-			<img src="images/outbound-components.png" width="548" height="378"/>
+			<img src="images/outbound-components.png" width="436" height="379"/>
 			<p>
 				アウトバウンド通信で利用するコンポーネントは，大きく3つに分類されます．
 			</p>
@@ -61,10 +57,6 @@
 					<dd>
 						リソースアダプタが提供する<a href="http://java.sun.com/javaee/5/docs/api/javax/resource/spi/ManagedConnectionFactory.html"><code>ManagedConnectionFactory</code></a>を
 						S2コンテナ内で利用可能にするコンポーネントです．
-					</dd>
-					<dt><code><a href="#ConnectionFactory">ConnectionFactory</a></code> (必須)</dt>
-					<dd>
-						JMSコネクションを提供するコンポーネントです．
 					</dd>
 					<dt><code><a href="#SessionFactory">SessionFactory</a></code> (必須)</dt>
 					<dd>
@@ -125,10 +117,10 @@
 					<code>ManagedConnectionFactoryDeployer</code>の実装クラスを以下に示します．
 				</p>
 				<ul>
-					<li><p><code>org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer</code></p></li>
+					<li><p><code>org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer</code></p></li>
 				</ul>
 				<p>
-					<code>ManagedConnectionFactoryDeployer</code>のプロパティおよびメソッドを以下に示します．
+					<code>JMSManagedConnectionFactoryDeployer</code>のプロパティおよびメソッドを以下に示します．
 				</p>
 				<h5>プロパティ</h5>
 				<table border="1">
@@ -146,7 +138,7 @@
 						<td><code>managedConnectionFactoryIndex</code></td>
 						<td>No</td>
 						<td>
-							<code>ra.xml</code>ファイルに記述された何番目の
+							リソースアダプタ内の<code>ra.xml</code>ファイルに記述された何番目の
 							<code>connector/resource-adapter/outbound-resourceadapter/connection-definition</code>
 							をベースにするかを示すインデックスを指定します．
 						</td>
@@ -212,7 +204,7 @@
 				</p>
 <source><![CDATA[
     <component name="mcfDeployer"
-            class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
+            class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
         <property name="managedConnectionFactoryClass">
             "]]><var>リソースアダプタの提供するManegedConnectionFactory実装クラスのFQN</var><![CDATA["
         </property>
@@ -235,29 +227,6 @@
 					<li><p><a href="http://activemq.apache.org/connection-factory-properties.html">Apache ActiveMQ</a></p></li>
 					<li><p><a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の「ManagedConnectionFactory Properties」</p></li>
 				</ul>
-			</subsection>
-
-			<subsection name="ConnectionFactory">
-				<p>
-					<code>ConnectionFactory</code>は，JMSコネクションを提供するコンポーネントです．
-				</p>
-				<p>
-					S2JMSでは，<code>ConnectionFactory</code>はリソースアダプタ (<code>ManagedConnectionFactory</code>) が提供する
-					オブジェクトを使用します．
-					このオブジェクトは<code>ManagedConnectionFactoryDeployer</code>の<code>createConnectionFactory()</code>メソッドにより
-					取得したものをコンポーネントとしてdiconファイルに登録します．
-				</p>
-				<p>
-					diconファイルへの記述は以下のようになります．
-				</p>
-<source><![CDATA[
-    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
-        mcfDeployer.createConnectionFactory()
-    </component>
-]]></source>
-				<p>
-					<code>mcfDeployer</code>は<code>ManagedConnectionFactoryDeployer</code>のコンポーネント名です．
-				</p>
 			</subsection>
 
 			<subsection name="SessionFactory">
@@ -519,121 +488,6 @@
 				<p>
 					このコンポーネントはdiconファイルに定義して使うことは想定していません．
 				</p>
-			</subsection>
-
-			<subsection name="Apache ActiveMQの場合">
-				<p>
-					以下にオープンソースのMOMプロダクト，
-					<a href="http://activemq.apache.org/">Apache ActiveMQ</a>で
-					アウトバウンド通信を使用する例を示します．
-				</p>
-<source><![CDATA[
-    <!-- マネージドコネクションファクトリ -->
-    <component name="mcfDeployer"
-            class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
-        <property name="managedConnectionFactoryClass">
-            "org.apache.activemq.ra.ActiveMQManagedConnectionFactory"
-        </property>
-    </component>
-
-    <!-- コネクションファクトリ -->
-    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
-        mcfDeployer.createConnectionFactory()
-    </component>
-
-    <!-- セッションファクトリ -->
-    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
-
-    <!-- デスティネーション (キューまたはトピック) ファクトリ -->
-    <component class="org.seasar.jms.core.destination.impl.QueueFactory">
-        <!-- デスティネーション名を指定します -->
-        <property name="name">"Foo"</property>
-    </component>
-]]></source>
-			</subsection>
-
-			<subsection name="IBM WebSphere MQの場合">
-				<p>
-					以下に<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
-					IBM WebSphere MQ (formerly known MQSeries) を組み合わせて
-					アウトバウンド通信を使用する例を示します．
-				</p>
-<source><![CDATA[
-    <!-- マネージドコネクションファクトリ -->
-    <component name="mcfDeployer"
-            class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
-        <property name="managedConnectionFactoryClass">
-            "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
-        </property>
-
-        <!-- キューマネージャとの接続情報 -->
-        <initMethod name="setProperty">
-            <arg>"connectionFactoryProperties"</arg>
-            <arg>"QueueManager=QMGR1"</arg>
-            <!-- より詳細な情報を設定する場合は以下のように設定します
-            <arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
-            -->
-        </initMethod>
-    </component>
-
-    <!-- コネクションファクトリ -->
-    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
-        mcfDeployer.createConnectionFactory()
-    </component>
-
-    <!-- セッションファクトリ -->
-    <component class="org.seasar.jms.core.session.impl.SessionFactoryImpl"/>
-
-    <!-- デスティネーション (キューまたはトピック) ファクトリ -->
-    <component class="org.seasar.jms.core.destination.impl.QueueFactory">
-        <!-- デスティネーション名を指定します -->
-        <property name="name">"LQ2"</property>
-        <!-- URI 形式で指定することもできます
-        <property name="name">"queue://HOST1.QM1/Q1?persistence=1&priority=5"</property>
-        または
-        <property name="name">"topic://Sport/Football/Results?multicast=7"</property>
-        -->
-    </component>
-]]></source>
-			</subsection>
-
-			<subsection name="JBoss Messagingの場合">
-				<p>
-					以下に<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
-					JBoss Messaging を組み合わせてアウトバウンド通信を使用する例を示します．
-				</p>
-<source><![CDATA[
-    <!-- マネージドコネクションファクトリ -->
-    <component name="mcfDeployer"
-        class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer">
-        <property name="managedConnectionFactoryClass">
-            "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
-        </property>
-        
-        <initMethod name="setProperty">
-            <arg>"ConnectionFactoryJndiName"</arg>
-            <arg>"/ConnectionFactory"</arg>
-        </initMethod>
-    </component>
-
-    <!-- コネクションファクトリ -->
-    <component name="connectionFactory" class="javax.jms.ConnectionFactory">
-        mcfDeployer.createConnectionFactory()
-    </component>
-
-    <!-- セッションファクトリ -->
-    <component class="org.seasar.jms.container.SessionFactoryImpl"/>
-
-    <!-- デスティネーション (キューまたはトピック) ファクトリ -->
-    <component class="org.seasar.jms.core.destination.impl.JndiDestinationFactory">
-        <property name="name">"queue/EventBean"</property>
-        <property name="env">
-            #{"java.naming.provider.url" : "jnp://localhost:1099",
-                "java.naming.factory.initial" : "org.jnp.interfaces.NamingContextFactory",
-                "java.naming.factory.url.pkgs" : "org.jboss.naming:org.jnp.interfaces"}
-        </property>
-    </component>
-]]></source>
 			</subsection>
 		</section>
 
