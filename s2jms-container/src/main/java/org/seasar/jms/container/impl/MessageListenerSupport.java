@@ -31,13 +31,14 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.jms.container.annotation.JMSBody;
 import org.seasar.jms.container.annotation.JMSHeader;
 import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.JMSProperty;
 import org.seasar.jms.container.annotation.OnMessage;
 import org.seasar.jms.container.binder.Binder;
+import org.seasar.jms.container.binder.impl.JMSBodyBinder;
 import org.seasar.jms.container.binder.impl.JMSHeaderBinder;
-import org.seasar.jms.container.binder.impl.JMSPayloadBinder;
 import org.seasar.jms.container.binder.impl.JMSPropertiesBinder;
 import org.seasar.jms.container.binder.impl.JMSPropertyBinder;
 import org.seasar.jms.container.exception.IllegalMessageListenerException;
@@ -169,13 +170,24 @@ public class MessageListenerSupport {
                 continue;
             }
 
+            final JMSBody body = field.getAnnotation(JMSBody.class);
+            if (body != null) {
+                final BindingType bindingType = body.bindingType();
+                if (bindingType != BindingType.NONE) {
+                    final String name = StringUtil.isEmpty(body.name()) ? field.getName() : body
+                            .name();
+                    binders.add(new JMSBodyBinder(name, bindingType, field));
+                }
+                continue;
+            }
+
             final JMSPayload payload = field.getAnnotation(JMSPayload.class);
             if (payload != null) {
                 final BindingType bindingType = payload.bindingType();
                 if (bindingType != BindingType.NONE) {
                     final String name = StringUtil.isEmpty(payload.name()) ? field.getName()
                             : payload.name();
-                    binders.add(new JMSPayloadBinder(name, bindingType, field));
+                    binders.add(new JMSBodyBinder(name, bindingType, field));
                 }
                 continue;
             }
@@ -222,13 +234,24 @@ public class MessageListenerSupport {
                 continue;
             }
 
+            final JMSBody body = method.getAnnotation(JMSBody.class);
+            if (body != null) {
+                final BindingType bindingType = body.bindingType();
+                if (bindingType != BindingType.NONE) {
+                    final String name = StringUtil.isEmpty(body.name()) ? propertyDesc
+                            .getPropertyName() : body.name();
+                    binders.add(new JMSBodyBinder(name, bindingType, propertyDesc));
+                }
+                continue;
+            }
+
             final JMSPayload payload = method.getAnnotation(JMSPayload.class);
             if (payload != null) {
                 final BindingType bindingType = payload.bindingType();
                 if (bindingType != BindingType.NONE) {
                     final String name = StringUtil.isEmpty(payload.name()) ? propertyDesc
                             .getPropertyName() : payload.name();
-                    binders.add(new JMSPayloadBinder(name, bindingType, propertyDesc));
+                    binders.add(new JMSBodyBinder(name, bindingType, propertyDesc));
                 }
                 continue;
             }

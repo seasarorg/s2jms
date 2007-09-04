@@ -21,13 +21,13 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.seasar.framework.container.annotation.tiger.BindingType;
-import org.seasar.jms.container.binder.impl.JMSPayloadBinder;
+import org.seasar.jms.container.binder.impl.JMSBodyBinder;
 
 /**
  * @author koichik
  * 
  */
-public class JMSPayloadBinderTest extends TestCase {
+public class JMSBodyBinderTest extends TestCase {
 
     String foo;
 
@@ -44,9 +44,9 @@ public class JMSPayloadBinderTest extends TestCase {
      * @throws Exception
      */
     public void testFoo() throws Exception {
-        JMSPayloadBinder binder = new JMSPayloadBinder("foo", BindingType.SHOULD,
-                JMSPayloadBinderTest.class.getDeclaredField("foo"));
-        binder.bind(JMSPayloadBinderTest.this, null, "FOO");
+        JMSBodyBinder binder = new JMSBodyBinder("foo", BindingType.SHOULD,
+                JMSBodyBinderTest.class.getDeclaredField("foo"));
+        binder.bind(JMSBodyBinderTest.this, null, "FOO");
         assertEquals("1", foo, "FOO");
     }
 
@@ -54,11 +54,11 @@ public class JMSPayloadBinderTest extends TestCase {
      * @throws Exception
      */
     public void testBar() throws Exception {
-        JMSPayloadBinder binder = new JMSPayloadBinder("bar", BindingType.SHOULD,
-                JMSPayloadBinderTest.class.getDeclaredField("bar"));
+        JMSBodyBinder binder = new JMSBodyBinder("bar", BindingType.SHOULD,
+                JMSBodyBinderTest.class.getDeclaredField("bar"));
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("bar", 100);
-        binder.bind(JMSPayloadBinderTest.this, null, map);
+        binder.bind(JMSBodyBinderTest.this, null, map);
         assertEquals("1", bar, 100);
     }
 

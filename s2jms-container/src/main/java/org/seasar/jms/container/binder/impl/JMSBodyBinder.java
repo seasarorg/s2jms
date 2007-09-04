@@ -24,27 +24,27 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 
 /**
- * JMSメッセージのペイロードをリスナコンポーネントにバインドするクラスです。
+ * JMSメッセージのボディをリスナコンポーネントにバインドするクラスです。
  * 
  * @author koichik
  */
-public class JMSPayloadBinder extends AbstractBinder {
+public class JMSBodyBinder extends AbstractBinder {
 
     // instance fields
-    /** JMSメッセージのペイロード型 */
+    /** JMSメッセージのボディ型 */
     protected Class<?> type;
 
     /**
      * インスタンスを構築します。
      * 
      * @param name
-     *            バインドするJMSメッセージのペイロード名
+     *            バインドするJMSメッセージのボディ名
      * @param bindingType
      *            バインディングタイプ
      * @param property
      *            JMSメッセージをバインドする対象のプロパティ
      */
-    public JMSPayloadBinder(final String name, final BindingType bindingType,
+    public JMSBodyBinder(final String name, final BindingType bindingType,
             final PropertyDesc property) {
         super(name, bindingType, new PropertyBindingSupport(property));
         type = property.getPropertyType();
@@ -54,25 +54,25 @@ public class JMSPayloadBinder extends AbstractBinder {
      * インスタンスを構築します。
      * 
      * @param name
-     *            バインドするJMSメッセージのペイロード名
+     *            バインドするJMSメッセージのボディ名
      * @param bindingType
      *            バインディングタイプ
      * @param field
      *            JMSメッセージをバインドする対象のフィールド
      */
-    public JMSPayloadBinder(final String name, final BindingType bindingType, final Field field) {
+    public JMSBodyBinder(final String name, final BindingType bindingType, final Field field) {
         super(name, bindingType, new FieldBindingSupport(field));
         type = field.getType();
     }
 
     @Override
-    protected boolean doBind(final Object target, final Message message, final Object payload) {
-        if (type.isAssignableFrom(payload.getClass())) {
-            bindingSupport.bind(target, payload);
+    protected boolean doBind(final Object target, final Message message, final Object body) {
+        if (type.isAssignableFrom(body.getClass())) {
+            bindingSupport.bind(target, body);
             return true;
         }
-        if (payload instanceof Map) {
-            final Map<?, ?> map = Map.class.cast(payload);
+        if (body instanceof Map) {
+            final Map<?, ?> map = Map.class.cast(body);
             final Object value = map.get(name);
             if (value != null) {
                 bindingSupport.bind(target, value);

@@ -27,15 +27,12 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
  * <p>
  * プロパティにインジェクションすることを示す場合は setter メソッドに注釈します。
  * </p>
- * <p>
- * このアノテーションは{@link JMSBody}に置き換えられました。 互換性のために残されていますが、{@link JMSBody}を使ってください。
- * </p>
  * 
  * @author y-komori
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.METHOD, ElementType.FIELD })
-public @interface JMSPayload {
+public @interface JMSBody {
 
     /**
      * リスナコンポーネントにインジェクションするJMSボディの名前です。

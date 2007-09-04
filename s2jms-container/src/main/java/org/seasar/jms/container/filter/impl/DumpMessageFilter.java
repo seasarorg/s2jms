@@ -99,13 +99,15 @@ public class DumpMessageFilter implements Filter {
                 dumpProperty(buf, message);
             }
             if (TextMessage.class.isInstance(message)) {
-                dumpPayload(buf, TextMessage.class.cast(message));
+                dumpBody(buf, TextMessage.class.cast(message));
             } else if (BytesMessage.class.isInstance(message)) {
-                dumpPayload(buf, BytesMessage.class.cast(message));
+                dumpBody(buf, BytesMessage.class.cast(message));
             } else if (MapMessage.class.isInstance(message)) {
-                dumpPayload(buf, MapMessage.class.cast(message));
+                dumpBody(buf, MapMessage.class.cast(message));
             } else if (ObjectMessage.class.isInstance(message)) {
-                dumpPayload(buf, ObjectMessage.class.cast(message));
+                dumpBody(buf, ObjectMessage.class.cast(message));
+            } else {
+                dumpBody(buf, message);
             }
             logger.log("DJMS-CONTAINER2107", new Object[] { message.getClass().getName(),
                     new String(buf) });
@@ -154,7 +156,7 @@ public class DumpMessageFilter implements Filter {
     }
 
     /**
-     * {@link TextMessage}のペイロードをダンプ出力します。
+     * {@link TextMessage}のボディをダンプ出力します。
      * 
      * @param buf
      *            編集用の文字列バッファ
@@ -163,15 +165,14 @@ public class DumpMessageFilter implements Filter {
      * @throws JMSException
      *             例外が発生した場合にスローされます
      */
-    protected void dumpPayload(final StringBuilder buf, final TextMessage message)
-            throws JMSException {
-        buf.append("===== Payload =====\n");
-        final String payload = message.getText();
-        buf.append(payload).append("\n");
+    protected void dumpBody(final StringBuilder buf, final TextMessage message) throws JMSException {
+        buf.append("===== Body (TextMessage) =====\n");
+        final String body = message.getText();
+        buf.append(body).append("\n");
     }
 
     /**
-     * {@link BytesMessage}のペイロードをダンプ出力します。
+     * {@link BytesMessage}のボディをダンプ出力します。
      * 
      * @param buf
      *            編集用の文字列バッファ
@@ -180,9 +181,9 @@ public class DumpMessageFilter implements Filter {
      * @throws JMSException
      *             例外が発生した場合にスローされます
      */
-    protected void dumpPayload(final StringBuilder buf, final BytesMessage message)
+    protected void dumpBody(final StringBuilder buf, final BytesMessage message)
             throws JMSException {
-        buf.append("===== Payload =====\n");
+        buf.append("===== Body (BytesMessage) =====\n");
         int remain = (int) message.getBodyLength();
         final byte[] bytes = new byte[16];
         final StringWriter sw = new StringWriter(1000);
@@ -217,7 +218,7 @@ public class DumpMessageFilter implements Filter {
     }
 
     /**
-     * {@link MapMessage}のペイロードをダンプ出力します。
+     * {@link MapMessage}のボディをダンプ出力します。
      * 
      * @param buf
      *            編集用の文字列バッファ
@@ -226,9 +227,8 @@ public class DumpMessageFilter implements Filter {
      * @throws JMSException
      *             例外が発生した場合にスローされます
      */
-    protected void dumpPayload(final StringBuilder buf, final MapMessage message)
-            throws JMSException {
-        buf.append("===== Payload =====\n");
+    protected void dumpBody(final StringBuilder buf, final MapMessage message) throws JMSException {
+        buf.append("===== Body (MapMessage) =====\n");
         for (final String key : new IterableAdapter(message.getMapNames())) {
             final Object value = message.getObject(key);
             buf.append(key).append(" : ").append(value).append("\n");
@@ -237,7 +237,7 @@ public class DumpMessageFilter implements Filter {
     }
 
     /**
-     * {@link ObjectMessage}のペイロードをダンプ出力します。
+     * {@link ObjectMessage}のボディをダンプ出力します。
      * 
      * @param buf
      *            編集用の文字列バッファ
@@ -246,11 +246,24 @@ public class DumpMessageFilter implements Filter {
      * @throws JMSException
      *             例外が発生した場合にスローされます
      */
-    protected void dumpPayload(final StringBuilder buf, final ObjectMessage message)
+    protected void dumpBody(final StringBuilder buf, final ObjectMessage message)
             throws JMSException {
-        buf.append("===== Payload =====\n");
-        final Object payload = message.getObject();
-        buf.append(payload).append("\n");
+        buf.append("===== Body (ObjectMessage) =====\n");
+        final Object body = message.getObject();
+        buf.append(body).append("\n");
+    }
+
+    /**
+     * メッセージのボディをダンプ出力します。
+     * 
+     * @param buf
+     *            編集用の文字列バッファ
+     * @param message
+     *            JMSメッセージ
+     */
+    protected void dumpBody(final StringBuilder buf, final Message message) {
+        buf.append("===== Body (").append(message.getClass().getSimpleName()).append(") =====\n");
+        buf.append(message).append("\n");
     }
 
 }
