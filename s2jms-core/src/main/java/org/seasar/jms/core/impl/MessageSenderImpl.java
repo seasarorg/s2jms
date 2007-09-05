@@ -161,61 +161,61 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setDeliveryMode(final int deliveryMode) {
+    public MessageSender setDeliveryMode(final int deliveryMode) {
         this.deliveryMode = deliveryMode;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setPriority(final int priority) {
+    public MessageSender setPriority(final int priority) {
         this.priority = priority;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setTimeToLive(final long timeToLive) {
+    public MessageSender setTimeToLive(final long timeToLive) {
         this.timeToLive = timeToLive;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setDisableMessageID(final boolean disableMessageID) {
+    public MessageSender setDisableMessageID(final boolean disableMessageID) {
         this.disableMessageID = disableMessageID;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setDisableMessageTimestamp(final boolean disableMessageTimestamp) {
+    public MessageSender setDisableMessageTimestamp(final boolean disableMessageTimestamp) {
         this.disableMessageTimestamp = disableMessageTimestamp;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setCorrelationID(final String correlationID) {
+    public MessageSender setCorrelationID(final String correlationID) {
         this.correlationID = correlationID;
         this.correlationIDAsBytes = null;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setCorrelationIDAsBytes(final byte[] correlationIDAsBytes) {
+    public MessageSender setCorrelationIDAsBytes(final byte[] correlationIDAsBytes) {
         this.correlationIDAsBytes = correlationIDAsBytes;
         this.correlationID = null;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageSenderImpl setReplyTo(Destination replyTo) {
+    public MessageSender setReplyTo(Destination replyTo) {
         this.replyTo = replyTo;
         return this;
     }
 
-    public MessageSenderImpl addProperty(final String name, final Object value) {
+    public MessageSender addProperty(final String name, final Object value) {
         properties.put(name, value);
         return this;
     }
 
-    public MessageSenderImpl addProperties(final Map<String, Object> properties) {
+    public MessageSender addProperties(final Map<String, Object> properties) {
         this.properties.putAll(properties);
         return this;
     }

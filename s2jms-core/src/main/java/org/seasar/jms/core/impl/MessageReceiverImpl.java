@@ -143,31 +143,31 @@ public class MessageReceiverImpl implements MessageReceiver {
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageReceiverImpl setTimeout(final long timeout) {
+    public MessageReceiver setTimeout(final long timeout) {
         this.timeout = timeout;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageReceiverImpl setMessageSelector(final String messageSelector) {
+    public MessageReceiver setMessageSelector(final String messageSelector) {
         this.messageSelector = messageSelector;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageReceiverImpl setNoLocal(final boolean noLocal) {
+    public MessageReceiver setNoLocal(final boolean noLocal) {
         this.noLocal = noLocal;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageReceiverImpl setDurable(final boolean durable) {
+    public MessageReceiver setDurable(final boolean durable) {
         this.durable = durable;
         return this;
     }
 
     @Binding(bindingType = BindingType.MAY)
-    public MessageReceiverImpl setSubscriptionName(final String subscriptionName) {
+    public MessageReceiver setSubscriptionName(final String subscriptionName) {
         this.subscriptionName = subscriptionName;
         return this;
     }
