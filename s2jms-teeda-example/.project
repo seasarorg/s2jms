@@ -10,6 +10,16 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.seasar.kijimuna.core.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.seasar.kijimuna.core.validator</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
@@ -17,5 +27,6 @@
 		<nature>org.seasar.diigu.eclipse.diiguNature</nature>
 		<nature>org.seasar.dblauncher.nature</nature>
 		<nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
+		<nature>org.seasar.kijimuna.core.nature</nature>
 	</natures>
 </projectDescription>

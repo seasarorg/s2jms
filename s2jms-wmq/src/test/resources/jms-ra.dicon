@@ -5,14 +5,29 @@
 	<include path="j2ee.dicon"/>
 
 	<component
-		class="org.seasar.jca.deploy.impl.WmqResourceAdapterDeployer"
+		class="org.seasar.jms.core.deploy.impl.WmqResourceAdapterDeployer"
 	>
 		<!-- スレッドプールのスレッド数 -->
 		<arg>10</arg>
 
-		<!-- Generic JMS ResourceAdapter へのパス -->
+		<!-- Generic Resource Adapter for JMS へのパス -->
 		<property name="path">
 			"ra/genericra-1.5.rar"
 		</property>
+
+		<!--
+			Generic Resource Adapter for JMS のプロパティを設定します．
+			設定可能なプロパティは
+				https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties
+			の「Resource Adapter properties」を参照してください．
+		-->
+		<initMethod name="setProperty">
+			<arg>"userName"</arg>
+			<arg>"koichik"</arg>
+		</initMethod>
+		<initMethod name="setProperty">
+			<arg>"password"</arg>
+			<arg>"hi_mi_tsu"</arg>
+		</initMethod>
 	</component>
 </components>

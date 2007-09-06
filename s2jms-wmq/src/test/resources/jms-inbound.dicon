@@ -5,36 +5,62 @@
 	<include path="jms-ra.dicon"/>
 	<include path="jms-outbound.dicon"/>
 
+	<!-- アクティベーションスペックのデプロイ -->
 	<component
-		class="org.seasar.jca.deploy.impl.MessageEndpointDeployer"
+		class="org.seasar.jca.deploy.impl.ActivationSpecDeployer"
 	>
 		<property name="activationSpecClassName">"com.sun.genericra.inbound.ActivationSpec"</property>
+
+		<!--
+			Generic Resource Adapter for JMS のプロパティを設定します．
+			設定可能なプロパティは
+				https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties
+			の「Activation Spec Properties」を参照してください．
+		-->
+		<!-- メッセージを並行に受信するセッション数を設定します (デフォルト 8) -->
+		<!-- この値は ResourceAdapterDeployer のスレッド数を超えないようにしてください -->
+		<!--
 		<initMethod name="setProperty">
-			<arg>"userName"</arg>
-			<arg>"koichik"</arg>
+			<arg>"maxPoolSize"</arg>
+			<arg>"8"</arg>
 		</initMethod>
-		<initMethod name="setProperty">
-			<arg>"password"</arg>
-			<arg>"hi_mi_tsu"</arg>
-		</initMethod>
+		-->
 		<initMethod name="setProperty">
 			<arg>"connectionFactoryProperties"</arg>
 			<arg>"QueueManager=QMGR1"</arg>
+			<!-- より詳細な情報を設定する場合は以下のように設定します．
+			<arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
+			-->
 		</initMethod>
+		<!-- デスティネーション名 -->
 		<initMethod name="setProperty">
 			<arg>"destinationProperties"</arg>
 			<arg>"BaseQueueName=LQ1"</arg>
+			<!-- トピックの場合
+			<arg>"BaseTopicName=Stock/Tse/4812"</arg>
+			-->
 		</initMethod>
+		<!-- デスティネーションタイプ -->
 		<initMethod name="setProperty">
 			<arg>"destinationType"</arg>
 			<arg>"javax.jms.Queue"</arg>
+			<!-- トピックの場合
+			<arg>"javax.jms.Topic"</arg>
+			-->
 		</initMethod>
 	</component>
-	<component
-		class="org.seasar.jca.inbound.MessageEndpointFactoryImpl"
-	/>
 
+	<!-- メッセージエンドポイントファクトリ -->
+	<component
+		class="org.seasar.jms.container.impl.JMSMessageEndpointFactory"
+	>
+		<!-- メッセージをトランザクショナルに受信しない場合は false を指定します -->
+		<property name="deliveryTransacted">true</property>
+	</component>
+
+	<!-- S2JMS-Container の設定 -->
 	<component class="org.seasar.jms.container.impl.JMSContainerImpl">
+		<!-- アプリケーション固有のメッセージリスナ・コンポーネントの名前を指定します (複数指定可) -->
 		<initMethod name="addMessageListener">
 			<arg>"listener1"</arg>
 		</initMethod>
@@ -43,6 +69,7 @@
 		</initMethod>
 	</component>
 	
+	<!-- メッセージリスナ・コンポーネントの設定 -->
 	<component name="listener1" instance="prototype" externalBinding="true"
 		class="org.seasar.jms.container.JMSContainerTest$MessageListener1"
 	/>

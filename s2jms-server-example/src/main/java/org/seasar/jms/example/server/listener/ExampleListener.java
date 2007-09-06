@@ -20,8 +20,8 @@ import java.util.Map;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.log.Logger;
+import org.seasar.jms.container.annotation.JMSBody;
 import org.seasar.jms.container.annotation.JMSHeader;
-import org.seasar.jms.container.annotation.JMSPayload;
 import org.seasar.jms.container.annotation.JMSProperty;
 import org.seasar.jms.core.MessageSender;
 
@@ -44,7 +44,7 @@ public class ExampleListener {
     @JMSProperty
     protected boolean needReply;
 
-    @JMSPayload
+    @JMSBody
     protected String text;
 
     public ExampleListener() {

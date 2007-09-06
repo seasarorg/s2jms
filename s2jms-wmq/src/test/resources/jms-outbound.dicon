@@ -4,12 +4,47 @@
 <components>
 	<include path="jms-ra.dicon"/>
 
-	<component class="org.seasar.jms.container.SessionFactoryImpl"/>
+	<!-- マネージドコネクションファクトリ -->
+	<component
+		class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer"
+	>
+		<property name="managedConnectionFactoryClass">
+			"com.sun.genericra.outbound.ManagedJMSConnectionFactory"
+		</property>
 
-	<component class="org.seasar.jms.core.destination.impl.QueueFactory">
-		<property name="name">"LQ2"</property>
+		<!--
+			Generic Resource Adapter for JMS のプロパティを設定します．
+			設定可能なプロパティは
+				https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties
+			の「ManagedConnectionFactory Properties」を参照してください．
+		-->
+		<!-- キューマネージャとの接続情報 -->
+		<initMethod name="setProperty">
+			<arg>"connectionFactoryProperties"</arg>
+			<arg>"QueueManager=QMGR1"</arg>
+			<!-- より詳細な情報を設定する場合は以下のように設定します
+			<arg>"QueueManager=QMGR1,HostName=host,Port=1234,TransportType=1"</arg>
+			-->
+		</initMethod>
 	</component>
 
+	<!-- セッションファクトリ -->
+	<component class="org.seasar.jms.container.SessionFactoryImpl"/>
+
+	<!-- デスティネーション (キューまたはトピック) ファクトリ -->
+	<component class="org.seasar.jms.core.destination.impl.QueueFactory">
+		<!-- キュー名を指定します -->
+		<property name="name">"LQ2"</property>
+		<!-- URI 形式で指定することもできます
+		<property name="name">"queue://HOST1.QM1/Q1?persistence=1&priority=5"</property>
+		または
+		<property name="name">"topic://Sport/Football/Results?multicast=7"</property>
+		-->
+	</component>
+
+	<!-- メッセージ送信コンポーネント -->
 	<component class="org.seasar.jms.core.impl.MessageSenderImpl"/>
+
+	<!-- メッセージ送信コンポーネント -->
 	<component class="org.seasar.jms.core.impl.MessageReceiverImpl"/>
 </components>
