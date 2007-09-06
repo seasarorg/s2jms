@@ -5,15 +5,11 @@
 	<include path="jms-ra.dicon"/>
 
 	<component name="mcfDeployer"
-		class="org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer"
+		class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer"
 	>
 		<property name="managedConnectionFactoryClass">
 			"org.apache.activemq.ra.ActiveMQManagedConnectionFactory"
 		</property>
-	</component>
-
-	<component name="connectionFactory" class="javax.jms.TopicConnectionFactory">
-		mcfDeployer.createConnectionFactory()
 	</component>
 
 	<component class="org.seasar.jms.core.destination.impl.TopicFactory">

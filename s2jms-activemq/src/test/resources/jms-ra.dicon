@@ -17,8 +17,8 @@
 
 		<!-- ActiveMQ Broker へのURL -->
 		<initMethod name="setProperty">
-			<arg>"ServerUrl"</arg>
-			<arg>"tcp://localhost:61616"</arg>
+			<arg>"BrokerXmlConfig"</arg>
+			<arg>"broker:(tcp://localhost:61616)?persistent=false&amp;useJmx=false"</arg>
 		</initMethod>
 	</component>
 </components>
