@@ -269,6 +269,9 @@ public class MessageListenerSupport {
                 .getSuperclass()
                 : clazz;
         for (final Method method : targetClass.getMethods()) {
+            if (method.isBridge() || method.isSynthetic()) {
+                continue;
+            }
             final OnMessage annotation = method.getAnnotation(OnMessage.class);
             if (annotation == null) {
                 continue;
