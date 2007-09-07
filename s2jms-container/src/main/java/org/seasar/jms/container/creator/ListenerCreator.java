@@ -49,7 +49,7 @@ public class ListenerCreator extends ComponentCreatorImpl {
      * 
      * @return Listener用のカスタマイザ
      */
-    public ComponentCustomizer getActionCustomizer() {
+    public ComponentCustomizer getListenerCustomizer() {
         return getCustomizer();
     }
 
@@ -59,7 +59,7 @@ public class ListenerCreator extends ComponentCreatorImpl {
      * @param customizer
      *            Listener用のカスタマイザ
      */
-    public void setActionCustomizer(final ComponentCustomizer customizer) {
+    public void setListenerCustomizer(final ComponentCustomizer customizer) {
         setCustomizer(customizer);
     }
 
