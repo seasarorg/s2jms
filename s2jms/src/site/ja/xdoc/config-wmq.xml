@@ -18,6 +18,14 @@
 				<a href="https://genericjmsra.dev.java.net/">Sun Generic Resource Adapter for JMS</a>と
 				IBM WebSphere MQ (formerly known MQSeries) を組み合わせて使用する場合の設定例を示します．
 			</p>
+			<p>
+				WebShpere固有の設定方法の詳細については，
+				以下のドキュメントの「第4部 WebSphere MQ JMSを使用したプログラミング」
+				(主に第10～12章) を参照してください．
+			</p>
+			<ul>
+				<li><p><a href="http://publibfp.boulder.ibm.com/epubs/pdf/d8864272.pdf">WebSphere MQ Javaの使用 バージョン6.0 (PDF)</a></p></li>
+			</ul>
 		</section>
 
 		<section name="リソースアダプタの設定">
@@ -44,7 +52,7 @@
         </property>
 
         <!--
-                    リソースアダプタ固有のプロパティを設定します．
+            リソースアダプタ固有のプロパティを設定します．
         -->
         <initMethod name="setProperty">
             <arg>"UserName"</arg>
@@ -60,11 +68,13 @@
 		</section>
 
 		<section name="アウトバウンド通信の設定">
-		http://activemq.apache.org/connection-factory-properties.html
 			<p>
 				ManagedConnectionFactoryDeployerに設定可能なGeneric Resource Adapter for JMSのプロパティは，
 				<a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の
 				「ManagedConnectionFactory Properties」を参照してください．
+			</p>
+			<p>
+				インバウンド通信と併用しない場合の設定は以下のようになります．
 			</p>
 <source><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
@@ -74,14 +84,13 @@
     <include path="jms-ra.dicon"/>
 
     <!-- マネージドコネクションファクトリ -->
-    <component name="mcfDeployer"
-            class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
+    <component class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
         <property name="managedConnectionFactoryClass">
             "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
         </property>
 
         <!--
-                    リソースアダプタ固有のプロパティを設定します．
+            リソースアダプタ固有のプロパティを設定します．
         -->
         <!-- キューマネージャとの接続情報 -->
         <initMethod name="setProperty">
@@ -127,6 +136,36 @@
     </component>
 </components>
 ]]></source>
+			<p>
+				インバウンド通信で受信したメッセージと同じセッションを使用してメッセージを送信する場合の設定は以下のようになります．
+				マネージドコネクションファクトリの設定は必要ありません．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="jms-ra.dicon"/>
+
+    <!-- セッションファクトリ -->
+    <component class="org.seasar.jms.container.session.impl.GenericRaSessionFactoryImpl"/>
+
+    <!-- メッセージ送信コンポーネント -->
+    <component instance="prototype"
+            class="org.seasar.jms.core.impl.MessageSenderImpl">
+        <property name="destinationFactory">
+            <!-- デスティネーション (キューまたはトピック) ファクトリ -->
+            <component class="org.seasar.jms.core.destination.impl.QueueFactory">
+                <!-- キュー名を指定します -->
+                <property name="name">"LQ1"</property>
+                <!-- URI 形式で指定することもできます
+                <property name="name">"queue://HOST1.QM1/LQ1?persistence=1&priority=5"</property>
+                -->
+            </component>
+        </property>
+    </component>
+</components>
+]]></source>
 		</section>
 
 		<section name="インバウンド通信">
@@ -135,6 +174,9 @@
 				<a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の
 				「ManagedConnectionFactory Properties」を参照してください．
 			</p>
+			<ul>
+				<li><p><a href="http://publibfp.boulder.ibm.com/epubs/pdf/d8864272.pdf">WebSphere MQ Javaの使用 バージョン6.0</a></p></li>
+			</ul>
 <source><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
@@ -149,7 +191,7 @@
         </property>
 
         <!--
-                    リソースアダプタ固有のプロパティを設定します．
+            リソースアダプタ固有のプロパティを設定します．
         -->
         <!-- メッセージを並行に受信するセッション数を設定します (デフォルト 8) -->
         <!-- この値は ResourceAdapterDeployer のスレッド数を超えないようにしてください -->
@@ -189,9 +231,7 @@
     </component>
 
     <!-- メッセージエンドポイントファクトリ -->
-    <component
-        class="org.seasar.jms.container.impl.JMSMessageEndpointFactory"
-    >
+    <component class="org.seasar.jms.container.impl.JMSMessageEndpointFactory">
         <!-- メッセージをトランザクショナルに受信しない場合は false を指定します -->
         <property name="deliveryTransacted">true</property>
     </component>

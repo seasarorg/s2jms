@@ -47,25 +47,24 @@
                     リソースアダプタ固有のプロパティを設定します．
         -->
         <!-- ActiveMQ Broker へのURL -->
-		<!-- 外部プロセスの ActiveMQ Broker を使用する場合 -->
-		<initMethod name="setProperty">
-			<arg>"ServerUrl"</arg>
-			<arg>"tcp://localhost:61616"</arg>
-		</initMethod>
-		<!-- 埋め込み (インプロセス) の ActiveMQ Broker を使用する場合 -->
-		<!--
-		<initMethod name="setProperty">
-			<arg>"BrokerXmlConfig"</arg>
-			<arg>"broker:(tcp://localhost:61616)?persistent=false&amp;useJmx=false"</arg>
-		</initMethod>
-		-->
+        <!-- 外部プロセスの ActiveMQ Broker を使用する場合 -->
+        <initMethod name="setProperty">
+            <arg>"ServerUrl"</arg>
+            <arg>"tcp://localhost:61616"</arg>
+        </initMethod>
+        <!-- 埋め込み (インプロセス) の ActiveMQ Broker を使用する場合 -->
+        <!--
+        <initMethod name="setProperty">
+            <arg>"ServerUrl"</arg>
+            <arg>"vm:(broker:(tcp://localhost:61616)?persistent=false&amp;useJmx=false)"</arg>
+        </initMethod>
+        -->
     </component>
 </components>
 ]]></source>
 		</section>
 
 		<section name="アウトバウンド通信の設定">
-		http://activemq.apache.org/connection-factory-properties.html
 			<p>
 				ManagedConnectionFactoryDeployerに設定可能なActiveMQ固有のプロパティは，
 				<a href="http://activemq.apache.org/connection-factory-properties.html">Apache ActiveMQのドキュメント</a>を
@@ -79,8 +78,7 @@
     <include path="jms-ra.dicon"/>
 
     <!-- マネージドコネクションファクトリ -->
-    <component name="mcfDeployer"
-            class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
+    <component class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
         <property name="managedConnectionFactoryClass">
             "org.apache.activemq.ra.ActiveMQManagedConnectionFactory"
         </property>
@@ -135,22 +133,22 @@
             "org.apache.activemq.ra.ActiveMQActivationSpec"
         </property>
 
-		<!-- メッセージを並行に受信するセッション数を設定します (デフォルト 10) -->
-		<!-- この値は ResourceAdapterDeployer のスレッド数を超えないようにしてください -->
-		<!--
-		<initMethod name="setProperty">
-			<arg>"maxSessions"</arg>
-			<arg>"10"</arg>
-		</initMethod>
-		-->
+        <!-- メッセージを並行に受信するセッション数を設定します (デフォルト 10) -->
+        <!-- この値は ResourceAdapterDeployer のスレッド数を超えないようにしてください -->
+        <!--
+        <initMethod name="setProperty">
+            <arg>"maxSessions"</arg>
+            <arg>"10"</arg>
+        </initMethod>
+        -->
 
-		<!-- 受信するデスティネーションを設定します -->
-		<initMethod name="setProperty">
-			<arg>"destination"</arg>
-			<arg>"Foo"</arg><!-- デスティネーションの名前 (キュー名またはトピック名) に変更してください -->
-		</initMethod>
+        <!-- 受信するデスティネーションを設定します -->
+        <initMethod name="setProperty">
+            <arg>"destination"</arg>
+            <arg>"Foo"</arg><!-- デスティネーションの名前 (キュー名またはトピック名) に変更してください -->
+        </initMethod>
 
-		<!-- 受信するデスティネーションの種類 (キューまたはトピック) を設定します -->
+        <!-- 受信するデスティネーションの種類 (キューまたはトピック) を設定します -->
         <initMethod name="setProperty">
             <arg>"destinationType"</arg>
             <arg>"javax.jms.Queue"</arg>
@@ -161,9 +159,7 @@
     </component>
 
     <!-- メッセージエンドポイントファクトリ -->
-    <component
-        class="org.seasar.jms.container.impl.JMSMessageEndpointFactory"
-    >
+    <component class="org.seasar.jms.container.impl.JMSMessageEndpointFactory">
         <!-- メッセージをトランザクショナルに受信しない場合は false を指定します -->
         <property name="deliveryTransacted">true</property>
     </component>

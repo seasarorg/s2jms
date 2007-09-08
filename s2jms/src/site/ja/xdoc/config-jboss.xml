@@ -9,7 +9,6 @@
 				<li><p><a href="#概要">概要</a></p></li>
 				<li><p><a href="#リソースアダプタの設定">リソースアダプタの設定</a></p></li>
 				<li><p><a href="#アウトバウンド通信の設定">アウトバウンド通信の設定</a></p></li>
-				<li><p><a href="#インバウンド通信">インバウンド通信</a></p></li>
 			</ul>
 		</section>
 
@@ -34,9 +33,7 @@
     <include path="j2ee.dicon"/>
 
     <!-- リソースアダプタ -->
-    <component
-        class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer"
-    >
+    <component class="org.seasar.jca.deploy.impl.RarResourceAdapterDeployer">
         <!-- スレッドプールのスレッド数 -->
         <arg>10</arg>
 
@@ -77,7 +74,6 @@
 		</section>
 
 		<section name="アウトバウンド通信の設定">
-		http://activemq.apache.org/connection-factory-properties.html
 			<p>
 				ManagedConnectionFactoryDeployerに設定可能なGeneric Resource Adapter for JMSのプロパティは，
 				<a href="https://genericjmsra.dev.java.net/docs/userguide/userguide.html#Resource_Adapter_properties">Sun Generic Resource Adapter for JMS</a>の
@@ -91,8 +87,7 @@
     <include path="jms-ra.dicon"/>
 
     <!-- マネージドコネクションファクトリ -->
-    <component name="mcfDeployer"
-        class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
+    <component class="org.seasar.jms.core.deploy.impl.JMSManagedConnectionFactoryDeployer">
         <property name="managedConnectionFactoryClass">
             "com.sun.genericra.outbound.ManagedJMSConnectionFactory"
         </property>
