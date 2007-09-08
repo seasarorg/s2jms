@@ -4,20 +4,6 @@
 		<title>移行ガイド</title>
 	</properties>
 	<body>
-		<section name="目次">
-			<ul>
-				<li><p><a href="#1.0.0">1.0.0</a></p>
-					<ul>
-						<li><p><a href="#依存ライブラリ">依存ライブラリ</a></p></li>
-						<li><p><a href="#リソースアダプタの設定">リソースアダプタの設定</a></p></li>
-						<li><p><a href="#アウトバウンド通信の設定">アウトバウンド通信の設定</a></p></li>
-						<li><p><a href="#インバウンド通信の設定">インバウンド通信の設定</a></p></li>
-						<li><p><a href="#S2JMS-Container">S2JMS-Container</a></p></li>
-					</ul>
-				</li>
-			</ul>
-		</section>
-
 		<section name="1.0.0">
 			<subsection name="依存ライブラリ">
 				S2JMS 1.0.0 は，S2JCA 1.0.0 との組み合わせで動作します．

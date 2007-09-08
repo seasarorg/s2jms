@@ -6,31 +6,31 @@ S2JMS Changelog
 
 
 
-Version {1.0.0} (2007/08/08)
+Version {1.0.0} (2007/09/09)
 
-* 移行の注意
+* Bug
 
-  S2JMS 1.0.0 は，S2JCA 1.0.0 との組み合わせで動作します．
-  これ以前のバージョンでは動作しないのでご注意ください．
+    * [{{{https://www.seasar.org/issues/browse/JMS-15}JMS-15}}] - ListenerCreator のカスタマイザ用プロパティが actionCustomizer になっていたのを listenerCustomizer に修正しました．
 
+* Improvement
 
+    * [{{{https://www.seasar.org/issues/browse/JMS-9}JMS-9}}] - S2JMS-Containerで，リスナ・コンポーネントがスローした例外をコンテナで飲み込んで JMS プロバイダに通知しないようにしていたのを廃止しました．
 
-* 変更点
+    * [{{{https://www.seasar.org/issues/browse/JMS-10}JMS-10}}] - MessageSenderImpl の replyTo プロパティに何もDIされない場合に警告が出ないようにしました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-11}JMS-11}}] - JMSコネクション用に，ConnectionFactory を実装した JMSManagedConnectionFactoryDeployer を追加しました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-12}JMS-12}}] - JMS 用のクラスを S2JCA から移動しました．
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-13}JMS-13}}] - @JMSPayload アノテーションに加えて @JMSBody アノテーションをサポートしました．
 
 Version {1.0.0-RC1} (2007/08/08)
 
-* 移行の注意
-
-  S2JMS 1.0.0-RC1 は，S2JCA 1.0.0-RC1 との組み合わせで動作します．
-  これ以前のバージョンでは動作しないのでご注意ください．
-
-* 変更点
-
-** Bug
+* Bug
 
     * [{{{https://www.seasar.org/issues/browse/JMS-5}JMS-5}}] - MessageReceiver で JMS メッセージを受信する度に javax.jms.Connection#stop() を呼び出さないようにしました．
     
-** Improvement
+* Improvement
 
     * [{{{https://www.seasar.org/issues/browse/JMS-1}JMS-1}}] - MessageSender および MessageReceiver で，送信または受信したメッセージおよびそのヘッダの一部を取得できるようにしました．
 
@@ -42,6 +42,6 @@ Version {1.0.0-RC1} (2007/08/08)
 
     * [{{{https://www.seasar.org/issues/browse/JMS-7}JMS-7}}] - S2JMS-Container で，リスナ・コンポーネントの Map 型のフィールドまたはプロパティ (setter メソッド) に @JMSProperty アノテーションが付けられた場合は，JMS メッセージの全てのプロパティをマッピングとして持つ Map\<String, Object\> をバインドするようにしました．
     
-** New Feature
+* New Feature
 
     * [{{{https://www.seasar.org/issues/browse/JMS-4}JMS-4}}] - DestinationFactory の実装として，一時キューを作成する TemporaryQueueFactory，一時トピックを作成する TemporaryTopicFactory を追加しました．
