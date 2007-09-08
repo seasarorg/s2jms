@@ -31,6 +31,11 @@ public class JMSManagedConnectionFactoryDeployer extends ManagedConnectionFactor
         super(raDeployer);
     }
 
+    /**
+     * インスタンスを初期化します．
+     * 
+     * @throws ResourceException
+     */
     @InitMethod
     public void initialize() throws ResourceException {
         connectionFactory = ConnectionFactory.class.cast(createConnectionFactory());
