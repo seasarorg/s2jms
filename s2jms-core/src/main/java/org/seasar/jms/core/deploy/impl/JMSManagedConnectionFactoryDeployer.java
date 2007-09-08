@@ -6,9 +6,9 @@ import javax.jms.JMSException;
 import javax.resource.ResourceException;
 import javax.resource.spi.ManagedConnectionFactory;
 
+import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.jca.deploy.ResourceAdapterDeployer;
 import org.seasar.jca.deploy.impl.ManagedConnectionFactoryDeployer;
-import org.seasar.jms.core.exception.SJMSException;
 
 /**
  * JMS用の{@link ManagedConnectionFactory}をデプロイするクラスです．
@@ -17,6 +17,9 @@ import org.seasar.jms.core.exception.SJMSException;
  */
 public class JMSManagedConnectionFactoryDeployer extends ManagedConnectionFactoryDeployer implements
         ConnectionFactory {
+
+    /** コネクションファクトリ */
+    protected ConnectionFactory connectionFactory;
 
     /**
      * インスタンスを構築します．
@@ -28,17 +31,18 @@ public class JMSManagedConnectionFactoryDeployer extends ManagedConnectionFactor
         super(raDeployer);
     }
 
+    @InitMethod
+    public void initialize() throws ResourceException {
+        connectionFactory = ConnectionFactory.class.cast(createConnectionFactory());
+    }
+
     /**
      * JMSのコネクションを作成して返します．
      * 
      * @return JMSコネクション
      */
     public Connection createConnection() throws JMSException {
-        try {
-            return ConnectionFactory.class.cast(createConnectionFactory()).createConnection();
-        } catch (final ResourceException e) {
-            throw new SJMSException("EJMS0000", e);
-        }
+        return connectionFactory.createConnection();
     }
 
     /**
@@ -52,12 +56,7 @@ public class JMSManagedConnectionFactoryDeployer extends ManagedConnectionFactor
      */
     public Connection createConnection(final String user, final String password)
             throws JMSException {
-        try {
-            return ConnectionFactory.class.cast(createConnectionFactory()).createConnection(user,
-                    password);
-        } catch (final ResourceException e) {
-            throw new SJMSException("EJMS0000", e);
-        }
+        return connectionFactory.createConnection(user, password);
     }
 
 }
