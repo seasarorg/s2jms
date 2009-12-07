@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.jms.Message;
 
 import org.seasar.framework.util.tiger.CollectionsUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 import org.seasar.jms.core.message.MessageHandler;
 
 /**
@@ -64,36 +65,40 @@ public class MessageHandlerFactory {
     }
 
     /**
-     * JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスを返します。
+     * JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}
+     * 実装クラスを返します。
      * 
      * @param messageClass
      *            JMSメッセージ型
-     * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラス。
-     *         対応するクラスがない場合は{@code null}
+     * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}
+     *         実装クラス。 対応するクラスがない場合は{@code null}
      */
-    public static MessageHandler<?, ?> getMessageHandlerFromMessageType(
+    @SuppressWarnings("unchecked")
+    public static MessageHandler<? extends Message, ?> getMessageHandlerFromMessageType(
             final Class<? extends Message> messageClass) {
-        for (final MessageHandler<?, ?> messageHandler : handlers) {
+        for (final MessageHandler<? extends Message, ?> messageHandler : handlers) {
             if (messageHandler.getMessageType().isAssignableFrom(messageClass)) {
-                return messageHandler;
+                return ReflectionUtil.newInstance(messageHandler.getClass());
             }
         }
         return null;
     }
 
     /**
-     * JMSメッセージのペイロード型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスを返します。
+     * JMSメッセージのペイロード型に対応する{@link org.seasar.jms.core.message.MessageHandler}
+     * 実装クラスを返します。
      * 
      * @param payloadType
      *            JMSメッセージのペイロード型
-     * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラス。
-     *         対応するクラスがない場合は{@code null}
+     * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}
+     *         実装クラス。 対応するクラスがない場合は{@code null}
      */
+    @SuppressWarnings("unchecked")
     public static MessageHandler<? extends Message, ?> getMessageHandlerFromPayloadType(
             final Class<?> payloadType) {
         for (final MessageHandler<? extends Message, ?> messageHandler : handlers) {
             if (messageHandler.getPayloadType().isAssignableFrom(payloadType)) {
-                return messageHandler;
+                return ReflectionUtil.newInstance(messageHandler.getClass());
             }
         }
         return null;
