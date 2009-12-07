@@ -8,7 +8,7 @@
   <!-- More Project Information -->
   <groupId>org.seasar.jms</groupId>
   <artifactId>s2jms</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>../s2jms-core</module>
@@ -17,7 +17,7 @@
     <module>../s2jms-dist</module>
   </modules>
   <properties>
-    <s2jca.version>${version}</s2jca.version>
+    <s2jca.version>1.0.1</s2jca.version>
   </properties>
 
   <!-- More Project Information -->

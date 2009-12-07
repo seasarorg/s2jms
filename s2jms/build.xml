@@ -2,6 +2,19 @@
 	<tstamp>
 		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
 	</tstamp>
+	<property name="newVersion" value="1.0.1-SNAPSHOT" />
+
+	<target name="update-pom">
+		<replaceregexp
+			match="(&lt;artifactId&gt;s2jms&lt;/artifactId&gt;\s*&lt;version&gt;)(?:[^&lt;]+)(&lt;/version&gt;)"
+			replace="\1${newVersion}\2" encoding="UTF-8">
+			<fileset dir="." includes="**/pom.xml" />
+			<fileset dir="../s2jms-core" includes="**/pom.xml" />
+			<fileset dir="../s2jms-container" includes="**/pom.xml" />
+			<fileset dir="../s2jms-server" includes="**/pom.xml" />
+			<fileset dir="../s2jms-dist" includes="**/pom.xml" />
+		</replaceregexp>
+	</target>
 
 	<target name="dist">
 		<antcall target="fix-site">
