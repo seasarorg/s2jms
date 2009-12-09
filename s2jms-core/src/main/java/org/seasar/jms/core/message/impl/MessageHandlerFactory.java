@@ -15,14 +15,20 @@
  */
 package org.seasar.jms.core.message.impl;
 
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.jms.Message;
 
-import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
+import org.seasar.framework.util.tiger.Tuple3;
 import org.seasar.jms.core.message.MessageHandler;
+
+import static org.seasar.framework.util.tiger.CollectionsUtil.*;
+import static org.seasar.framework.util.tiger.GenericUtil.*;
 
 /**
  * JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}実装クラスの
@@ -34,14 +40,19 @@ import org.seasar.jms.core.message.MessageHandler;
 public class MessageHandlerFactory {
 
     // static fields
-    /** {@link MessageHandler}の{@link Map} */
-    protected static LinkedList<MessageHandler<? extends Message, ?>> handlers = CollectionsUtil
-            .newLinkedList();
+    /** {@link MessageHandler}のMSGTYPE型変数 */
+    protected static final Type MSGTYPE = MessageHandler.class.getTypeParameters()[0];
+
+    /** {@link MessageHandler}のPAYLOADTYPE型変数 */
+    protected static final Type PAYLOADTYPE = MessageHandler.class.getTypeParameters()[1];
+
+    /** {@link MessageHandler}とそのメッセージタイプ，ペイロードタイプの組からなる{@link List} */
+    protected static final LinkedList<Tuple3<Class<? extends MessageHandler<? extends Message, ?>>, Class<?>, Class<?>>> handlers = newLinkedList();
     static {
-        handlers.add(new TextMessageHandler());
-        handlers.add(new MapMessageHandler());
-        handlers.add(new BytesMessageHandler());
-        handlers.add(new ObjectMessageHandler());
+        addMessageHandler(ObjectMessageHandler.class);
+        addMessageHandler(BytesMessageHandler.class);
+        addMessageHandler(MapMessageHandler.class);
+        addMessageHandler(TextMessageHandler.class);
     }
 
     /**
@@ -53,8 +64,29 @@ public class MessageHandlerFactory {
      * @param handler
      *            追加されるメッセージハンドラ
      */
-    public static void addMessageHandler(final MessageHandler<?, ?> handler) {
-        handlers.addFirst(handler);
+    @SuppressWarnings("unchecked")
+    public static void addMessageHandler(final MessageHandler<? extends Message, ?> handler) {
+        addMessageHandler((Class<? extends MessageHandler<? extends Message, ?>>) handler
+                .getClass());
+    }
+
+    /**
+     * {@link org.seasar.jms.core.message.MessageHandler}を追加します。
+     * <p>
+     * 追加される{@link org.seasar.jms.core.message.MessageHandler}はリストの先頭に加えられます。
+     * </p>
+     * 
+     * @param handler
+     *            追加されるメッセージハンドラのクラス
+     */
+    public static void addMessageHandler(
+            final Class<? extends MessageHandler<? extends Message, ?>> handlerClass) {
+        final Map<TypeVariable<?>, Type> typeVariableMap = getTypeVariableMap(handlerClass);
+        final Class<?> messageType = getActualClass(MSGTYPE, typeVariableMap);
+        final Class<?> payloadType = getActualClass(PAYLOADTYPE, typeVariableMap);
+        handlers
+                .addFirst(new Tuple3<Class<? extends MessageHandler<? extends Message, ?>>, Class<?>, Class<?>>(
+                        handlerClass, messageType, payloadType));
     }
 
     /**
@@ -73,12 +105,11 @@ public class MessageHandlerFactory {
      * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}
      *         実装クラス。 対応するクラスがない場合は{@code null}
      */
-    @SuppressWarnings("unchecked")
     public static MessageHandler<? extends Message, ?> getMessageHandlerFromMessageType(
             final Class<? extends Message> messageClass) {
-        for (final MessageHandler<? extends Message, ?> messageHandler : handlers) {
-            if (messageHandler.getMessageType().isAssignableFrom(messageClass)) {
-                return ReflectionUtil.newInstance(messageHandler.getClass());
+        for (final Tuple3<Class<? extends MessageHandler<? extends Message, ?>>, Class<?>, Class<?>> tuple : handlers) {
+            if (tuple.getValue2().isAssignableFrom(messageClass)) {
+                return ReflectionUtil.newInstance(tuple.getValue1());
             }
         }
         return null;
@@ -93,12 +124,11 @@ public class MessageHandlerFactory {
      * @return JMSメッセージ型に対応する{@link org.seasar.jms.core.message.MessageHandler}
      *         実装クラス。 対応するクラスがない場合は{@code null}
      */
-    @SuppressWarnings("unchecked")
     public static MessageHandler<? extends Message, ?> getMessageHandlerFromPayloadType(
             final Class<?> payloadType) {
-        for (final MessageHandler<? extends Message, ?> messageHandler : handlers) {
-            if (messageHandler.getPayloadType().isAssignableFrom(payloadType)) {
-                return ReflectionUtil.newInstance(messageHandler.getClass());
+        for (final Tuple3<Class<? extends MessageHandler<? extends Message, ?>>, Class<?>, Class<?>> tuple : handlers) {
+            if (tuple.getValue3().isAssignableFrom(payloadType)) {
+                return ReflectionUtil.newInstance(tuple.getValue1());
             }
         }
         return null;
