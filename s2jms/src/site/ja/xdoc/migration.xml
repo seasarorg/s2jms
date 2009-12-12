@@ -4,6 +4,10 @@
 		<title>移行ガイド</title>
 	</properties>
 	<body>
+		<section name="1.0.1">
+			<p>注意点はありません．</p>
+		</section>
+
 		<section name="1.0.0">
 			<subsection name="依存ライブラリ">
 				S2JMS 1.0.0 は，S2JCA 1.0.0 との組み合わせで動作します．

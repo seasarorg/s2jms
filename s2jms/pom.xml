@@ -8,7 +8,7 @@
   <!-- More Project Information -->
   <groupId>org.seasar.jms</groupId>
   <artifactId>s2jms</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>pom</packaging>
   <modules>
     <module>../s2jms-core</module>
@@ -120,8 +120,8 @@
       <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
     </snapshotRepository>
     <site>
-      <id>www.seasar.org</id>
-      <url>scp://www.seasar.org/home/groups/s2jms/public_html/</url>
+      <id>maven.seasar.org</id>
+      <url>dav:https://www.seasar.org/site/s2jms/</url>
     </site>
   </distributionManagement>
 
@@ -234,6 +234,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav</artifactId>
+        <version>1.0-beta-2</version>
       </extension>
     </extensions>
   </build>

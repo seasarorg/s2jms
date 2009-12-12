@@ -11,13 +11,21 @@
   <parent>
     <groupId>org.seasar.jms</groupId>
     <artifactId>s2jms</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <relativePath>../s2jms</relativePath>
   </parent>
 
   <!-- More Project Information -->
   <name>S2JMS-Container</name>
   <url>http://s2jms.sandbox.seasar.org/</url>
+
+  <!-- Environment Settings -->
+  <distributionManagement>
+    <site>
+      <id>maven.seasar.org</id>
+      <url>dav:https://www.seasar.org/site/s2jms/s2jms-container/</url>
+    </site>
+  </distributionManagement>
 
   <!-- Dependency Settings -->
   <dependencies>

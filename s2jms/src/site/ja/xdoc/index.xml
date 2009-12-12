@@ -22,12 +22,19 @@
 		</section>
 		<section name="ニュース">
 			<dl>
+				<dt>2009/12/12</dt>
+				<dd>
+					S2JMS 1.0.1をリリースしました．
+					(<a href="downloads.html">ダウンロード</a>)
+					(<a href="changelog.html#a1.0.1">変更履歴</a>)
+					(<a href="migration.html#a1.0.1">移行ガイド</a>)
+				</dd>
 				<dt>2007/09/09</dt>
 				<dd>
 					S2JMS 1.0.0をリリースしました．
 					(<a href="downloads.html">ダウンロード</a>)
-					(<a href="changelog.html#1.0.0">変更履歴</a>)
-					(<a href="migration.html#1.0.0">移行ガイド</a>)
+					(<a href="changelog.html#a1.0.0">変更履歴</a>)
+					(<a href="migration.html#a1.0.0">移行ガイド</a>)
 				</dd>
 				<dt>2007/08/16</dt>
 				<dd>
@@ -43,7 +50,7 @@
 				<dd>
 					S2JMS 1.0.0-RC1をリリースしました．
 					(<a href="downloads.html">ダウンロード</a>)
-					(<a href="changelog.html#1.0.0-RC1">変更履歴</a>)
+					(<a href="changelog.html#a1.0.0-RC1">変更履歴</a>)
 				</dd>
 				<dt>2007/07/07</dt>
 				<dd>

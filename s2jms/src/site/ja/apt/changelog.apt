@@ -6,6 +6,12 @@ S2JMS Changelog
 
 
 
+Version {1.0.1} (2009/12/12)
+
+* Bug
+
+    * [{{{https://www.seasar.org/issues/browse/JMS-16}JMS-16}}] - MessageHandlerFactory がスレッドセーフでない MessageHandler をスレッド間で共有している問題を修正しました．[Seasar-user:18978]
+
 Version {1.0.0} (2007/09/09)
 
 * Bug
