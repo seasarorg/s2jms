@@ -6,7 +6,7 @@
 	<include path="jms-default-filter.dicon"/>
 
 	<!-- アクティベーションスペックのデプロイ -->
-	<component
+	<component name="activationSpecDeployer"
 		class="org.seasar.jca.deploy.impl.ActivationSpecDeployer"
 	>
 		<property name="activationSpecClassName">

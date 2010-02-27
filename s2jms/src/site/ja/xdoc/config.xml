@@ -67,6 +67,7 @@
 								<li><p><a href="config-inbound.html#ActivationSpecDeployer">ActivationSpecDeployer</a></p></li>
 								<li><p><a href="config-inbound.html#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
 								<li><p><a href="config-inbound.html#MessageEndpointFactory">MessageEndpointFactory</a></p></li>
+								<li><p><a href="config-inbound.html#MessageEndpointActivator">MessageEndpointActivator</a></p></li>
 							</ul>
 						</li>
 						<li><p><a href="config-inbound.html#JMSコンテナの設定">JMSコンテナの設定</a></p>

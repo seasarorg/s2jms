@@ -128,7 +128,8 @@
     <include path="jms-ra.dicon"/>
 
     <!-- アクティベーションスペック -->
-    <component class="org.seasar.jca.deploy.impl.ActivationSpecDeployer">
+    <component name="activationSpecDeployer"
+        class="org.seasar.jca.deploy.impl.ActivationSpecDeployer">
         <property name="activationSpecClassName">
             "org.apache.activemq.ra.ActiveMQActivationSpec"
         </property>
@@ -171,6 +172,22 @@
             <arg>"messageListener"</arg>
         </initMethod>
     </component>
+</components>
+]]></source>
+			<p>
+				メッセージの受信を開始するために，<code>app.dicon</code>の最後など，
+				SMART deploy や AutoRegister によるコンポーネントの登録が終わった後に
+				初期化される場所に<code>MessageEndpointActivator</code>を定義します．
+			</p>
+<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+"http://www.seasar.org/dtd/components24.dtd">
+<components>
+    <include path="j2ee.dicon"/>
+    <include path="jms.dicon"/>
+
+    <component class="org.seasar.jca.deploy.impl.MessageEndpointActivator"/> 
 </components>
 ]]></source>
 		</section>

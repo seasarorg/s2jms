@@ -22,7 +22,7 @@
 	<classpathentry sourcepath="lib/sources/s2-framework-2.4.40-sources.jar" kind="lib" path="lib/s2-framework-2.4.40.jar"/>
 	<classpathentry sourcepath="lib/sources/s2-extension-2.4.40-sources.jar" kind="lib" path="lib/s2-extension-2.4.40.jar"/>
 	<classpathentry sourcepath="lib/sources/s2-tiger-2.4.40-sources.jar" kind="lib" path="lib/s2-tiger-2.4.40.jar"/>
-	<classpathentry sourcepath="lib/sources/s2jca-1.0.1-sources.jar" kind="lib" path="lib/s2jca-1.0.1.jar"/>
+	<classpathentry sourcepath="lib/sources/s2jca-1.0.2-sources.jar" kind="lib" path="lib/s2jca-1.0.2.jar"/>
 	<classpathentry sourcepath="lib/sources/s2jms-core-1.0.1-sources.jar" kind="lib" path="lib/s2jms-core-1.0.1.jar"/>
 	<classpathentry sourcepath="lib/sources/s2jms-container-1.0.1-sources.jar" kind="lib" path="lib/s2jms-container-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>

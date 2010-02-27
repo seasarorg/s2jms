@@ -12,6 +12,7 @@
 						<li><p><a href="#ActivationSpecDeployer">ActivationSpecDeployer</a></p></li>
 						<li><p><a href="#リソースアダプタ固有のプロパティ">リソースアダプタ固有のプロパティ</a></p></li>
 						<li><p><a href="#MessageEndpointFactory">MessageEndpointFactory</a></p></li>
+						<li><p><a href="#MessageEndpointActivator">MessageEndpointActivator</a></p></li>
 					</ul>
 				</li>
 				<li><p><a href="#JMSコンテナの設定">JMSコンテナの設定</a></p>
@@ -34,6 +35,8 @@
 				<dd>インバウンド通信で利用されるメッセージエンドポイントを生成するためのコンポーネントです．</dd>
 				<dt><code><a href="#JMSContainer">JMSContainer</a></code></dt>
 				<dd>受信したJMSメッセージをアプリケーションコンポーネントにバインドし，リスナメソッドを呼び出すコンポーネントです．</dd>
+				<dt><code><a href="#MessageEndpointActivator">MessageEndpointActivator</a></code></dt>
+				<dd>インバウンド通信によるメッセージの受信を開始・終了するコンポーネントです．</dd>
 			</dl>
 		</section>
 
@@ -139,6 +142,44 @@
 						<td>
 							リソースアダプタ固有のプロパティを指定します．
 						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="MessageEndpointActivator">
+				<p>
+					<code>MessageEndpointActivator</code>は，
+					インバウンド通信によるメッセージの受信を開始・終了するコンポーネントです．
+				</p>
+				<p>
+					このコンポーネントは，<code>app.dicon</code> の最後など，
+					SMART deploy や AutoRegister によるコンポーネントの登録が終わった後に
+					初期化される場所に定義します．
+				</p>
+				<p>
+					<code>MessageEndpointActivator</code>の実装クラスを以下に示します．
+				</p>
+				<ul>
+					<li><p><code>org.seasar.jca.deploy.impl.MessageEndpointActivator</code></p></li>
+				</ul>
+				<h5>プロパティ</h5>
+				<table border="1">
+					<tr><th>プロパティ</th><th>必須</th><th>説明</th><th>デフォルト</th></tr>
+					<tr>
+						<td><code>activationSpecDeployer</code></td>
+						<td>Yes</td>
+						<td>
+							メッセージエンドポイントの
+							<code>ActivationSepcDeployer</code>
+							を指定します．
+							自動バインディングするには，
+							<code>ActivationSepcDeployer</code>の
+							コンポーネント名が，このプロパティと同じ
+							<code>activationSepcDeployer</code>の
+							でなくてはなりません．
+							それ以外の場合は明示的にプロパティを設定する必要があります．
+						</td>
+						<td>N/A</td>
 					</tr>
 				</table>
 			</subsection>

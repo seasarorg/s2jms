@@ -5,4 +5,6 @@
 	<include path="j2ee.dicon"/>
 	<include path="jms.dicon"/>	
 	<include path="aop.dicon"/>
+
+	<component class="org.seasar.jca.deploy.impl.MessageEndpointActivator"/>
 </components>

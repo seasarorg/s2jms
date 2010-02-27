@@ -37,4 +37,6 @@
 		class="org.seasar.jms.container.JMSContainerTest$MessageListener1"/>
 	<component name="listener2" instance="prototype" externalBinding="true"
 		class="org.seasar.jms.container.JMSContainerTest$MessageListener2"/>
+
+	<component class="org.seasar.jca.deploy.impl.EndPointActivator"/>
 </components>
