@@ -17,7 +17,7 @@
     <module>../s2jms-dist</module>
   </modules>
   <properties>
-    <s2jca.version>1.0.2</s2jca.version>
+    <s2jca.version>1.0.3-SNAPSHOT</s2jca.version>
   </properties>
 
   <!-- More Project Information -->

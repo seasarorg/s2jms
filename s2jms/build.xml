@@ -2,7 +2,7 @@
 	<tstamp>
 		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
 	</tstamp>
-	<property name="newVersion" value="1.0.1" />
+	<property name="newVersion" value="1.0.2-SNAPSHOT" />
 
 	<target name="update-pom">
 		<replaceregexp
