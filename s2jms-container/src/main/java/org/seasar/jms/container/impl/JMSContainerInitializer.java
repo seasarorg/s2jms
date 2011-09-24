@@ -15,13 +15,14 @@
  */
 package org.seasar.jms.container.impl;
 
-import java.util.concurrent.Callable;
-
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.deployer.ComponentDeployerFactory;
 import org.seasar.framework.container.deployer.ExternalComponentDeployerProvider;
+import org.seasar.framework.container.factory.S2ContainerFactory;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.jca.deploy.impl.MessageEndpointActivator;
 import org.seasar.jms.container.external.JMSExternalContext;
 import org.seasar.jms.container.external.JMSExternalContextComponentDefRegister;
 
@@ -30,7 +31,10 @@ import org.seasar.jms.container.external.JMSExternalContextComponentDefRegister;
  * 
  * @author koichik
  */
-public class JMSContainerInitializer implements Callable<S2Container> {
+public class JMSContainerInitializer {
+
+    // static fields
+    private static final Logger logger = Logger.getLogger(JMSContainerInitializer.class);
 
     // instance fields
     /** S2コンテナを作成するための設定ファイルのパス */
@@ -46,18 +50,12 @@ public class JMSContainerInitializer implements Callable<S2Container> {
         this.configPath = configPath;
     }
 
-    public S2Container call() {
-        return initialize();
-    }
-
     /**
      * S2コンテナを初期化します。
-     * 
-     * @return ルートのS2コンテナ
      */
-    public S2Container initialize() {
+    public void initialize() {
         if (isAlreadyInitialized()) {
-            return SingletonS2ContainerFactory.getContainer();
+            return;
         }
         if (!StringUtil.isEmpty(configPath)) {
             SingletonS2ContainerFactory.setConfigPath(configPath);
@@ -69,7 +67,35 @@ public class JMSContainerInitializer implements Callable<S2Container> {
         SingletonS2ContainerFactory
                 .setExternalContextComponentDefRegister(new JMSExternalContextComponentDefRegister());
         SingletonS2ContainerFactory.init();
-        return SingletonS2ContainerFactory.getContainer();
+    }
+
+    /**
+     * S2コンテナを終了します。
+     * 
+     * <p>
+     * S2Containerの終了は初期化とは逆順に、上位コンテナに登録された末尾のコンポーネントから終了します。
+     * そのため、S2JMSのメッセージエンドポイントが終了するよりも先にCOOL deployで自動登録された、
+     * アプリケーションのコンポーネントが終了してしまい、S2JMS-Containerがメッセージを
+     * アプリケーションにディスパッチすることができなくなってしまいます。
+     * 
+     * S2JMS-Serverは、S2コンテナを終了する前にS2JMSのメッセージエンドポイントを終了しなければなりません。
+     * </p>
+     */
+    public void destroy() {
+        if (!isAlreadyInitialized()) {
+            return;
+        }
+        final S2Container container = SingletonS2ContainerFactory.getContainer();
+        final MessageEndpointActivator[] activators = (MessageEndpointActivator[]) container
+                .findAllComponents(MessageEndpointActivator.class);
+        for (int i = 0; i < activators.length; ++i) {
+            try {
+                activators[i].stop();
+            } catch (final Exception e) {
+                logger.log("EJMS-CONTAINER0001", new Object[] { e }, e);
+            }
+        }
+        S2ContainerFactory.destroy();
     }
 
     /**

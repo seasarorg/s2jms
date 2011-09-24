@@ -26,7 +26,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,8 +44,8 @@ import java.util.logging.Logger;
  * </p>
  * <dl>
  * <dt><code>--classpath <var>classpaths</var></code></dt>
- * <dd>追加のクラスパスを指定します。 <code><var>classpaths</var></code>はプラットフォームのパス区切り文字を使って複数のパスを指定することができます。
- * 追加されたクラスパスは標準のクラスパスより前に設定されます。<br>
+ * <dd>追加のクラスパスを指定します。 <code><var>classpaths</var></code>
+ * はプラットフォームのパス区切り文字を使って複数のパスを指定することができます。 追加されたクラスパスは標準のクラスパスより前に設定されます。<br>
  * 指定されたパスがディレクトリの場合、そのディレクトリ直下にJarファイルが含まれていればそれらのJarファイルが全てクラスパスに追加されます。
  * ディレクトリ直下にJarファイルが含まれていなければそのディレクトリがクラスパスに追加されます。
  * 指定されたパスがファイルの場合はそのファイルがクラスパスに追加されます。</dd>
@@ -78,8 +77,8 @@ public class Main {
     protected static CountDownLatch latch = new CountDownLatch(1);
 
     // instance fields
-    /** S2コンテナ */
-    protected Object s2container;
+    /** S2JMSコンテナイニシャライザ */
+    protected Object initializer;
 
     /**
      * S2JMS-Serverプロセスを開始します。
@@ -130,47 +129,45 @@ public class Main {
 
             @Override
             public void run() {
-                destoryS2Container();
                 latch.countDown();
             }
         });
-        s2container = createS2Container(dicon);
+        initialize(dicon);
         logger.log(Level.INFO, "IJMS-SERVER3001");
 
         try {
             latch.await();
         } catch (final InterruptedException ignore) {
-            destoryS2Container();
         }
+        destory();
     }
 
     /**
-     * S2コンテナを構築します。
+     * S2JMSコンテナを構築します。
      * 
      * @param dicon
      *            ルートとなるdiconファイルのパス名
-     * @return S2コンテナ
      * @throws Exception
-     *             S2コンテナの作成中に例外が発生した場合にスローされます
+     *             S2JMSコンテナの作成中に例外が発生した場合にスローされます
      */
-    protected Object createS2Container(final String dicon) throws Exception {
+    protected void initialize(final String dicon) throws Exception {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         final Class<?> clazz = classLoader.loadClass(JMS_CONTAINER_INITIALIZER);
         final Constructor<?> ctor = clazz.getConstructor(String.class);
-        final Callable<?> jmsContainerInitializer = Callable.class.cast(ctor.newInstance(dicon));
-        return jmsContainerInitializer.call();
+        initializer = ctor.newInstance(dicon);
+        final Method initialize = initializer.getClass().getMethod("initialize");
+        initialize.invoke(initializer);
     }
 
     /**
-     * S2コンテナを破棄します。
-     * 
+     * S2JMSコンテナを破棄します。
      */
-    protected void destoryS2Container() {
+    protected void destory() {
         logger.log(Level.INFO, "IJMS-SERVER3002");
         try {
-            if (s2container != null) {
-                final Method destoroy = s2container.getClass().getMethod("destroy");
-                destoroy.invoke(s2container);
+            if (initializer != null) {
+                final Method destoroy = initializer.getClass().getMethod("destroy");
+                destoroy.invoke(initializer);
             }
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "EJMS-SERVER3003", e);
